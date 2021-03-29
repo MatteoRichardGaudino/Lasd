@@ -150,8 +150,8 @@ namespace lasd {
     }
     template<typename Data>
     void Vector<Data>::MapPostOrder(const MapFunctor fun, void* v){
-        for (unsigned long i = size-1; i >= 0; i--){
-            fun(elements[i], v);
+        for (unsigned long i = size; i > 0; i--) {
+            fun(elements[i-1], v);
         }
     }
 // Specific member functions (inherited from FoldableContainer)
@@ -164,10 +164,8 @@ namespace lasd {
     }
     template<typename Data>
     void Vector<Data>::FoldPostOrder(const FoldFunctor fun, const void* v1, void* v2) const {
-        if(size != 0) {
-            for (unsigned long i = size - 1; i >= 0; i--) {
-                fun(elements[i], v1, v2);
-            }
+        for (unsigned long i = size; i > 0; i--) {
+            fun(elements[i-1], v1, v2);
         }
     }
 

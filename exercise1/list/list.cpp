@@ -85,7 +85,7 @@ namespace lasd {
 
     // Comparison operators
     template<typename Data>
-    bool List<Data>::operator==(List<Data>& list) const noexcept{
+    bool List<Data>::operator==(const List<Data>& list) const noexcept{
         if (size == list.size){
             Node* tmp = head;
             Node* tmp2 = list.head;
@@ -98,7 +98,7 @@ namespace lasd {
         } else return false;
     }
     template<typename Data>
-    bool List<Data>::operator!=(List<Data>& list) const noexcept{
+    bool List<Data>::operator!=(const List<Data>& list) const noexcept{
         return !((*this) == list);
     }
 
@@ -237,10 +237,8 @@ namespace lasd {
     }
     template<typename Data>
     void List<Data>::MapPostOrder(const MapFunctor fun, void * v) {
-        if (size != 0) {
-            for (unsigned long i = size - 1; i >= 0; i--) {
-                fun((*this)[i], v);
-            }
+        for (unsigned long i = size; i > 0; i--) {
+            fun((*this)[i-1], v);
         }
     }
 
@@ -258,10 +256,8 @@ namespace lasd {
     }
     template<typename Data>
     void List<Data>::FoldPostOrder(const FoldFunctor fun, const void* v1, void* v2) const {
-        if (size != 0) {
-            for (unsigned long i = size - 1; i >= 0; i--) {
-                fun((*this)[i], v1, v2);
-            }
+        for (unsigned long i = size ; i > 0; i--) {
+            fun((*this)[i-1], v1, v2);
         }
     } // Override FoldableContainer member
 

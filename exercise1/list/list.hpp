@@ -128,8 +128,8 @@ public:
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(List<Data>&) const noexcept;
-  bool operator!=(List<Data>&) const noexcept;
+  bool operator==(const List<Data>&) const noexcept;
+  bool operator!=(const List<Data>&) const noexcept;
 
   /* ************************************************************************ */
 
