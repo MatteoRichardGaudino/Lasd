@@ -21,7 +21,7 @@ private:
 
 protected:
 
-  ulong size = 0;
+  unsigned long size = 0;
 
 public:
 
@@ -50,7 +50,7 @@ public:
     return size == 0;
   } // (concrete function should not throw exceptions)
 
-  virtual ulong Size() const noexcept{
+  virtual unsigned long Size() const noexcept{
     return size;
   } // (concrete function should not throw exceptions)
 
@@ -97,7 +97,7 @@ public:
   virtual Data& Front() const = 0; // (concrete function must throw std::length_error when empty)
   virtual Data& Back() const = 0; // (concrete function must throw std::length_error when empty)
 
-  virtual Data& operator[](const ulong) const = 0; // (concrete function must throw std::out_of_range when out of range)
+  virtual Data& operator[](const unsigned long ) const = 0; // (concrete function must throw std::out_of_range when out of range)
 
 };
 
@@ -222,8 +222,8 @@ public:
 
   typedef std::function<void(const Data&, const void*, void*) noexcept> FoldFunctor;
 
-  virtual void FoldPreOrder(const FoldFunctor, void*, void*) const = 0;
-  virtual void FoldPostOrder(const FoldFunctor, void*, void*) const = 0;
+  virtual void FoldPreOrder(const FoldFunctor, const void*, void*) const = 0;
+  virtual void FoldPostOrder(const FoldFunctor, const void*, void*) const = 0;
 
   virtual bool Exists(const Data&) const noexcept override; // Override TestableContainer member
 
