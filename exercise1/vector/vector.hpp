@@ -37,7 +37,7 @@ public:
   /* ************************************************************************ */
 
   // Specific constructors
-  Vector(const unsigned long ); // A vector with a given initial dimension
+  Vector(const unsigned long); // A vector with a given initial dimension
   Vector(const LinearContainer<Data>&); // A vector obtained from a LinearContainer
 
   /* ************************************************************************ */

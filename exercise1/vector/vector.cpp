@@ -164,8 +164,10 @@ namespace lasd {
     }
     template<typename Data>
     void Vector<Data>::FoldPostOrder(const FoldFunctor fun, const void* v1, void* v2) const {
-        for (unsigned long i = size-1; i >= 0; i--){
-            fun(elements[i], v1, v2);
+        if(size != 0) {
+            for (unsigned long i = size - 1; i >= 0; i--) {
+                fun(elements[i], v1, v2);
+            }
         }
     }
 
