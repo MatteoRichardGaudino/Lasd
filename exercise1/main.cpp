@@ -3,6 +3,8 @@
 
 #include "zmytest/test.hpp"
 
+#include "list/list.hpp"
+
 /* ************************************************************************** */
 
 #include <iostream>

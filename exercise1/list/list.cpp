@@ -93,6 +93,8 @@ namespace lasd {
                 if (tmp->data != tmp2->data){
                     return false;
                 }
+                tmp = tmp->next;
+                tmp2 = tmp2->next;
             }
             return true;
         } else return false;
@@ -115,7 +117,7 @@ namespace lasd {
     }
     template<typename Data>
     void List<Data>::InsertAtFront(Data&& dat){
-        Node* newNode = new Node(dat);
+        Node* newNode = new Node(std::move(dat));
         newNode->next = head;
         head = newNode;
         size++;
@@ -133,12 +135,12 @@ namespace lasd {
         }
     }
     template<typename Data>
-    Data& List<Data>::FrontNRemove(){
+    Data List<Data>::FrontNRemove(){
         if (size != 0) {
+            Data data = std::move(head->data);
             Node *tmp = head;
             head = head->next;
             size--;
-            Data data = tmp->data;
             delete tmp;
             return data;
         } else{

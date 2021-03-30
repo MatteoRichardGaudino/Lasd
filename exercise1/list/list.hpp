@@ -79,7 +79,7 @@ protected:
         return (this->data == node.data) && (this->next == node.next);
     }
     bool operator!=(const Node& node) const noexcept{
-        return !(*this == node);
+        return !((*this) == node);
     }
 
     /* ********************************************************************** */
@@ -138,7 +138,7 @@ public:
   void InsertAtFront(const Data&); // Copy of the value
   void InsertAtFront(Data&&); // Move of the value
   void RemoveFromFront(); // (must throw std::length_error when empty)
-  Data& FrontNRemove(); // (must throw std::length_error when empty)
+  Data FrontNRemove(); // (must throw std::length_error when empty)
 
   void InsertAtBack(const Data&); // Copy of the value
   void InsertAtBack(Data&&); // Move of the value
