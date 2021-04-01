@@ -30,7 +30,7 @@ protected:
     // Data
     // ...
     Data data;
-    Node* next;
+    Node* next = nullptr;
 
     /* ********************************************************************** */
 
@@ -40,12 +40,10 @@ protected:
 
     Node(const Data& d){
         data = d;
-        next = nullptr;
     }
 
     Node(Data&& d) noexcept {
         std::swap(data, d);
-        next = nullptr;
     }
 
     /* ********************************************************************** */
