@@ -54,6 +54,14 @@ private:
 };
 
 void launchMenu();
+template<typename Data>
+void setupContainerMenu(Menu&, LinearContainer<Data>&);
+template<typename Data>
+void setupMappableMenu(Menu&, MappableContainer<Data>&, const bool);
+template<typename Data>
+void setupFoldableMenu(Menu&, FoldableContainer<Data>&);
+template<typename Data>
+void setupTestableContainerMenu(Menu&, TestableContainer<Data>&);
 
 template<typename Data>
 void launchVectorMenu();
@@ -98,6 +106,15 @@ void popolaList(List<Data>&);
 /* *** Mappable test *** */
 template<typename Data>
 void printMappable(MappableContainer<Data>&, bool);
+void testMappable(MappableContainer<int>&);
+void testMappable(MappableContainer<float>&);
+void testMappable(MappableContainer<string>&);
+
+/* *** Foldable test *** */
+void testFoldable(FoldableContainer<int>&);
+void testFoldable(FoldableContainer<float>&);
+void testFoldable(FoldableContainer<string>&);
+
 
 
 

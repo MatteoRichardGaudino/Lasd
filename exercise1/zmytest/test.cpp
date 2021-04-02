@@ -51,110 +51,6 @@ bool Menu::show() const{
     cout << "********************" << endl;
     return true;
 }
-/*
-void launchMenu(){
-    Menu structMenu("Chose a data structure:");
-
-    Menu mainMenu("Chose an action:");
-
-    MenuItem insertValues("Insert Values");
-    MenuItem front("Front");
-    MenuItem back("Back");
-    MenuItem subscript("Subscript operator []");
-    MenuItem exists("Exists");
-    MenuItem empty("Is Empty");
-    MenuItem size("Size") ;
-    MenuItem printAll("Print all");
-    MenuItem clear("Clear");
-    MenuItem testFold("Test fold function");
-    MenuItem testMap("Test map function");
-    MenuItem fullTest("Start lasd full tes", [](Vector<int>&){
-        lasdtest();
-    });
-
-    Vector<int> vec;
-    MenuItem vect("Vector", [&](Vector<int>&){
-        Menu typeMenu("Chose a type:");
-        MenuItem resize("Resize");
-        mainMenu.add(resize);
-
-
-        MenuItem intType("Int", [&](Vector<int> vec){
-            cout<< "Test size: " << vec.Size();
-            insertValues.setOnAction([](Vector<int>& vec){ popolaVector<int>(vec); });
-            front.setOnAction([](Vector<int>& vec){ cout << vec.Front() << endl; });
-            back.setOnAction([](Vector<int>& vec){ cout << vec.Back() << endl; });
-
-            subscript.setOnAction([](Vector<int>& vec){
-                unsigned long in = 0;
-                cout << "Insert the index (0 <= index < " << vec.Size() << ")" << endl << ">>> ";
-                cin >> in;
-                try {
-                    cout << "vec[" << in << "] = " << vec[in];
-                } catch (out_of_range& e){
-                    cout << "Error, Out of range" << endl;
-                }
-            });
-            exists.setOnAction([](Vector<int>& vec){
-                int in = 0;
-                cout << "Insert the value to search" << endl << ">>> ";
-                cin >> in;
-                cout << "Value " << in << ((vec.Exists(in))? "": " doesn't") << " Exist in vec" << endl;
-            });
-            empty.setOnAction([](Vector<int>& vec){ cout << ((vec.Empty())? "True": "False") << endl; });
-            size.setOnAction([](Vector<int>& vec){ cout << "Size is: " << vec.Size() << endl; });
-            printAll.setOnAction([](Vector<int>& vec){ printMappable<int>(vec, false); });
-            clear.setOnAction([](Vector<int>& vec){
-                vec.Clear();
-                cout << "Cleaning the vector" << endl;
-            });
-            testFold.setOnAction([](Vector<int>& vec){
-                // todo
-            });
-            testMap.setOnAction([](Vector<int>& vec){
-                // todo
-            });
-            resize.setOnAction([](Vector<int>& vec){
-                unsigned long in = 0;
-                cout << "Insert new Size" << endl << ">>> ";
-                cin >> in;
-                vec.Resize(in);
-                cout << "New size is " << vec.Size() << endl;
-            });
-        });
-        MenuItem floatType("Float", [](Vector<int>& vec){cout << "hai scelto float...";});
-        MenuItem stringType("String", [](Vector<int>& vec){cout << "hai scelto string...";});
-
-        typeMenu.add(intType);
-        typeMenu.add(floatType);
-        typeMenu.add(stringType);
-        typeMenu.show(vec);
-
-
-        mainMenu.add(insertValues);
-        mainMenu.add(front);
-        mainMenu.add(back);
-        mainMenu.add(subscript);
-        mainMenu.add(move(exists));
-        mainMenu.add(empty);
-        mainMenu.add(size);
-        mainMenu.add(printAll);
-        mainMenu.add(clear);
-        mainMenu.add(testFold);
-        mainMenu.add(testMap);
-        mainMenu.add(fullTest);
-        mainMenu.show(vec);
-    });
-
-    MenuItem list("List", [](Vector<int>& vec){
-        cout<< "hai scelto list"<< endl;
-    });
-
-    structMenu.add(vect);
-    structMenu.add(list);
-    structMenu.show(vec);
-}
- */
 
 void launchMenu(){
     Menu structMenu("Chose a data structure:");
@@ -177,12 +73,74 @@ void launchMenu(){
 
     structMenu.add(vect);
     structMenu.add(list);
-    structMenu.show();
 
-    typeMenu.add(intType);
-    typeMenu.add(floatType);
-    typeMenu.add(stringType);
-    typeMenu.show();
+    if(structMenu.show()){
+        typeMenu.add(intType);
+        typeMenu.add(floatType);
+        typeMenu.add(stringType);
+        typeMenu.show();
+    }
+}
+
+template<typename Data>
+void setupContainerMenu(Menu& menu, LinearContainer<Data>& cont){
+
+    MenuItem front("Front", [&cont](){
+        testFront(cont);
+    });
+    MenuItem back("Back", [&cont](){
+        testBack(cont);
+    });
+    MenuItem subscript("Subscript operator []", [&cont](){
+        testSubscript(cont);
+    });
+
+    MenuItem empty("Is Empty", [&cont](){
+        testEmpty(cont);
+    });
+    MenuItem size("Size", [&cont](){
+        testSize(cont);
+    }) ;
+
+    MenuItem clear("Clear", [&cont](){
+        testClear(cont);
+    });
+    MenuItem fullTest("Start lasd full tes", [](){
+        lasdtest();
+    });
+
+    menu.add(front);
+    menu.add(back);
+    menu.add(subscript);
+    menu.add(empty);
+    menu.add(size);
+    menu.add(clear);
+    menu.add(fullTest);
+}
+template<typename Data>
+void setupMappableMenu(Menu& menu, MappableContainer<Data>& cont, const bool addArrow){
+    MenuItem printAll("Print all", [&cont, addArrow](){
+        printMappable(cont, addArrow);
+    });
+    MenuItem testMap("Test map function", [&cont](){
+        testMappable(cont);
+    });
+    menu.add(printAll);
+    menu.add(testMap);
+}
+template<typename Data>
+void setupFoldableMenu(Menu& menu, FoldableContainer<Data>& cont){
+    MenuItem testFold("Test fold function", [&cont](){
+        testFoldable(cont);
+    });
+    menu.add(testFold);
+}
+template<typename Data>
+void setupTestableContainerMenu(Menu& menu, TestableContainer<Data>& cont){
+    MenuItem exists("Exists", [&cont](){
+        testExists(cont);
+    });
+    menu.add(exists);
 }
 
 template<typename Data>
@@ -194,56 +152,17 @@ void launchVectorMenu(){
     MenuItem insertValues("Insert Values", [&vec](){
         popolaVector<Data>(vec);
     });
-    MenuItem front("Front", [&vec](){
-        testFront(vec);
-    });
-    MenuItem back("Back", [&vec](){
-        testBack(vec);
-    });
-    MenuItem subscript("Subscript operator []", [&vec](){
-        testSubscript(vec);
-    });
-    MenuItem exists("Exists", [&vec](){
-        testExists(vec);
-    });
-    MenuItem empty("Is Empty", [&vec](){
-        testEmpty(vec);
-    });
-    MenuItem size("Size", [&vec](){
-        testSize(vec);
-    }) ;
-    MenuItem printAll("Print all", [&vec](){
-        printMappable(vec, false);
-    });
-    MenuItem clear("Clear", [&vec](){
-        testClear(vec);
-    });
-    MenuItem testFold("Test fold function", [&vec](){
-        // TODO
-    });
-    MenuItem testMap("Test map function", [&vec](){
-        // TODO
-    });
-    MenuItem fullTest("Start lasd full tes", [](){
-        lasdtest();
-    });
+    mainMenu.add(insertValues);
+
+    setupContainerMenu(mainMenu, vec);
+    setupTestableContainerMenu(mainMenu, vec);
+    setupMappableMenu(mainMenu, vec, false);
+    setupFoldableMenu(mainMenu, vec);
 
     MenuItem resize("Resize", [&vec](){
         testResize(vec);
     });
 
-    mainMenu.add(insertValues);
-    mainMenu.add(front);
-    mainMenu.add(back);
-    mainMenu.add(subscript);
-    mainMenu.add(move(exists));
-    mainMenu.add(empty);
-    mainMenu.add(size);
-    mainMenu.add(printAll);
-    mainMenu.add(clear);
-    mainMenu.add(testFold);
-    mainMenu.add(testMap);
-    mainMenu.add(fullTest);
     mainMenu.add(resize);
 
     while (mainMenu.show());
@@ -258,39 +177,12 @@ void launchListMenu(){
     MenuItem insertValues("Insert Values", [&list](){
         popolaList<Data>(list);
     });
-    MenuItem front("Front", [&list](){
-        testFront(list);
-    });
-    MenuItem back("Back", [&list](){
-        testBack(list);
-    });
-    MenuItem subscript("Subscript operator []", [&list](){
-        testSubscript(list);
-    });
-    MenuItem exists("Exists", [&list](){
-        testExists(list);
-    });
-    MenuItem empty("Is Empty", [&list](){
-        testEmpty(list);
-    });
-    MenuItem size("Size", [&list](){
-        testSize(list);
-    }) ;
-    MenuItem printAll("Print all", [&list](){
-        printMappable(list, true);
-    });
-    MenuItem clear("Clear", [&list](){
-        testClear(list);
-    });
-    MenuItem testFold("Test fold function", [&list](){
-        // TODO
-    });
-    MenuItem testMap("Test map function", [&list](){
-        // TODO
-    });
-    MenuItem fullTest("Start lasd full tes", [](){
-        lasdtest();
-    });
+    mainMenu.add(insertValues);
+
+    setupContainerMenu(mainMenu, list);
+    setupTestableContainerMenu(mainMenu, list);
+    setupMappableMenu(mainMenu, list, true);
+    setupFoldableMenu(mainMenu, list);
 
     MenuItem insertAtFront("Insert at Front", [&list](){
         testInsertAtFront(list);
@@ -305,19 +197,6 @@ void launchListMenu(){
         testInsertAtBack(list);
     });
 
-    mainMenu.add(insertValues);
-    mainMenu.add(front);
-    mainMenu.add(back);
-    mainMenu.add(subscript);
-    mainMenu.add(move(exists));
-    mainMenu.add(empty);
-    mainMenu.add(size);
-    mainMenu.add(printAll);
-    mainMenu.add(clear);
-    mainMenu.add(testFold);
-    mainMenu.add(testMap);
-    mainMenu.add(fullTest);
-
     mainMenu.add(insertAtFront);
     mainMenu.add(removeFromFront);
     mainMenu.add(frontNRemove);
@@ -327,29 +206,7 @@ void launchListMenu(){
 }
 
 
-template<typename Data>
-void popolaVector(Vector<Data> & vec){
-    unsigned long newSize = 0;
-    cout << "Insert new Size" << endl << ">>> ";
-    cin >> newSize;
-    vec.Resize(newSize);
-    for (unsigned long i = 0; i < newSize; ++i) {
-        cout << "[" << i << "] = ";
-        cin >> vec[i];
-    }
-}
-
-template<typename Data>
-void printMappable(MappableContainer<Data>& cont, bool addArrow){
-    cont.MapPreOrder([](Data& i, void* arrow){
-        cout << i << ((*((bool*)arrow))? " -> ": " ");
-    }, &addArrow);
-    if (addArrow) {
-        cout << "nullptr";
-    }
-    cout << endl;
-}
-
+/* *** Container test *** */
 template<typename Data>
 void testFront(LinearContainer<Data>& cont) {
     try {
@@ -397,6 +254,20 @@ void testClear(LinearContainer<Data>& cont) {
     cont.Clear();
     cout << "Container is clear. Size = " << cont.Size() << ". Is Empty? " << ((cont.Empty())? "True": "False") << endl;
 }
+
+
+/* *** Vector test *** */
+template<typename Data>
+void popolaVector(Vector<Data> & vec) {
+    unsigned long newSize = 0;
+    cout << "Insert new Size" << endl << ">>> ";
+    cin >> newSize;
+    vec.Resize(newSize);
+    for (unsigned long i = 0; i < newSize; ++i) {
+        cout << "[" << i << "] = ";
+        cin >> vec[i];
+    }
+}
 template<typename Data>
 void testResize(Vector<Data>& vec){
     unsigned long in = 0;
@@ -407,7 +278,7 @@ void testResize(Vector<Data>& vec){
 }
 
 
-
+/* *** List test *** */
 template<typename Data>
 void popolaList(List<Data>& list){
     list.Clear();
@@ -454,6 +325,76 @@ void testInsertAtBack(List<Data>& list){
     cin >> tmp;
     list.InsertAtBack(tmp);
 }
+
+/* *** Mappable test *** */
+template<typename Data>
+void printMappable(MappableContainer<Data>& cont, bool addArrow){
+    cont.MapPreOrder([](Data& i, void* arrow){
+        cout << i << ((*((bool*)arrow))? " -> ": " ");
+    }, &addArrow);
+    if (addArrow) {
+        cout << "nullptr";
+    }
+    cout << endl;
+}
+
+void testMappable(MappableContainer<int>& cont){
+    cont.MapPreOrder([](int& data, void* _){ data *= 2; }, nullptr);
+    cout << "Function n -> 2n applied to all elements" << endl;
+}
+void testMappable(MappableContainer<float>& cont){
+    cont.MapPreOrder([](float & data, void* _){ data *= data; }, nullptr);
+    cout << "Function n -> n*n applied to all elements" << endl;
+}
+void testMappable(MappableContainer<string>& cont){
+    cont.MapPreOrder([](string & data, void* _){
+        for (char& c : data) {
+            c = toupper(c);
+        }
+        }, nullptr);
+    cout << "Function n -> uppercase(n) applied to all elements" << endl;
+}
+
+/* *** Foldable test *** */
+void testFoldable(FoldableContainer<int>& cont){
+    int sum = 0;
+    int n;
+    cout <<"Insert n(int):" << ">>> ";
+    cin >> n;
+    cont.FoldPreOrder([](const int& data, const void* n, void* sum){
+        if (data < *((int*)n)){
+            *((int*)sum) += data;
+        }
+        }, &n, &sum);
+    cout << "Sum of integer (less than " << n << "): " << sum << endl;
+}
+void testFoldable(FoldableContainer<float>& cont){
+    int prod = 1;
+    float n;
+    cout <<"Insert n(float):" << ">>> ";
+    cin >> n;
+    cont.FoldPreOrder([](const float& data, const void* n, void* prod){
+        if (data > *((float*)n)){
+            *((float*)prod) *= data;
+        }
+    }, &n, &prod);
+    cout << "Product of float (greater than " << n << "): " << prod << endl;
+}
+void testFoldable(FoldableContainer<string>& cont){
+    string str = "";
+    int n;
+    cout <<"Insert n(int):" << ">>> ";
+    cin >> n;
+    cont.FoldPreOrder([](const string& data, const void* n, void* str){
+        if (data.size() <= *((int*)n)){
+            *((string*)str) += data;
+        }
+    }, &n, &str);
+    cout << "Concatenation of strings (with size less or equal than " << n << "): " << str << endl;
+}
+
+
+
 
 
 
