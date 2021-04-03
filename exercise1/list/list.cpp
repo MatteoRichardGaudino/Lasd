@@ -211,7 +211,7 @@ namespace lasd {
     }
 
     template<typename Data>
-    Data& List<Data>::operator[](const unsigned long i) const noexcept {
+    Data& List<Data>::operator[](const unsigned long i) const {
         if (i < size){
             Node* tmp = head;
             unsigned long j = 0;

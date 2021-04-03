@@ -32,6 +32,7 @@ public:
     MenuItem& operator=(const MenuItem& m){
         text = m.text;
         action = m.action;
+        return *this;
     }
     bool operator==(const MenuItem& m) const noexcept{
         return this == &m;
