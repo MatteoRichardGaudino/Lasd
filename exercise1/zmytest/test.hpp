@@ -120,19 +120,6 @@ void testFoldable(FoldableContainer<float>&);
 void testFoldable(FoldableContainer<string>&);
 
 
-
-
-
-    /*template<typename Data>
-    bool checkExists(LinearContainer<Data>);
-
-    bool checkSumLtN(FoldableContainer<int>, int); // less than
-    bool checkProdGtN(FoldableContainer<float>, float); // greater than
-    bool checkConcatLeN(FoldableContainer<string>, string); // less or equal than
-
-    bool check2N(MappableContainer<int>);
-    bool checkPow(MappableContainer<float>);
-    bool checkUppercase(MappableContainer<string>);
 /* ************************************************************************** */
 
 

@@ -168,7 +168,7 @@ namespace lasd {
         if (size == 0){
             InsertAtFront(dat);
         } else{
-            Node* newNode = new Node(dat);
+            Node* newNode = new Node(std::move(dat));
             Node* tmp = head;
             while (tmp->next != nullptr){
                 tmp = tmp->next;
