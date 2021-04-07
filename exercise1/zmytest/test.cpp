@@ -1,4 +1,5 @@
 #include "test.hpp"
+#include <random>
 
 using namespace std;
 
@@ -59,6 +60,10 @@ void launchMenu(){
     MenuItem intType("Int");
     MenuItem floatType("Float");
     MenuItem stringType("String");
+    MenuItem fullTest("Start lasd full test", [](){
+        lasdtest();
+        exit(0);
+    });
 
     MenuItem vect("Vector", [&](){
         intType.setOnAction([](){ launchVectorMenu<int>(); });
@@ -73,6 +78,7 @@ void launchMenu(){
 
     structMenu.add(vect);
     structMenu.add(list);
+    structMenu.add(fullTest);
 
     if(structMenu.show()){
         typeMenu.add(intType);
@@ -105,9 +111,6 @@ void setupContainerMenu(Menu& menu, LinearContainer<Data>& cont){
     MenuItem clear("Clear", [&cont](){
         testClear(cont);
     });
-    MenuItem fullTest("Start lasd full tes", [](){
-        lasdtest();
-    });
 
     menu.add(front);
     menu.add(back);
@@ -115,7 +118,6 @@ void setupContainerMenu(Menu& menu, LinearContainer<Data>& cont){
     menu.add(empty);
     menu.add(size);
     menu.add(clear);
-    menu.add(fullTest);
 }
 template<typename Data>
 void setupMappableMenu(Menu& menu, MappableContainer<Data>& cont, const bool addArrow){
@@ -150,7 +152,7 @@ void launchVectorMenu(){
     Menu mainMenu("Chose an action:");
 
     MenuItem insertValues("Insert Values", [&vec](){
-        popolaVector<Data>(vec);
+        popolaVector(vec);
     });
     mainMenu.add(insertValues);
 
@@ -175,7 +177,7 @@ void launchListMenu(){
     Menu mainMenu("Chose an action:");
 
     MenuItem insertValues("Insert Values", [&list](){
-        popolaList<Data>(list);
+        popolaList(list);
     });
     mainMenu.add(insertValues);
 
@@ -205,6 +207,7 @@ void launchListMenu(){
     while (mainMenu.show());
 }
 
+default_random_engine gen(random_device{}());
 
 /* *** Container test *** */
 template<typename Data>
@@ -257,15 +260,46 @@ void testClear(LinearContainer<Data>& cont) {
 
 
 /* *** Vector test *** */
-template<typename Data>
-void popolaVector(Vector<Data> & vec) {
+
+void popolaVector(Vector<int> & vec) {
     unsigned long newSize = 0;
     cout << "Insert new Size" << endl << ">>> ";
     cin >> newSize;
     vec.Resize(newSize);
-    for (unsigned long i = 0; i < newSize; ++i) {
-        cout << "[" << i << "] = ";
-        cin >> vec[i];
+    uniform_int_distribution<int> distr(-10000, 10000);
+    for (unsigned long i = 0; i < vec.Size(); i++) {
+        vec[i] = distr(gen);
+    }
+}
+
+void popolaVector(Vector<float> & vec) {
+    unsigned long newSize = 0;
+    cout << "Insert new Size" << endl << ">>> ";
+    cin >> newSize;
+    vec.Resize(newSize);
+    uniform_real_distribution<float> distr(-10000, 10000);
+    for (unsigned long i = 0; i < vec.Size(); i++) {
+        vec[i] = distr(gen);
+    }
+}
+
+void popolaVector(Vector<string> & vec) {
+    unsigned long newSize = 0;
+    const string charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!:.;-_#*@";
+    cout << "Insert new Size" << endl << ">>> ";
+    cin >> newSize;
+    vec.Resize(newSize);
+    uniform_int_distribution<unsigned int> distr(0, charset.size()-1);
+    uniform_int_distribution<unsigned int> size(0, 15);
+
+    string str;
+    for (unsigned long i = 0; i < vec.Size(); i++) {
+        str = "";
+        unsigned int s = size(gen);
+        for (unsigned int j = 0; j < s; ++j) {
+            str += charset[distr(gen)];
+        }
+        vec[i] = str;
     }
 }
 template<typename Data>
@@ -279,17 +313,41 @@ void testResize(Vector<Data>& vec){
 
 
 /* *** List test *** */
-template<typename Data>
-void popolaList(List<Data>& list){
+void popolaList(List<int>& list){
     list.Clear();
     unsigned long newSize = 0;
-    Data tmp;
     cout << "Insert new Size" << endl << ">>> ";
     cin >> newSize;
+    uniform_int_distribution<int> distr(-10000, 10000);
     for (unsigned long i = 0; i < newSize; ++i) {
-        cout << "[" << i << "] = ";
-        cin >> tmp;
-        list.InsertAtBack(tmp);
+        list.InsertAtFront(distr(gen));
+    }
+}
+void popolaList(List<float>& list){
+    list.Clear();
+    unsigned long newSize = 0;
+    cout << "Insert new Size" << endl << ">>> ";
+    cin >> newSize;
+    uniform_real_distribution<float> distr(-10000, 10000);
+    for (unsigned long i = 0; i < newSize; ++i) {
+        list.InsertAtFront(distr(gen));
+    }
+}
+void popolaList(List<string>& list){
+    list.Clear();
+    unsigned long newSize = 0;
+    cout << "Insert new Size" << endl << ">>> ";
+    cin >> newSize;
+    const string charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!:.;-_#*@";
+    uniform_int_distribution<unsigned int> distr(0, charset.size()-1);
+    uniform_int_distribution<unsigned int> size(0, 15);
+    for (unsigned long i = 0; i < newSize; i++) {
+        string str = "";
+        unsigned int s = size(gen);
+        for (unsigned int j = 0; j < s; ++j) {
+            str += charset[distr(gen)];
+        }
+        list.InsertAtFront(move(str));
     }
 }
 

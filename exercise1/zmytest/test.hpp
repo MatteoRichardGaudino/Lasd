@@ -88,10 +88,16 @@ void testClear(LinearContainer<Data>&);
 /* *** Vector test *** */
 template<typename Data>
 void testResize(Vector<Data>&);
-template<typename Data>
-void popolaVector(Vector<Data> &);
+void popolaVector(Vector<int> &);
+void popolaVector(Vector<float> &);
+void popolaVector(Vector<string> &);
+
 
 /* *** List test *** */
+void popolaList(List<int>&);
+void popolaList(List<float>&);
+void popolaList(List<string>&);
+
 template<typename Data>
 void testInsertAtFront(List<Data>&);
 template<typename Data>
@@ -100,9 +106,6 @@ template<typename Data>
 void testFrontNRemove(List<Data>&);
 template<typename Data>
 void testInsertAtBack(List<Data>&);
-
-template<typename Data>
-void popolaList(List<Data>&);
 
 /* *** Mappable test *** */
 template<typename Data>
