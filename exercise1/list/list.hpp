@@ -179,14 +179,14 @@ protected:
   // Auxiliary member functions (for MappableContainer)
 
   // type MapPreOrder(arguments) specifiers; // Accessory function executing from one point of the list onwards
-  // type MapPostOrder(arguments) specifiers; // Accessory function executing from one point of the list onwards
+  void MapPostOrder(Node*, const MapFunctor, void *); // Accessory function executing from one point of the list onwards
 
   /* ************************************************************************ */
 
   // Auxiliary member functions (for FoldableContainer)
 
   // type FoldPreOrder(arguments) specifiers; // Accessory function executing from one point of the list onwards
-  // type FoldPostOrder(arguments) specifiers; // Accessory function executing from one point of the list onwards
+  void FoldPostOrder(const Node*, const FoldFunctor, const void*, void*) const; // Accessory function executing from one point of the list onwards
 
 };
 

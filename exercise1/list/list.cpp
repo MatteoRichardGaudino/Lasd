@@ -239,8 +239,18 @@ namespace lasd {
     }
     template<typename Data>
     void List<Data>::MapPostOrder(const MapFunctor fun, void * v) {
-        for (unsigned long i = size; i > 0; i--) {
-            fun((*this)[i-1], v);
+        // for (unsigned long i = size; i > 0; i--) { n^2 solution
+        //     fun((*this)[i-1], v);
+        // }
+        // recoursive solution
+        MapPostOrder(head, fun, v);
+    }
+
+    template<typename Data>
+    void List<Data>::MapPostOrder(Node* node, const MapFunctor fun, void * v){
+        if (node != nullptr){
+            MapPostOrder(node->next, fun, v);
+            fun(node->data, v);
         }
     }
 
@@ -258,12 +268,20 @@ namespace lasd {
     }
     template<typename Data>
     void List<Data>::FoldPostOrder(const FoldFunctor fun, const void* v1, void* v2) const {
-        for (unsigned long i = size ; i > 0; i--) {
-            fun((*this)[i-1], v1, v2);
-        }
+        //for (unsigned long i = size ; i > 0; i--) { n^2 solution
+        //    fun((*this)[i-1], v1, v2);
+        //}
+        // recoursive solution
+        FoldPostOrder(head, fun, v1, v2);
     } // Override FoldableContainer member
 
-
+    template<typename Data>
+    void List<Data>::FoldPostOrder(const Node* node, const FoldFunctor fun, const void* v1, void* v2) const{
+        if (node != nullptr){
+            FoldPostOrder(node->next, fun, v1, v2);
+            fun(node->data, v1, v2);
+        }
+    }
 /* ************************************************************************** */
 
 }

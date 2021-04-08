@@ -5,7 +5,7 @@ using namespace std;
 
 MenuItem::MenuItem(const string& label, function<void()> onAction){
     text = label;
-    action = onAction;
+    action = std::move(onAction);
 }
 MenuItem::MenuItem(const string & label){
     text = label;
@@ -16,7 +16,7 @@ void MenuItem::run(){
 }
 
 void MenuItem::setOnAction(function<void(void)> fun){
-    action = fun;
+    action = std::move(fun);
 }
 Menu::Menu(const string& t){
     title = t;
@@ -54,12 +54,13 @@ bool Menu::show() const{
 }
 
 void launchMenu(){
-    Menu structMenu("Chose a data structure:");
+    Menu structMenu("Chose a data structure or Launch lasd full test:");
     Menu typeMenu("Chose a type:");
 
     MenuItem intType("Int");
     MenuItem floatType("Float");
     MenuItem stringType("String");
+
     MenuItem fullTest("Start lasd full test", [](){
         lasdtest();
         exit(0);
