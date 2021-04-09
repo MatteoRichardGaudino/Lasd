@@ -278,9 +278,11 @@ void popolaVector(Vector<float> & vec) {
     cout << "Insert new Size" << endl << ">>> ";
     cin >> newSize;
     vec.Resize(newSize);
-    uniform_real_distribution<float> distr(-10000, 10000);
+    uniform_int_distribution<int> intDistr(-10000, 10000); // parte intera
+    uniform_int_distribution<int> decDistr(0, 99); // parte decimale
     for (unsigned long i = 0; i < vec.Size(); i++) {
-        vec[i] = distr(gen);
+        int intVal = intDistr(gen);
+        vec[i] = intVal + (decDistr(gen) * ((intVal < 0)? (-0.01): (0.01)));
     }
 }
 
@@ -329,9 +331,11 @@ void popolaList(List<float>& list){
     unsigned long newSize = 0;
     cout << "Insert new Size" << endl << ">>> ";
     cin >> newSize;
-    uniform_real_distribution<float> distr(-10000, 10000);
+    uniform_int_distribution<int> intDistr(-10000, 10000); // parte intera
+    uniform_int_distribution<int> decDistr(0, 99); // parte decimale
     for (unsigned long i = 0; i < newSize; ++i) {
-        list.InsertAtFront(distr(gen));
+        int intVal = intDistr(gen);
+        list.InsertAtFront(intVal + (decDistr(gen) * ((intVal < 0)? (-0.01): (0.01))));
     }
 }
 void popolaList(List<string>& list){

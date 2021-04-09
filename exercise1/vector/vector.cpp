@@ -97,7 +97,7 @@ namespace lasd {
             unsigned long min = (size<=newSize)? size : newSize;
 
             for (unsigned long i = 0; i < min; i++){
-                tmp[i] = elements[i];
+                std::swap(tmp[i], elements[i]);
             }
             std::swap(tmp, elements);
             size = newSize;
