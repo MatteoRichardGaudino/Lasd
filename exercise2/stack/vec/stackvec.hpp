@@ -14,7 +14,7 @@ namespace lasd {
 /* ************************************************************************** */
 
 template <typename Data>
-class StackVec { // Must extend Stack<Data> and Vector<Data>
+class StackVec : virtual public Stack<Data>, virtual protected Vector<Data>{ // Must extend Stack<Data> and Vector<Data>
 
 private:
 
@@ -22,73 +22,76 @@ private:
 
 protected:
 
-  // using Vector<Data>::???;
+  using Vector<Data>::size;
+  using Vector<Data>::elements;
+  unsigned long cursor = 0;
 
-  // ...
+  const unsigned int initSize = 4;
+  const unsigned int resizeFactor = 2;
 
 public:
 
   // Default constructor
-  // StackVec() specifier;
+  StackVec();
 
   /* ************************************************************************ */
 
   // Specific constructor
-  // StackVec(argument) specifiers; // A stack obtained from a LinearContainer
+  StackVec(const LinearContainer<Data>& lc) : Vector<Data>(lc){}; // A stack obtained from a LinearContainer
 
   /* ************************************************************************ */
 
   // Copy constructor
-  // StackVec(argument);
+  StackVec(const StackVec<Data>& sv) : Vector<Data>(sv){};
 
   // Move constructor
-  // StackVec(argument);
+  StackVec(StackVec<Data>&& sv) noexcept : Vector<Data>(std::move(sv)){};
 
   /* ************************************************************************ */
 
   // Destructor
-  // ~StackVec() specifier;
+  ~StackVec() = default;
 
   /* ************************************************************************ */
 
   // Copy assignment
-  // type operator=(argument);
+  StackVec& operator=(const StackVec<Data>&);
 
   // Move assignment
-  // type operator=(argument);
+  StackVec& operator=(StackVec<Data>&&) noexcept;
 
   /* ************************************************************************ */
 
   // Comparison operators
-  // type operator==(argument) specifiers;
-  // type operator!=(argument) specifiers;
+  bool operator==(const StackVec<Data>&) const noexcept;
+  bool operator!=(const StackVec<Data>&) const noexcept;
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from Stack)
 
-  // type Push(argument) specifiers; // Override Stack member (copy of the value)
-  // type Push(argument) specifiers; // Override Stack member (move of the value)
-  // type Top() specifiers; // Override Stack member (must throw std::length_error when empty)
-  // type Pop() specifiers; // Override Stack member (must throw std::length_error when empty)
-  // type TopNPop() specifiers; // Override Stack member (must throw std::length_error when empty)
+  void Push(const Data&) override; // Override Stack member (copy of the value)
+  void Push(Data&&) override; // Override Stack member (move of the value)
+  Data& Top() const override; // Override Stack member (must throw std::length_error when empty)
+  void Pop() override; // Override Stack member (must throw std::length_error when empty)
+  Data TopNPop() override; // Override Stack member (must throw std::length_error when empty)
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from Container)
 
-  // type Empty() specifiers; // Override Container member
+  bool Empty() const noexcept override; // Override Container member
 
-  // type Size() specifiers; // Override Container member
+  unsigned long Size() const noexcept override; // Override Container member
 
-  // type Clear() specifiers; // Override Container member
+  void Clear() override; // Override Container member
 
 protected:
 
   // Auxiliary member functions
 
-  // type Expand() specifiers;
-  // type Reduce() specifiers;
+  void Expand();
+  void Reduce();
 
 };
 
