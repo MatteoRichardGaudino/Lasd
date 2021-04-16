@@ -20,6 +20,7 @@ namespace lasd {
         for (unsigned long i = 0; i < size; i++){
             elements[i] = linearContainer[i];
         }
+        std::cout<<"[TEST] Copy LinearContainer";
     }
 
     // Copy from Vector
@@ -37,6 +38,7 @@ namespace lasd {
     Vector<Data>::Vector(Vector<Data>&& vector) noexcept{
         std::swap(elements, vector.elements);
         std::swap(size, vector.size);
+        std::cout<<"[TEST] move LinearContainer";
     }
 
     //Destructor

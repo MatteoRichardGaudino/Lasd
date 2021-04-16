@@ -37,15 +37,15 @@ public:
   /* ************************************************************************ */
 
   // Specific constructor
-  StackVec(const LinearContainer<Data>& lc) : Vector<Data>(lc){}; // A stack obtained from a LinearContainer
+  StackVec(const LinearContainer<Data>&); // A stack obtained from a LinearContainer
 
   /* ************************************************************************ */
 
   // Copy constructor
-  StackVec(const StackVec<Data>& sv) : Vector<Data>(sv){};
+  StackVec(const StackVec<Data>& sv);
 
   // Move constructor
-  StackVec(StackVec<Data>&& sv) noexcept : Vector<Data>(std::move(sv)){};
+  StackVec(StackVec<Data>&& sv) noexcept;
 
   /* ************************************************************************ */
 
