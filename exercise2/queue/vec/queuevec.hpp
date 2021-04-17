@@ -90,7 +90,7 @@ public:
 protected:
 
   // Auxiliary member functions
-  void Normalize();
+  //void Normalize();
   void Expand();
   void Reduce();
   // type SwapVectors(arguments) specifiers;

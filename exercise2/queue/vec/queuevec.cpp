@@ -57,7 +57,6 @@ namespace lasd {
             unsigned long t2 = qv.tail;
 
             while (t1 != head){
-                std::cout<< elements[t1] << "-" << qv.elements[t2] << ", ";
                 if (elements[t1] != qv.elements[t2]) return false;
                 t1 = (t1+1)%size;
                 t2 = (t2+1)%qv.size;
@@ -136,28 +135,28 @@ namespace lasd {
         Vector<Data>::Resize(initSize);
     }
 
-    template<typename Data>
-    void QueueVec<Data>::Normalize() {
-        if (tail != 0) {
-            Data *tmpElements = new Data[size];
-            unsigned long t = tail;
-            unsigned long i = 0;
-            while (t != head) {
-                std::swap(tmpElements[i], elements[t]);
-                t = (t + 1) % size;
-                i++;
-            }
-            std::swap(elements, tmpElements);
-            head = i;
-            tail = 0;
-            delete[] tmpElements;
-        }
-    }
+   //template<typename Data>
+   //void QueueVec<Data>::Normalize() {
+   //    if (tail != 0) {
+   //        Data *tmpElements = new Data[size];
+   //        unsigned long t = tail;
+   //        unsigned long i = 0;
+   //        while (t != head) {
+   //            std::swap(tmpElements[i], elements[t]);
+   //            t = (t + 1) % size;
+   //            i++;
+   //        }
+   //        std::swap(elements, tmpElements);
+   //        head = i;
+   //        tail = 0;
+   //        delete[] tmpElements;
+   //    }
+   //}
 
     template<typename Data>
     void QueueVec<Data>::Expand() {
         if (Size() >= size-1){
-            Normalize();
+            //Normalize();
             Vector<Data>::Resize(size*resizeFactor);
         }
     }
@@ -166,12 +165,26 @@ namespace lasd {
     void QueueVec<Data>::Reduce() {
         unsigned long newSize = size/resizeFactor;
         if (Size() <= size/4 && newSize > Size() && newSize >= initSize){
-            Normalize();
-            Vector<Data>::Resize(newSize);
+            //Normalize();
+            //Vector<Data>::Resize(newSize);
+            Data *tmpElements = new Data[newSize];
+            unsigned long t = tail;
+            unsigned long i = 0;
+            while (t != head) {
+                std::swap(tmpElements[i], elements[t]);
+                t = (t + 1) % size;
+                i++;
+            }
+
+            //for (i, t; t != head; t = (t + 1) % size, i++) {
+            //    std::swap(tmpElements[i], elements[t]);
+            //}
+            std::swap(elements, tmpElements);
+            head = i;
+            tail = 0;
+            delete[] tmpElements;
         }
     }
-
-
 
 /* ************************************************************************** */
 

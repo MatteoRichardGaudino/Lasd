@@ -27,7 +27,7 @@ namespace lasd {
         elements = new Data[vector.size];
         size = vector.size;
         for (unsigned long i = 0; i < size; i++){
-            elements[i] = vector[i];
+            elements[i] = vector.elements[i];
         }
     }
 
