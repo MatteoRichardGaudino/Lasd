@@ -1,4 +1,8 @@
 #include "test.hpp"
+#include "../stack/vec/stackvec.hpp"
+#include "../stack/lst/stacklst.hpp"
+#include "../queue/lst/queuelst.hpp"
+#include "../queue/vec/queuevec.hpp"
 #include <random>
 
 using namespace std;
@@ -77,8 +81,71 @@ void launchMenu(){
         stringType.setOnAction([](){ launchListMenu<string>(); });
     });
 
+    MenuItem stackVec("StackVec", [&](){
+        intType.setOnAction([](){
+            StackVec<int> stk;
+            launchStackMenu(stk);
+        });
+        floatType.setOnAction([](){
+            StackVec<float> stk;
+            launchStackMenu(stk);
+        });
+        stringType.setOnAction([](){
+            StackVec<string> stk;
+            launchStackMenu(stk);
+        });
+    });
+    MenuItem stackLst("StackLst", [&](){
+        intType.setOnAction([](){
+            StackLst<int> stk;
+            launchStackMenu<int>(stk);
+        });
+        floatType.setOnAction([](){
+            StackLst<float> stk;
+            launchStackMenu<float>(stk);
+        });
+        stringType.setOnAction([](){
+            StackLst<string> stk;
+            launchStackMenu<string>(stk);
+        });
+    });
+
+    MenuItem queueLst("QueueLst", [&](){
+        intType.setOnAction([](){
+            QueueLst<int> que;
+            launchQueueMenu<int>(que);
+        });
+        floatType.setOnAction([](){
+            QueueLst<float> que;
+            launchQueueMenu<float>(que);
+        });
+        stringType.setOnAction([](){
+            QueueLst<string> que;
+            launchQueueMenu<string>(que);
+        });
+    });
+    MenuItem queueVec("QueueVec", [&](){
+        intType.setOnAction([](){
+            QueueVec<int> que;
+            launchQueueMenu<int>(que);
+        });
+        floatType.setOnAction([](){
+            QueueVec<float> que;
+            launchQueueMenu<float>(que);
+        });
+        stringType.setOnAction([](){
+            QueueVec<string> que;
+            launchQueueMenu<string>(que);
+        });
+    });
+
+
     structMenu.add(vect);
     structMenu.add(list);
+    structMenu.add(stackVec);
+    structMenu.add(stackLst);
+    structMenu.add(queueVec);
+    structMenu.add(queueLst);
     structMenu.add(fullTest);
 
     if(structMenu.show()){
@@ -89,19 +156,7 @@ void launchMenu(){
     }
 }
 
-template<typename Data>
-void setupContainerMenu(Menu& menu, LinearContainer<Data>& cont){
-
-    MenuItem front("Front", [&cont](){
-        testFront(cont);
-    });
-    MenuItem back("Back", [&cont](){
-        testBack(cont);
-    });
-    MenuItem subscript("Subscript operator []", [&cont](){
-        testSubscript(cont);
-    });
-
+void setupContainerMenu(Menu& menu, Container& cont){
     MenuItem empty("Is Empty", [&cont](){
         testEmpty(cont);
     });
@@ -113,12 +168,29 @@ void setupContainerMenu(Menu& menu, LinearContainer<Data>& cont){
         testClear(cont);
     });
 
-    menu.add(front);
-    menu.add(back);
-    menu.add(subscript);
     menu.add(empty);
     menu.add(size);
     menu.add(clear);
+}
+template<typename Data>
+void setupLinearContainerMenu(Menu& menu, LinearContainer<Data>& cont){
+
+    MenuItem front("Front", [&cont](){
+        testFront(cont);
+    });
+    MenuItem back("Back", [&cont](){
+        testBack(cont);
+    });
+    MenuItem subscript("Subscript operator []", [&cont](){
+        testSubscript(cont);
+    });
+
+
+
+    menu.add(front);
+    menu.add(back);
+    menu.add(subscript);
+
 }
 template<typename Data>
 void setupMappableMenu(Menu& menu, MappableContainer<Data>& cont, const bool addArrow){
@@ -157,6 +229,7 @@ void launchVectorMenu(){
     });
     mainMenu.add(insertValues);
 
+    setupLinearContainerMenu(mainMenu, vec);
     setupContainerMenu(mainMenu, vec);
     setupTestableContainerMenu(mainMenu, vec);
     setupMappableMenu(mainMenu, vec, false);
@@ -170,7 +243,6 @@ void launchVectorMenu(){
 
     while (mainMenu.show());
 }
-
 template<typename Data>
 void launchListMenu(){
     List<Data> list;
@@ -182,6 +254,7 @@ void launchListMenu(){
     });
     mainMenu.add(insertValues);
 
+    setupLinearContainerMenu(mainMenu, list);
     setupContainerMenu(mainMenu, list);
     setupTestableContainerMenu(mainMenu, list);
     setupMappableMenu(mainMenu, list, true);
@@ -208,9 +281,88 @@ void launchListMenu(){
     while (mainMenu.show());
 }
 
+template<typename Data>
+void launchStackMenu(Stack<Data>& stk){
+    Menu mainMenu("Chose an action:");
+
+    MenuItem insertValues("Insert Values", [&stk](){
+        popolaStack(stk);
+    });
+    mainMenu.add(insertValues);
+
+    setupContainerMenu(mainMenu, stk);
+
+    MenuItem push("Push", [&stk](){
+        testPush(stk);
+    });
+    MenuItem top("Top", [&stk](){
+        testTop(stk);
+    });
+    MenuItem pop("Pop", [&stk](){
+        testPop(stk);
+    });
+    MenuItem topNPop("Top and Pop", [&stk](){
+        testTopNPop(stk);
+    });
+
+    mainMenu.add(push);
+    mainMenu.add(top);
+    mainMenu.add(pop);
+    mainMenu.add(topNPop);
+
+    while (mainMenu.show());
+}
+
+template<typename Data>
+void launchQueueMenu(Queue<Data>& que){
+    Menu mainMenu("Chose an action:");
+
+    MenuItem insertValues("Insert Values", [&que](){
+        popolaQueue(que);
+    });
+    mainMenu.add(insertValues);
+
+    setupContainerMenu(mainMenu, que);
+
+    MenuItem enqueue("Enqueue", [&que](){
+        testEnqueue(que);
+    });
+    MenuItem head("Head", [&que](){
+        testHead(que);
+    });
+    MenuItem dequeue("Dequeue", [&que](){
+        testDequeue(que);
+    });
+    MenuItem headNDequeue("Head and Dequeue", [&que](){
+        testHeadNDequeue(que);
+    });
+
+    mainMenu.add(enqueue);
+    mainMenu.add(head);
+    mainMenu.add(dequeue);
+    mainMenu.add(headNDequeue);
+
+    while (mainMenu.show());
+}
+
+/* *** Random generation *** */
 default_random_engine gen(random_device{}());
 
+
 /* *** Container test *** */
+
+void testEmpty(Container& cont) {
+    cout << "Container is" << ((cont.Empty())? "": " not") << " Empty. Size = " << cont.Size() << endl;
+}
+void testSize(Container& cont) {
+    cout << "Size is: " << cont.Size() << endl;
+}
+void testClear(Container& cont) {
+    cont.Clear();
+    cout << "Container is clear. Size = " << cont.Size() << ". Is Empty? " << ((cont.Empty())? "True": "False") << endl;
+}
+
+/* *** Linear Container test *** */
 template<typename Data>
 void testFront(LinearContainer<Data>& cont) {
     try {
@@ -245,20 +397,6 @@ void testExists(TestableContainer<Data>& cont) {
     cin >> in;
     cout << "Value " << in << ((cont.Exists(in))? "": " doesn't") << " belong to container" << endl;
 }
-template<typename Data>
-void testEmpty(LinearContainer<Data>& cont) {
-    cout << "Container is" << ((cont.Empty())? "": " not") << " Empty. Size = " << cont.Size() << endl;
-}
-template<typename Data>
-void testSize(LinearContainer<Data>& cont) {
-    cout << "Size is: " << cont.Size() << endl;
-}
-template<typename Data>
-void testClear(LinearContainer<Data>& cont) {
-    cont.Clear();
-    cout << "Container is clear. Size = " << cont.Size() << ". Is Empty? " << ((cont.Empty())? "True": "False") << endl;
-}
-
 
 /* *** Vector test *** */
 
@@ -456,9 +594,152 @@ void testFoldable(FoldableContainer<string>& cont){
     cout << "Concatenation of strings (with size less or equal than " << n << "): " << str << endl;
 }
 
+/* *** Stack test *** */
+void popolaStack(Stack<int>& stk){
+    stk.Clear();
+    unsigned long newSize = 0;
+    cout << "Insert new Size" << endl << ">>> ";
+    cin >> newSize;
+    uniform_int_distribution<int> distr(-10000, 10000);
+    for (unsigned long i = 0; i < newSize; ++i) {
+        stk.Push(distr(gen));
+    }
+}
+void popolaStack(Stack<float>& stk){
+    stk.Clear();
+    unsigned long newSize = 0;
+    cout << "Insert new Size" << endl << ">>> ";
+    cin >> newSize;
+    uniform_int_distribution<int> intDistr(-10000, 10000); // parte intera
+    uniform_int_distribution<int> decDistr(0, 99); // parte decimale
+    for (unsigned long i = 0; i < newSize; ++i) {
+        int intVal = intDistr(gen);
+        stk.Push(intVal + (decDistr(gen) * ((intVal < 0)? (-0.01): (0.01))));
+    }
+}
+void popolaStack(Stack<string>& stk){
+    stk.Clear();
+    unsigned long newSize = 0;
+    cout << "Insert new Size" << endl << ">>> ";
+    cin >> newSize;
+    const string charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!:.;-_#*@";
+    uniform_int_distribution<unsigned int> distr(0, charset.size()-1);
+    uniform_int_distribution<unsigned int> size(0, 15);
+    for (unsigned long i = 0; i < newSize; i++) {
+        string str = "";
+        unsigned int s = size(gen);
+        for (unsigned int j = 0; j < s; ++j) {
+            str += charset[distr(gen)];
+        }
+        stk.Push(move(str));
+    }
+}
+
+template<typename Data>
+void testPush(Stack<Data>& stk){
+    Data value;
+    cout<< "Insert value to Push" << endl << ">>> ";
+    cin >> value;
+    stk.Push(value);
+}
+template<typename Data>
+void testTop(Stack<Data>& stk){
+    try {
+        cout<< "Top value: " << stk.Top() << endl;
+    } catch (length_error& e){
+        cout<< "Error: " << e.what() << endl;
+    }
+}
+template<typename Data>
+void testPop(Stack<Data>& stk){
+    try {
+        stk.Pop();
+        cout<< "Pop value on top" << endl;
+    } catch (length_error& e){
+        cout<< "Error: " << e.what() << endl;
+    }
+}
+template<typename Data>
+void testTopNPop(Stack<Data>& stk){
+    try {
+        cout<< "Pop value on top: "<< stk.TopNPop() << endl;
+    } catch (length_error& e){
+        cout<< "Error: " << e.what() << endl;
+    }
+}
 
 
+/* *** Queue test *** */
+void popolaQueue(Queue<int>& que){
+    que.Clear();
+    unsigned long newSize = 0;
+    cout << "Insert new Size" << endl << ">>> ";
+    cin >> newSize;
+    uniform_int_distribution<int> distr(-10000, 10000);
+    for (unsigned long i = 0; i < newSize; ++i) {
+        que.Enqueue(distr(gen));
+    }
+}
+void popolaQueue(Queue<float>& que){
+    que.Clear();
+    unsigned long newSize = 0;
+    cout << "Insert new Size" << endl << ">>> ";
+    cin >> newSize;
+    uniform_int_distribution<int> intDistr(-10000, 10000); // parte intera
+    uniform_int_distribution<int> decDistr(0, 99); // parte decimale
+    for (unsigned long i = 0; i < newSize; ++i) {
+        int intVal = intDistr(gen);
+        que.Enqueue(intVal + (decDistr(gen) * ((intVal < 0)? (-0.01): (0.01))));
+    }
+}
+void popolaQueue(Queue<string>& que){
+    que.Clear();
+    unsigned long newSize = 0;
+    cout << "Insert new Size" << endl << ">>> ";
+    cin >> newSize;
+    const string charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!:.;-_#*@";
+    uniform_int_distribution<unsigned int> distr(0, charset.size()-1);
+    uniform_int_distribution<unsigned int> size(0, 15);
+    for (unsigned long i = 0; i < newSize; i++) {
+        string str = "";
+        unsigned int s = size(gen);
+        for (unsigned int j = 0; j < s; ++j) {
+            str += charset[distr(gen)];
+        }
+        que.Enqueue(move(str));
+    }
+}
 
-
-
-
+template<typename Data>
+void testEnqueue(Queue<Data>& que){
+    Data value;
+    cout<< "Insert value to Enqueue" << endl << ">>> ";
+    cin >> value;
+    que.Enqueue(value);
+}
+template<typename Data>
+void testHead(Queue<Data>& que){
+    try {
+        cout<< "Head value: " << que.Head() << endl;
+    } catch (length_error& e){
+        cout<< "Error: " << e.what() << endl;
+    }
+}
+template<typename Data>
+void testDequeue(Queue<Data>& que){
+    try {
+        que.Dequeue();
+        cout<< "Dequeue value on Top" << endl;
+    } catch (length_error& e){
+        cout<< "Error: " << e.what() << endl;
+    }
+}
+template<typename Data>
+void testHeadNDequeue(Queue<Data>& que){ //5 3 5 1 5 2 5 3 5 4 8 8 8 8 8 8 5 1 8 6 5 1 5 2 5 3 5 4 3 2 3 5 4 8 8 8
+    //5 3 5 1 8 6 5 1 5 2 5 3 5 4 3 2 3 5 4 8 8 8
+    try {
+        cout<< "Dequeue value on top: "<< que.HeadNDequeue() << endl;
+    } catch (length_error& e){
+        cout<< "Error: " << e.what() << endl;
+    }
+}

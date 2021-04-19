@@ -5,6 +5,8 @@
 
 #include "../list/list.hpp"
 #include "../vector/vector.hpp"
+#include "../stack/stack.hpp"
+#include "../queue/queue.hpp"
 #include "../zlasdtest/test.hpp"
 
 #include <string>
@@ -55,8 +57,9 @@ private:
 };
 
 void launchMenu();
+void setupContainerMenu(Menu& menu, Container& cont);
 template<typename Data>
-void setupContainerMenu(Menu&, LinearContainer<Data>&);
+void setupLinearContainerMenu(Menu&, LinearContainer<Data>&);
 template<typename Data>
 void setupMappableMenu(Menu&, MappableContainer<Data>&, const bool);
 template<typename Data>
@@ -69,7 +72,19 @@ void launchVectorMenu();
 template<typename Data>
 void launchListMenu();
 
+template<typename Data>
+void launchStackMenu(Stack<Data>&);
+
+template<typename Data>
+void launchQueueMenu(Queue<Data>&);
+
 /* *** Container test *** */
+
+void testEmpty(Container&);
+void testSize(Container&);
+void testClear(Container&);
+
+/* *** Linear Container test *** */
 template<typename Data>
 void testFront(LinearContainer<Data>&);
 template<typename Data>
@@ -78,12 +93,7 @@ template<typename Data>
 void testSubscript(LinearContainer<Data>&);
 template<typename Data>
 void testExists(TestableContainer<Data>&);
-template<typename Data>
-void testEmpty(LinearContainer<Data>&);
-template<typename Data>
-void testSize(LinearContainer<Data>&);
-template<typename Data>
-void testClear(LinearContainer<Data>&);
+
 
 /* *** Vector test *** */
 template<typename Data>
@@ -118,6 +128,38 @@ void testMappable(MappableContainer<string>&);
 void testFoldable(FoldableContainer<int>&);
 void testFoldable(FoldableContainer<float>&);
 void testFoldable(FoldableContainer<string>&);
+
+
+/* *** Stack test *** */
+void popolaStack(Stack<int>&);
+void popolaStack(Stack<float>&);
+void popolaStack(Stack<string>&);
+
+template<typename Data>
+void testPush(Stack<Data>&);
+template<typename Data>
+void testTop(Stack<Data>&);
+template<typename Data>
+void testPop(Stack<Data>&);
+template<typename Data>
+void testTopNPop(Stack<Data>&);
+
+/* *** Queue test *** */
+void popolaQueue(Queue<int>&);
+void popolaQueue(Queue<float>&);
+void popolaQueue(Queue<string>&);
+
+template<typename Data>
+void testEnqueue(Queue<Data>&);
+template<typename Data>
+void testHead(Queue<Data>&);
+template<typename Data>
+void testDequeue(Queue<Data>&);
+template<typename Data>
+void testHeadNDequeue(Queue<Data>&);
+
+
+
 
 
 /* ************************************************************************** */

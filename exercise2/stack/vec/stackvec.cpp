@@ -119,7 +119,6 @@ namespace lasd {
     void StackVec<Data>::Expand() {
         if (cursor >= size - 1){
             Vector<Data>::Resize(size*resizeFactor);
-            std::cout<< "Stack expanded cursor: " << cursor << " newSize: " << size << " oldSize: " << size/resizeFactor << std::endl;
         }
     }
     template<typename Data>
@@ -127,7 +126,6 @@ namespace lasd {
         unsigned long newSize = size/resizeFactor;
         if (cursor <= size/4 && newSize > cursor && newSize >= initSize){ //cursor <= 25% of size
             Vector<Data>::Resize(newSize);
-            std::cout<< "Stack reduced cursor: " << cursor << " newSize: " << size << " oldSize: " << size*resizeFactor << std::endl;
         }
     }
 /* ************************************************************************** */

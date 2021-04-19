@@ -157,7 +157,20 @@ namespace lasd {
     void QueueVec<Data>::Expand() {
         if (Size() >= size-1){
             //Normalize();
-            Vector<Data>::Resize(size*resizeFactor);
+            //Vector<Data>::Resize(size*resizeFactor);
+            unsigned long newSize = size*resizeFactor;
+            Data *tmpElements = new Data[newSize];
+            unsigned long t = tail;
+            unsigned long i = 0;
+            while (t != head) {
+                std::swap(tmpElements[i], elements[t]);
+                t = (t + 1) % size;
+                i++;
+            }
+            std::swap(elements, tmpElements);
+            head = i;
+            tail = 0;
+            delete[] tmpElements;
         }
     }
 
