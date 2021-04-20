@@ -1,4 +1,3 @@
-
 namespace lasd {
 
 /* ************************************************************************** */
@@ -9,10 +8,16 @@ namespace lasd {
     }
 
     template<typename Data>
-    QueueVec<Data>::QueueVec(const LinearContainer<Data>& lc) : Vector<Data>(lc){
-        head = size;
-        if (size*resizeFactor < initSize) Vector<Data>::Resize(initSize);
-        else Expand();
+    QueueVec<Data>::QueueVec(const LinearContainer<Data>& lc){
+        if (lc.Size() == 0) Vector<Data>::Resize(initSize);
+        else {
+            if (lc.Size() * resizeFactor < initSize) Vector<Data>::Resize(initSize);
+            else Vector<Data>::Resize(lc.Size() * resizeFactor);
+            for (unsigned long i = 0; i < lc.Size(); ++i) {
+                elements[i] = lc[i];
+            }
+            head = lc.Size();
+        }
     }
 
     template<typename Data>
@@ -129,48 +134,33 @@ namespace lasd {
 
     template<typename Data>
     void QueueVec<Data>::Clear(){
-        Vector<Data>::Clear();
+        //Vector<Data>::Clear();
+        Vector<Data>::Resize(initSize);
         head = 0;
         tail = 0;
-        Vector<Data>::Resize(initSize);
     }
 
-   //template<typename Data>
-   //void QueueVec<Data>::Normalize() {
-   //    if (tail != 0) {
-   //        Data *tmpElements = new Data[size];
-   //        unsigned long t = tail;
-   //        unsigned long i = 0;
-   //        while (t != head) {
-   //            std::swap(tmpElements[i], elements[t]);
-   //            t = (t + 1) % size;
-   //            i++;
-   //        }
-   //        std::swap(elements, tmpElements);
-   //        head = i;
-   //        tail = 0;
-   //        delete[] tmpElements;
-   //    }
-   //}
+    template<typename Data>
+    void QueueVec<Data>::Normalize(unsigned long newSize) {
+        Data *tmpElements = new Data[newSize];
+        unsigned long t = tail;
+        unsigned long i = 0;
+        while (t != head) {
+            std::swap(tmpElements[i], elements[t]);
+            t = (t + 1) % size;
+            i++;
+        }
+        std::swap(elements, tmpElements);
+        head = i;
+        tail = 0;
+        size = newSize;
+        delete[] tmpElements;
+    }
 
     template<typename Data>
     void QueueVec<Data>::Expand() {
         if (Size() >= size-1){
-            //Normalize();
-            //Vector<Data>::Resize(size*resizeFactor);
-            unsigned long newSize = size*resizeFactor;
-            Data *tmpElements = new Data[newSize];
-            unsigned long t = tail;
-            unsigned long i = 0;
-            while (t != head) {
-                std::swap(tmpElements[i], elements[t]);
-                t = (t + 1) % size;
-                i++;
-            }
-            std::swap(elements, tmpElements);
-            head = i;
-            tail = 0;
-            delete[] tmpElements;
+            Normalize(size*resizeFactor);
         }
     }
 
@@ -178,24 +168,7 @@ namespace lasd {
     void QueueVec<Data>::Reduce() {
         unsigned long newSize = size/resizeFactor;
         if (Size() <= size/4 && newSize > Size() && newSize >= initSize){
-            //Normalize();
-            //Vector<Data>::Resize(newSize);
-            Data *tmpElements = new Data[newSize];
-            unsigned long t = tail;
-            unsigned long i = 0;
-            while (t != head) {
-                std::swap(tmpElements[i], elements[t]);
-                t = (t + 1) % size;
-                i++;
-            }
-
-            //for (i, t; t != head; t = (t + 1) % size, i++) {
-            //    std::swap(tmpElements[i], elements[t]);
-            //}
-            std::swap(elements, tmpElements);
-            head = i;
-            tail = 0;
-            delete[] tmpElements;
+            Normalize(newSize);
         }
     }
 

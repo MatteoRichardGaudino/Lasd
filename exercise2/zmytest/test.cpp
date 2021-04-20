@@ -66,7 +66,7 @@ void launchMenu(){
     MenuItem stringType("String");
 
     MenuItem fullTest("Start lasd full test", [](){
-        //lasdtest();
+        lasdtest();
         exit(0);
     });
 
