@@ -93,7 +93,6 @@ protected:
   void Normalize(unsigned long);
   void Expand();
   void Reduce();
-  // type SwapVectors(arguments) specifiers;
 
 };
 

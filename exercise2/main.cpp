@@ -1,14 +1,11 @@
 
-#include "zlasdtest/test.hpp"
+//#include "zlasdtest/test.hpp"
 
 #include "zmytest/test.hpp"
 
 /* ************************************************************************** */
 
 #include <iostream>
-
-using namespace std;
-using namespace lasd;
 
 /* ************************************************************************** */
 

@@ -735,8 +735,7 @@ void testDequeue(Queue<Data>& que){
     }
 }
 template<typename Data>
-void testHeadNDequeue(Queue<Data>& que){ //5 3 5 1 5 2 5 3 5 4 8 8 8 8 8 8 5 1 8 6 5 1 5 2 5 3 5 4 3 2 3 5 4 8 8 8
-    //5 3 5 1 8 6 5 1 5 2 5 3 5 4 3 2 3 5 4 8 8 8
+void testHeadNDequeue(Queue<Data>& que){
     try {
         cout<< "Dequeue value on top: "<< que.HeadNDequeue() << endl;
     } catch (length_error& e){

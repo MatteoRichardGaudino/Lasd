@@ -65,7 +65,8 @@ namespace lasd {
     }
     template<typename Data>
     void StackVec<Data>::Push(Data&& data){
-        elements[cursor++] = std::move(data);
+        std::swap(elements[cursor], data);
+        cursor++;
         Expand();
     }
 
