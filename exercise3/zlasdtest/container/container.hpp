@@ -268,6 +268,46 @@ void FoldStringConcatenate(const std::string&, const void*, void*);
 
 /* ************************************************************************** */
 
+// InOrderMappableContainer member functions!
+
+template <typename Data, typename Parameter>
+void MapInOrder(unsigned int& testnum, unsigned int& testerr, lasd::InOrderMappableContainer<Data>& con, bool chk, typename lasd::InOrderMappableContainer<Data>::MapFunctor fun, const Parameter& inipar) {
+  bool tst = true;
+  testnum++;
+  Parameter par = {inipar};
+  try {
+    std::cout << " " << testnum << " Executing map in order - ";
+    con.MapInOrder(fun, &par);
+    std::cout << ": " << ((tst = chk) ? "Correct" : "Error") << "!" << std::endl;
+  } catch(std::exception exc) {
+    std::cout << "\"" << exc.what() << "\": " << ((tst = !chk) ? "Correct" : "Error") << "!" << std::endl;
+  }
+  testerr += (1 - (unsigned int) tst);
+}
+
+/* ************************************************************************** */
+
+// InOrderFoldableContainer member functions!
+
+template <typename Data, typename Parameter, typename Value>
+void FoldInOrder(unsigned int& testnum, unsigned int& testerr, const lasd::InOrderFoldableContainer<Data>& con, bool chk, typename lasd::InOrderFoldableContainer<Data>::FoldFunctor fun, const Parameter& inipar, const Value& inival, const Value& finval) {
+  bool tst;
+  testnum++;
+  Parameter par = {inipar};
+  Value val = inival;
+  try {
+    std::cout << " " << testnum << " Executing fold in order - ";
+    con.FoldInOrder(fun, &par, &val);
+    std::cout << "obtained value is \"" << val << "\": ";
+    std::cout << ((tst = ((val == finval) == chk)) ? "Correct" : "Error") << "!" << std::endl;
+  } catch(std::exception exc) {
+    std::cout << "\"" << exc.what() << "\": " << ((tst = !chk) ? "Correct" : "Error") << "!" << std::endl;
+  }
+  testerr += (1 - (unsigned int) tst);
+}
+
+/* ************************************************************************** */
+
 // BreadthMappableContainer member functions!
 
 template <typename Data, typename Parameter>

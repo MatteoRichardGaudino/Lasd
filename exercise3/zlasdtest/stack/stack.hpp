@@ -1,64 +1,64 @@
 
-#ifndef QUEUETEST_HPP
-#define QUEUETEST_HPP
+#ifndef STACKTEST_HPP
+#define STACKTEST_HPP
 
-#include "../../queue/queue.hpp"
+#include "../../stack/stack.hpp"
 
 /* ************************************************************************** */
 
 template <typename Data>
-void EnqueueC(unsigned int& testnum, unsigned int& testerr, lasd::Queue<Data>& que, const Data& val) {
+void PushC(uint& testnum, uint& testerr, lasd::Stack<Data>& stk, const Data& val) {
   testnum++;
   bool tst = true;
   try {
-    std::cout << " " << testnum << " Enqueue on the queue of the value \"" << val << "\": ";
-    que.Enqueue(val);
+    std::cout << " " << testnum << " Push on the stack of the value \"" << val << "\": ";
+    stk.Push(val);
     std::cout << "Correct!" << std::endl;
   } catch(std::exception exc) {
     std::cout << "\"" << exc.what() << "\": " << "Error!" << std::endl;
     tst = false;
   }
-  testerr += (1 - (unsigned int) tst);
+  testerr += (1 - (uint) tst);
 }
 
 template <typename Data>
-void EnqueueM(unsigned int& testnum, unsigned int& testerr, lasd::Queue<Data>& que, Data val) {
+void PushM(uint& testnum, uint& testerr, lasd::Stack<Data>& stk, Data val) {
   testnum++;
   bool tst = true;
   try {
-    std::cout << " " << testnum << " Enqueue on the queue of the value \"" << val << "\": ";
-    que.Enqueue(std::move(val));
+    std::cout << " " << testnum << " Push on the stack of the value \"" << val << "\": ";
+    stk.Push(std::move(val));
     std::cout << "Correct!" << std::endl;
   } catch(std::exception exc) {
     std::cout << "\"" << exc.what() << "\": " << "Error!" << std::endl;
     tst = false;
   }
-  testerr += (1 - (unsigned int) tst);
+  testerr += (1 - (uint) tst);
 }
 
 template <typename Data>
-void Head(unsigned int& testnum, unsigned int& testerr, lasd::Queue<Data>& que, bool chk, const Data& val) {
+void Top(uint& testnum, uint& testerr, lasd::Stack<Data>& stk, bool chk, const Data& val) {
   testnum++;
   bool tst;
   try {
-    std::cout << " " << testnum << " Head of the queue with value \"" << que.Head() << "\": ";
-    std::cout << ((tst = ((que.Head() == val) == chk)) ? "Correct" : "Error") << "!" << std::endl;
+    std::cout << " " << testnum << " Top of the stack with value \"" << stk.Top() << "\": ";
+    std::cout << ((tst = ((stk.Top() == val) == chk)) ? "Correct" : "Error") << "!" << std::endl;
   } catch(std::length_error exc) {
     std::cout << exc.what() << "\": " << ((tst = !chk) ? "Correct" : "Error") << "!" << std::endl;
   } catch(std::exception exc) {
     tst = false;
     std::cout << std::endl << "Wrong exception: " << exc.what() << "!" << std::endl;
   }
-  testerr += (1 - (unsigned int) tst);
+  testerr += (1 - (uint) tst);
 }
 
 template <typename Data>
-void Dequeue(unsigned int& testnum, unsigned int& testerr, lasd::Queue<Data>& que, bool chk) {
+void Pop(uint& testnum, uint& testerr, lasd::Stack<Data>& stk, bool chk) {
   testnum++;
   bool tst = true;
   try {
-    std::cout << " " << testnum << " Dequeue from the queue: ";
-    que.Dequeue();
+    std::cout << " " << testnum << " Pop from the stack: ";
+    stk.Pop();
     std::cout << ((tst = chk) ? "Correct" : "Error") << "!" << std::endl;
   } catch(std::length_error exc) {
     std::cout << "\"" << exc.what() << "\": " << ((tst = !chk) ? "Correct" : "Error") << "!" << std::endl;
@@ -66,49 +66,49 @@ void Dequeue(unsigned int& testnum, unsigned int& testerr, lasd::Queue<Data>& qu
     tst = false;
     std::cout << std::endl << "Wrong exception: " << exc.what() << "!" << std::endl;
   }
-  testerr += (1 - (unsigned int) tst);
+  testerr += (1 - (uint) tst);
 }
 
 template <typename Data>
-void HeadNDequeue(unsigned int& testnum, unsigned int& testerr, lasd::Queue<Data>& que, bool chk, const Data& val) {
+void TopNPop(uint& testnum, uint& testerr, lasd::Stack<Data>& stk, bool chk, const Data& val) {
   testnum++;
   bool tst;
   try {
-    std::cout << " " << testnum << " HeadNDequeue from the queue with value \"" << que.Head() << "\": ";
-    std::cout << ((tst = ((que.HeadNDequeue() == val) == chk)) ? "Correct" : "Error") << "!" << std::endl;
+    std::cout << " " << testnum << " TopNPop from the stack with value \"" << stk.Top() << "\": ";
+    std::cout << ((tst = ((stk.TopNPop() == val) == chk)) ? "Correct" : "Error") << "!" << std::endl;
   } catch(std::length_error exc) {
     std::cout << exc.what() << "\": " << ((tst = !chk) ? "Correct" : "Error") << "!" << std::endl;
   } catch(std::exception exc) {
     tst = false;
     std::cout << std::endl << "Wrong exception: " << exc.what() << "!" << std::endl;
   }
-  testerr += (1 - (unsigned int) tst);
+  testerr += (1 - (uint) tst);
 }
 
-template <typename Que>
-void EqualQueue(unsigned int& testnum, unsigned int& testerr, const Que& que1, const Que& que2, bool chk) {
+template <typename Stk>
+void EqualStack(uint& testnum, uint& testerr, const Stk& stk1, const Stk& stk2, bool chk) {
   testnum++;
   bool tst;
   try {
-    std::cout << " " << testnum << " The two queues are " << ((tst = (que1 == que2)) ? "" : "not ") << "equal: ";
+    std::cout << " " << testnum << " The two stacks are " << ((tst = (stk1 == stk2)) ? "" : "not ") << "equal: ";
     std::cout << ((tst = (tst == chk)) ? "Correct" : "Error") << "!" << std::endl;
   } catch(std::exception exc) {
     std::cout << "\"" << exc.what() << "\": " << ((tst = !chk) ? "Correct" : "Error") << "!" << std::endl;
   }
-  testerr += (1 - (unsigned int) tst);
+  testerr += (1 - (uint) tst);
 }
 
-template <typename Que>
-void NonEqualQueue(unsigned int& testnum, unsigned int& testerr, const Que& que1, const Que& que2, bool chk) {
+template <typename Stk>
+void NonEqualStack(uint& testnum, uint& testerr, const Stk& stk1, const Stk& stk2, bool chk) {
   testnum++;
   bool tst;
   try {
-    std::cout << " " << testnum << " The two queues are " << ((tst = (que1 != que2)) ? "not " : "") << "equal: ";
+    std::cout << " " << testnum << " The two stacks are " << ((tst = (stk1 != stk2)) ? "not " : "") << "equal: ";
     std::cout << ((tst = (tst == chk)) ? "Correct" : "Error") << "!" << std::endl;
   } catch(std::exception exc) {
     std::cout << "\"" << exc.what() << "\": " << ((tst = !chk) ? "Correct" : "Error") << "!" << std::endl;
   }
-  testerr += (1 - (unsigned int) tst);
+  testerr += (1 - (uint) tst);
 }
 
 /* ************************************************************************** */
