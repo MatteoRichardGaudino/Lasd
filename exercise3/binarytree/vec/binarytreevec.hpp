@@ -14,82 +14,97 @@ namespace lasd {
 /* ************************************************************************** */
 
 template <typename Data>
-class BinaryTreeVec { // Must extend BinaryTree<Data>
+class BinaryTreeVec : virtual public BinaryTree<Data>{ // Must extend BinaryTree<Data>
 
 private:
 
   // ...
 
 protected:
-
-  // using BinaryTree<Data>::???;
-
   // ...
 
-  struct NodeVec { // Must extend Node
+struct NodeVec : virtual public BinaryTree<Data>::Node { // Must extend Node
 
   private:
 
     // ...
 
   protected:
+    unsigned long index;
+    Data element;
 
     // ...
 
   public:
 
-    // ...
+    Data& Element() noexcept; // Mutable access to the element (concrete function should not throw exceptions)
+    const Data& Element() const noexcept; // Immutable access to the element (concrete function should not throw exceptions)
+
+    bool HasLeftChild() const noexcept; // (concrete function should not throw exceptions)
+    bool HasRightChild() const noexcept; // (concrete function should not throw exceptions)
+
+    NodeVec& LeftChild() const; // (concrete function must throw std::out_of_range when not existent)
+    NodeVec& RightChild() const;
 
   };
+
+Vector<NodeVec> elements;
 
 public:
 
   // Default constructor
-  // BinaryTreeVec() specifiers;
+  BinaryTreeVec() = default;
 
   /* ************************************************************************ */
 
   // Specific constructors
-  // BinaryTreeVec(argument) specifiers; // A binary tree obtained from a LinearContainer
+  BinaryTreeVec(const LinearContainer<Data>&); // A binary tree obtained from a LinearContainer
 
   /* ************************************************************************ */
 
   // Copy constructor
-  // BinaryTreeVec(argument) specifiers;
+  BinaryTreeVec(const BinaryTreeVec<Data>&);
 
   // Move constructor
-  // BinaryTreeVec(argument) specifiers;
+  BinaryTreeVec(BinaryTreeVec<Data>&&) noexcept;
 
   /* ************************************************************************ */
 
   // Destructor
-  // ~BinaryTreeVec() specifiers;
+  ~BinaryTreeVec();
 
   /* ************************************************************************ */
 
   // Copy assignment
-  // type operator=(argument) specifiers;
+  BinaryTreeVec& operator=(const BinaryTreeVec<Data>&);
 
   // Move assignment
-  // type operator=(argument) specifiers;
+  BinaryTreeVec& operator=(BinaryTreeVec<Data>&&) noexcept;
 
   /* ************************************************************************ */
 
   // Comparison operators
-  // type operator==(argument) specifiers;
-  // type operator!=(argument) specifiers;
+  bool operator==(const BinaryTreeVec<Data>&) const noexcept;
+  bool operator!=(const BinaryTreeVec<Data>&) const noexcept;
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from BinaryTree)
 
-  // type Root() specifiers; // Override BinaryTree member (throw std::length_error when empty)
+  NodeVec& Root() const override; // Override BinaryTree member (throw std::length_error when empty)
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from Container)
 
-  // type Clear() specifiers; // Override Container member
+  void Clear() override; // Override Container member
+
+  using typename MappableContainer<Data>::MapFunctor;
+  void MapBreadth(const MapFunctor, void*) override; // Override BreadthMappableContainer member
+
+  using typename FoldableContainer<Data>::FoldFunctor;
+  void FoldBreadth(const FoldFunctor, const void*, void*) const override; // Override BreadthFoldableContainer member
+
 
 };
 

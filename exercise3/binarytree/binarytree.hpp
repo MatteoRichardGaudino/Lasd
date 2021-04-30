@@ -42,7 +42,6 @@ public:
     // ...
 
   protected:
-
     // Comparison operators
     bool operator==(const Node&) const noexcept; // Comparison of abstract types is possible, but should not be visible.
     bool operator!=(const Node&) const noexcept; // Comparison of abstract types is possible, but should not be visible.
@@ -59,7 +58,7 @@ public:
     /* ********************************************************************** */
 
     // Copy assignment
-    Node& operator=(const Node) = delete; // Copy assignment of abstract types should not be possible.
+    Node& operator=(const Node&) = delete; // Copy assignment of abstract types should not be possible.
 
     // Move assignment
     Node& operator=(Node&&) noexcept = delete; // Move assignment of abstract types should not be possible.
@@ -72,15 +71,15 @@ public:
 
     // Specific member functions
 
-    virtual Data& Element() noexcept; // Mutable access to the element (concrete function should not throw exceptions)
-    virtual const Data& Element() const noexcept; // Immutable access to the element (concrete function should not throw exceptions)
+    virtual Data& Element() noexcept = 0; // Mutable access to the element (concrete function should not throw exceptions)
+    virtual const Data& Element() const noexcept = 0; // Immutable access to the element (concrete function should not throw exceptions)
 
     virtual bool IsLeaf() const noexcept; // (concrete function should not throw exceptions)
-    virtual bool HasLeftChild() const noexcept; // (concrete function should not throw exceptions)
-    virtual bool HasRightChild() const noexcept; // (concrete function should not throw exceptions)
+    virtual bool HasLeftChild() const noexcept = 0; // (concrete function should not throw exceptions)
+    virtual bool HasRightChild() const noexcept = 0; // (concrete function should not throw exceptions)
 
-    virtual Node& LeftChild() const; // (concrete function must throw std::out_of_range when not existent)
-    virtual Node& RightChild() const; // (concrete function must throw std::out_of_range when not existent)
+    virtual Node& LeftChild() const = 0; // (concrete function must throw std::out_of_range when not existent)
+    virtual Node& RightChild() const = 0; // (concrete function must throw std::out_of_range when not existent)
 
   };
 
@@ -100,8 +99,8 @@ public:
   /* ************************************************************************ */
 
   // Comparison operators
-  bool operator==(const BinaryTree&) const noexcept; // Comparison of abstract binary tree is possible.
-  bool operator!=(const BinaryTree&) const noexcept; // Comparison of abstract binary tree is possible.
+  bool operator==(const BinaryTree<Data>&) const noexcept; // Comparison of abstract binary tree is possible.
+  bool operator!=(const BinaryTree<Data>&) const noexcept; // Comparison of abstract binary tree is possible.
 
   /* ************************************************************************ */
 
@@ -115,8 +114,8 @@ public:
 
   using typename MappableContainer<Data>::MapFunctor;
 
-  void MapPreOrder(const MapFunctor, void*) override; // Override MappableContainer member
-  void MapPostOrder(const MapFunctor, void*) override; // Override MappableContainer member
+  void MapPreOrder(const MapFunctor fun, void* v) override { MapPreOrder(Root(), fun, v); }; // Override MappableContainer member
+  void MapPostOrder(const MapFunctor fun, void* v) override { MapPostOrder(Root(), fun, v); }; // Override MappableContainer member
 
   /* ************************************************************************ */
 
@@ -124,70 +123,70 @@ public:
 
   using typename FoldableContainer<Data>::FoldFunctor;
 
-  void FoldPreOrder(const FoldFunctor, const void*, void*) override; // Override FoldableContainer member
-  void FoldPostOrder(const FoldFunctor, const void*, void*) override; // Override FoldableContainer member
+  void FoldPreOrder(const FoldFunctor fun, const void* v1, void* v2) const override { FoldPreOrder(Root(), fun, v1, v2); }; // Override FoldableContainer member
+  void FoldPostOrder(const FoldFunctor fun, const void* v1, void* v2) const override { FoldPostOrder(Root(), fun, v1, v2); }; // Override FoldableContainer member
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from InOrderMappableContainer)
 
-  void MapInOrder(const MapFunctor, void*) override; // Override InOrderMappableContainer member
+  void MapInOrder(const MapFunctor fun, void* v) override { MapInOrder(Root(), fun, v); }; // Override InOrderMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from InOrderFoldableContainer)
 
-  void FoldInOrder(const FoldFunctor, const void*, void*) const override; // Override InOrderFoldableContainer member
+  void FoldInOrder(const FoldFunctor fun, const void* v1, void* v2) const override { FoldInOrder(Root(), fun, v1, v2); }; // Override InOrderFoldableContainer member
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from BreadthMappableContainer)
 
-  void MapBreadth(const MapFunctor, void*) override; // Override BreadthMappableContainer member
+  void MapBreadth(const MapFunctor fun, void* v) override { MapBreadth(Root(), fun, v); }; // Override BreadthMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from BreadthFoldableContainer)
 
-  void FoldBreadth(const FoldFunctor, const void*, void*) const override; // Override BreadthFoldableContainer member
+  void FoldBreadth(const FoldFunctor fun, const void* v1, void* v2) const { FoldBreadth(Root(), fun, v1, v2); }; // Override BreadthFoldableContainer member
 
 protected:
 
   // Auxiliary member functions (for MappableContainer)
 
-  // type MapPreOrder(arguments) specifiers; // Accessory function executing from one node of the tree
-  // type MapPostOrder(arguments) specifiers; // Accessory function executing from one node of the tree
+  void MapPreOrder(Node&, const MapFunctor, void*);  // Accessory function executing from one node of the tree
+  void MapPostOrder(Node&, const MapFunctor, void*); // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member functions (for FoldableContainer)
 
-  // type FoldPreOrder(arguments) specifiers; // Accessory function executing from one node of the tree
-  // type FoldPostOrder(arguments) specifiers; // Accessory function executing from one node of the tree
+  void FoldPreOrder(const Node&, const FoldFunctor, const void*, void*); // Accessory function executing from one node of the tree
+  void FoldPostOrder(const Node&, const FoldFunctor, const void*, void*); // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member functions (for InOrderMappableContainer)
 
-  // type MapInOrder(arguments) specifiers; // Accessory function executing from one node of the tree
+  void MapInOrder(Node&, const MapFunctor, void*); // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member functions (for InOrderFoldableContainer)
 
-  // type FoldInOrder(arguments) specifiers; // Accessory function executing from one node of the tree
+  void FoldInOrder(const Node&, const FoldFunctor, const void*, void*) const; // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member functions (for BreadthMappableContainer)
 
-  // type MapBreadth(arguments) specifiers; // Accessory function executing from one node of the tree
+  void MapBreadth(Node&, const MapFunctor, void*); // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
   // Auxiliary member functions (for BreadthFoldableContainer)
 
-  // type FoldBreadth(arguments) specifiers; // Accessory function executing from one node of the tree
+  void FoldBreadth(const Node&, const FoldFunctor, const void*, void*) const; // Accessory function executing from one node of the tree
 
 };
 
