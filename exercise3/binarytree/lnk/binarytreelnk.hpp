@@ -13,7 +13,7 @@ namespace lasd {
 /* ************************************************************************** */
 
 template <typename Data>
-class BinaryTreeLnk : BinaryTree<Data> { // Must extend BinaryTree<Data>
+class BinaryTreeLnk : virtual public BinaryTree<Data> { // Must extend BinaryTree<Data>
 
 private:
 
@@ -32,15 +32,27 @@ protected:
     // ...
 
   protected:
+    Data element;
+    NodeLnk* right = nullptr;
+    NodeLnk* left = nullptr;
 
-    // ...
-
+    void AuxCopyNode(NodeLnk*, const NodeLnk*);
   public:
+    NodeLnk() = default;
+    NodeLnk(Data e);
+    NodeLnk(const NodeLnk&);
 
-    // ...
+    Data& Element() noexcept override; // Mutable access to the element (concrete function should not throw exceptions)
+    const Data& Element() const noexcept override; // Immutable access to the element (concrete function should not throw exceptions)
 
+    bool HasLeftChild() const noexcept override; // (concrete function should not throw exceptions)
+    bool HasRightChild() const noexcept override; // (concrete function should not throw exceptions)
+
+    NodeLnk& LeftChild() const override; // (concrete function must throw std::out_of_range when not existent)
+    NodeLnk& RightChild() const override; // (concrete function must throw std::out_of_range when not existent)
   };
 
+  NodeLnk* root = nullptr;
 public:
 
   // Default constructor
@@ -57,7 +69,7 @@ public:
   BinaryTreeLnk(const BinaryTreeLnk<Data>&);
 
   // Move constructor
-  BinaryTreeLnk(BinaryTreeLnk<Data>&) noexcept;
+  BinaryTreeLnk(BinaryTreeLnk<Data>&&) noexcept;
 
   /* ************************************************************************ */
 
@@ -89,7 +101,8 @@ public:
   // Specific member functions (inherited from Container)
 
   void Clear() override; // Override Container member
-
+protected:
+    void AuxCopyLinearContainer(const LinearContainer<Data>&, unsigned long, NodeLnk*);
 };
 
 /* ************************************************************************** */

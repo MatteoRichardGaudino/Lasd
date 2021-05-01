@@ -37,14 +37,14 @@ struct NodeVec : virtual public BinaryTree<Data>::Node { // Must extend Node
 
   public:
 
-    Data& Element() noexcept; // Mutable access to the element (concrete function should not throw exceptions)
-    const Data& Element() const noexcept; // Immutable access to the element (concrete function should not throw exceptions)
+    Data& Element() noexcept override; // Mutable access to the element (concrete function should not throw exceptions)
+    const Data& Element() const noexcept override; // Immutable access to the element (concrete function should not throw exceptions)
 
-    bool HasLeftChild() const noexcept; // (concrete function should not throw exceptions)
-    bool HasRightChild() const noexcept; // (concrete function should not throw exceptions)
+    bool HasLeftChild() const noexcept override; // (concrete function should not throw exceptions)
+    bool HasRightChild() const noexcept override; // (concrete function should not throw exceptions)
 
-    NodeVec& LeftChild() const; // (concrete function must throw std::out_of_range when not existent)
-    NodeVec& RightChild() const;
+    NodeVec& LeftChild() const override; // (concrete function must throw std::out_of_range when not existent)
+    NodeVec& RightChild() const override;
 
   };
 
@@ -71,7 +71,7 @@ public:
   /* ************************************************************************ */
 
   // Destructor
-  ~BinaryTreeVec();
+  ~BinaryTreeVec() = default;
 
   /* ************************************************************************ */
 
@@ -98,6 +98,7 @@ public:
   // Specific member functions (inherited from Container)
 
   void Clear() override; // Override Container member
+  unsigned long Size() const noexcept override; // Override Container member
 
   using typename MappableContainer<Data>::MapFunctor;
   void MapBreadth(const MapFunctor, void*) override; // Override BreadthMappableContainer member
