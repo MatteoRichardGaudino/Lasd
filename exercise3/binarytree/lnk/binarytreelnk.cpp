@@ -13,15 +13,6 @@ namespace lasd {
 
     template<typename Data>
     BinaryTreeLnk<Data>::NodeLnk::NodeLnk(const NodeLnk& root){
-        //element = root.element;
-        //if (root.HasLeftChild()){
-        //    left = new NodeLnk();
-        //    AuxCopyNode(left, root.left);
-        //}
-        //if (root.HasRightChild()){
-        //    right = new NodeLnk();
-        //    AuxCopyNode(right, root.right);
-        //}
         AuxCopyNode(this, root);
     }
 

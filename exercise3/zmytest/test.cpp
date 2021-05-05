@@ -139,6 +139,36 @@ void launchMenu(){
         });
     });
 
+    MenuItem btVec("BinaryTreeVec", [&](){
+        intType.setOnAction([](){
+            BinaryTreeVec<int> bt;
+            launchBtMenu(bt);
+        });
+        floatType.setOnAction([](){
+            BinaryTreeVec<float> bt;
+            launchBtMenu(bt);
+        });
+        stringType.setOnAction([](){
+            BinaryTreeVec<string> bt;
+            launchBtMenu(bt);
+        });
+    });
+
+    MenuItem btLnk("BinaryTreeLnk", [&](){
+        intType.setOnAction([](){
+            BinaryTreeLnk<int> bt;
+            launchBtMenu(bt);
+        });
+        floatType.setOnAction([](){
+            BinaryTreeLnk<float> bt;
+            launchBtMenu(bt);
+        });
+        stringType.setOnAction([](){
+            BinaryTreeLnk<string> bt;
+            launchBtMenu(bt);
+        });
+    });
+
 
     structMenu.add(vect);
     structMenu.add(list);
@@ -146,6 +176,8 @@ void launchMenu(){
     structMenu.add(stackLst);
     structMenu.add(queueVec);
     structMenu.add(queueLst);
+    structMenu.add(btVec);
+    structMenu.add(btLnk);
     structMenu.add(fullTest);
 
     if(structMenu.show()){
@@ -345,6 +377,89 @@ void launchQueueMenu(Queue<Data>& que){
     while (mainMenu.show());
 }
 
+template<typename Data>
+void launchBtMenu(BinaryTree<Data>& bt){
+    typename BinaryTree<Data>::Node* node = nullptr;
+
+    if (!bt.Empty()){
+        node = &bt.Root();
+    }
+
+    Menu mainMenu("Chose an action:");
+
+    MenuItem insertValues("Insert Values", [&bt](){
+        popolaBt(bt);
+    });
+
+    MenuItem root("Print Root", [&bt](){
+        testRoot(bt);
+    });
+
+    MenuItem gotoroot("Goto Root", [&bt](){
+        gotoRoot(bt, node);
+    });
+
+
+    MenuItem hasLeft("Has Left Child", [&bt](){
+        testHasLeftChild(node);
+    });
+    MenuItem hasRight("Has Right Child", [&bt](){
+        testHasRightChild(node);
+    });
+    MenuItem isLeaf("Is Leaf", [&bt](){
+        testIsLeaf(node);
+    });
+
+    MenuItem left("Goto left", [&bt](){
+        gotoLeft(node);
+    });
+    MenuItem right("Goto Right", [&bt](){
+        gotoRight(node);
+    });
+    MenuItem element("Print Element", [&bt](){
+        testElement(node);
+    });
+
+    MenuItem preOrder("Print PreOrder", [&bt](){
+        printPreOrder(bt);
+    });
+    MenuItem postOrder("Print PostOrder", [&bt](){
+        printPostOrder(bt);
+    });
+    MenuItem inOrder("Print InOrder", [&bt](){
+        printInOrder(bt);
+    });
+    MenuItem breadth("Print Breadth", [&bt](){
+        printBreadth(bt);
+    });
+
+    MenuItem map("Test Map function", [&bt](){
+        testMappableBT(bt);
+    });
+
+    mainMenu.add(insertValues);
+    mainMenu.add(root);
+    mainMenu.add(gotoroot);
+    mainMenu.add(hasLeft);
+    mainMenu.add(hasRight);
+    mainMenu.add(isLeaf);
+    mainMenu.add(left);
+    mainMenu.add(right);
+    mainMenu.add(element);
+
+    mainMenu.add(preOrder);
+    mainMenu.add(postOrder);
+    mainMenu.add(inOrder);
+    mainMenu.add(breadth);
+    mainMenu.add(map);
+
+
+    setupContainerMenu(mainMenu, bt);
+
+
+    while (mainMenu.show());
+}
+
 /* *** Random generation *** */
 default_random_engine gen(random_device{}());
 
@@ -400,7 +515,7 @@ void testExists(TestableContainer<Data>& cont) {
 
 /* *** Vector test *** */
 
-void popolaVector(Vector<int> & vec) {
+void popolaVector(Vector<int>& vec) {
     unsigned long newSize = 0;
     cout << "Insert new Size" << endl << ">>> ";
     cin >> newSize;
@@ -411,7 +526,7 @@ void popolaVector(Vector<int> & vec) {
     }
 }
 
-void popolaVector(Vector<float> & vec) {
+void popolaVector(Vector<float>& vec) {
     unsigned long newSize = 0;
     cout << "Insert new Size" << endl << ">>> ";
     cin >> newSize;
@@ -424,7 +539,7 @@ void popolaVector(Vector<float> & vec) {
     }
 }
 
-void popolaVector(Vector<string> & vec) {
+void popolaVector(Vector<string>& vec) {
     unsigned long newSize = 0;
     const string charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!:.;-_#*@";
     cout << "Insert new Size" << endl << ">>> ";
@@ -742,3 +857,7 @@ void testHeadNDequeue(Queue<Data>& que){
         cout<< "Error: " << e.what() << endl;
     }
 }
+
+/* *** BinaryTree test *** */
+
+

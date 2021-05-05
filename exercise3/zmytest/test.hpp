@@ -8,6 +8,9 @@
 #include "../stack/stack.hpp"
 #include "../queue/queue.hpp"
 #include "../zlasdtest/test.hpp"
+#include "../binarytree/binarytree.hpp"
+#include "../binarytree/vec/binarytreevec.hpp"
+#include "../binarytree/lnk/binarytreelnk.hpp"
 
 #include <string>
 #include <iostream>
@@ -77,6 +80,9 @@ void launchStackMenu(Stack<Data>&);
 
 template<typename Data>
 void launchQueueMenu(Queue<Data>&);
+
+template<typename Data>
+void launchBtMenu(BinaryTree<Data>&);
 
 /* *** Container test *** */
 
@@ -158,8 +164,48 @@ void testDequeue(Queue<Data>&);
 template<typename Data>
 void testHeadNDequeue(Queue<Data>&);
 
+/* *** BinaryTree test *** */
+template<typename Data>
+void popolaBt(BinaryTree<Data>&);
+void popolaBtVec(BinaryTreeVec<int>&);
+void popolaBtVec(BinaryTreeVec<float>&);
+void popolaBtVec(BinaryTreeVec<string>&);
 
+void popolaBtLnk(BinaryTreeLnk<int>&);
+void popolaBtLnk(BinaryTreeLnk<float>&);
+void popolaBtLnk(BinaryTreeLnk<string>&);
 
+template<typename Data>
+void printPreOrder(const MappableContainer<Data>&);
+template<typename Data>
+void printPostOrder(const MappableContainer<Data>&);
+template<typename Data>
+void printInOrder(const InOrderMappableContainer<Data>&);
+template<typename Data>
+void printBreadth(const BreadthMappableContainer<Data>&);
+
+void testMappableBT(MappableContainer<int>&);
+void testMappableBT(MappableContainer<float>&);
+void testMappableBT(MappableContainer<string>&);
+
+template<typename Data>
+void gotoRight(typename BinaryTree<Data>::Node*&);
+template<typename Data>
+void gotoLeft(typename BinaryTree<Data>::Node*&);
+template<typename Data>
+void gotoRoot(typename BinaryTree<Data>::Node*&);
+
+template<typename Data>
+void testRoot(BinaryTree<Data>&);
+
+template<typename Data>
+void testIsLeaf(typename BinaryTree<Data>::Node*);
+template<typename Data>
+void testHasLeftChild(typename BinaryTree<Data>::Node*);
+template<typename Data>
+void testHasRightChild(typename BinaryTree<Data>::Node*);
+template<typename Data>
+void testElement(typename BinaryTree<Data>::Node*);
 
 
 /* ************************************************************************** */
