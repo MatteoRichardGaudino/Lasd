@@ -1,11 +1,14 @@
-
 namespace lasd {
 
 /* ************************************************************************** */
 
     template<typename Data>
-    BinaryTreeLnk<Data>::NodeLnk::NodeLnk(Data e) {
+    BinaryTreeLnk<Data>::NodeLnk::NodeLnk(const Data& e) {
         element = e;
+    }
+    template<typename Data>
+    BinaryTreeLnk<Data>::NodeLnk::NodeLnk(Data&& e) {
+        std::swap(element, e);
     }
 
     template<typename Data>
@@ -19,19 +22,20 @@ namespace lasd {
         //    right = new NodeLnk();
         //    AuxCopyNode(right, root.right);
         //}
-        AuxCopyNode(this, &root);
+        AuxCopyNode(this, root);
     }
 
+
     template<typename Data>
-    void BinaryTreeLnk<Data>::NodeLnk::AuxCopyNode(NodeLnk* nodecpy, const NodeLnk* node){
-        nodecpy->element = node->element;
-        if (node->HasLeftChild()){
+    void BinaryTreeLnk<Data>::NodeLnk::AuxCopyNode(NodeLnk* nodecpy, const Node& node){
+        nodecpy->element = node.Element();
+        if (node.HasLeftChild()){
             nodecpy->left = new NodeLnk();
-            AuxCopyNode(nodecpy->left, node->left);
+            AuxCopyNode(nodecpy->left, node.LeftChild());
         }
-        if (node->HasRightChild()){
+        if (node.HasRightChild()){
             nodecpy->right = new NodeLnk();
-            AuxCopyNode(nodecpy->right, node->right);
+            AuxCopyNode(nodecpy->right, node.RightChild());
         }
     }
 
@@ -47,11 +51,11 @@ namespace lasd {
 
     template<typename Data>
     bool BinaryTreeLnk<Data>::NodeLnk::HasLeftChild() const noexcept{
-        return left == nullptr;
+        return left != nullptr;
     }
     template<typename Data>
     bool BinaryTreeLnk<Data>::NodeLnk::HasRightChild()const noexcept{
-        return right == nullptr;
+        return right != nullptr;
     }
 
     template<typename Data>
@@ -70,8 +74,19 @@ namespace lasd {
     BinaryTreeLnk<Data>::BinaryTreeLnk(const LinearContainer<Data>& linearContainer){
         if (linearContainer.Size() != 0){
             root = new NodeLnk(linearContainer[0]);
-            AuxCopyLinearContainer(linearContainer, 0, root);
+            FromLinearContainer(linearContainer, root, 0);
             size = linearContainer.Size();
+        }
+    }
+    template<typename Data>
+    void BinaryTreeLnk<Data>::FromLinearContainer(const LinearContainer<Data>& lc, NodeLnk* node, unsigned long i) {
+        if (i*2 + 1 < lc.Size()){
+            node->left = new NodeLnk(lc[i*2 + 1]);
+            FromLinearContainer(lc, node->left, i*2 + 1);
+        }
+        if (i*2 + 2 < lc.Size()){
+            node->right = new NodeLnk(lc[i*2 + 2]);
+            FromLinearContainer(lc, node->right, i*2 + 2);
         }
     }
 
@@ -111,7 +126,11 @@ namespace lasd {
 
     template<typename Data>
     bool BinaryTreeLnk<Data>::operator==(const BinaryTreeLnk<Data>& bt) const noexcept{
-        return *root == *(bt.root);
+        if (!Empty() && !bt.Empty())
+            return Root() == bt.Root();
+        else if (Empty() && bt.Empty()) return true;
+        else return false;
+
     }
 
     template<typename Data>
@@ -127,24 +146,18 @@ namespace lasd {
 
     template<typename Data>
     void BinaryTreeLnk<Data>::Clear(){
+        PostOrderClear(root);
+        root = nullptr;
         size = 0;
-        // TODO
     }
-
     template<typename Data>
-    void BinaryTreeLnk<Data>::AuxCopyLinearContainer(const LinearContainer<Data>& lc, unsigned long i, NodeLnk* node){
-        if ((i*2)+1 < lc.Size()){
-            NodeLnk* newNode = new NodeLnk(lc[(i*2)+1]);
-            node->left = newNode;
-            AuxCreateNode(lc, i, (i*2)+1, newNode);
-        }
-        if ((i*2)+2 < lc.Size()){
-            NodeLnk* newNode = new NodeLnk(lc[(i*2)+2]);
-            node->right = newNode;
-            AuxCreateNode(lc, i, (i*2)+2, newNode);
+    void BinaryTreeLnk<Data>::PostOrderClear(NodeLnk* node){
+        if (node != nullptr){
+            PostOrderClear(node->left);
+            PostOrderClear(node->right);
+            delete node;
         }
     }
-
 
 /* ************************************************************************** */
 

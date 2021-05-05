@@ -30,12 +30,20 @@ struct NodeVec : virtual public BinaryTree<Data>::Node { // Must extend Node
     // ...
 
   protected:
+    friend class BinaryTreeVec<Data>;
     unsigned long index;
     Data element;
-
-    // ...
+    Vector<NodeVec*>* elements = nullptr;
 
   public:
+    NodeVec() = default;
+    ~NodeVec() = default;
+
+    NodeVec(const NodeVec&);
+    NodeVec(NodeVec&&) noexcept;
+
+    NodeVec& operator=(const NodeVec&);
+    NodeVec& operator=(NodeVec&&) noexcept;
 
     Data& Element() noexcept override; // Mutable access to the element (concrete function should not throw exceptions)
     const Data& Element() const noexcept override; // Immutable access to the element (concrete function should not throw exceptions)
@@ -47,8 +55,7 @@ struct NodeVec : virtual public BinaryTree<Data>::Node { // Must extend Node
     NodeVec& RightChild() const override;
 
   };
-
-Vector<NodeVec> elements;
+Vector<NodeVec*> elements;
 
 public:
 
@@ -99,6 +106,7 @@ public:
 
   void Clear() override; // Override Container member
   unsigned long Size() const noexcept override; // Override Container member
+  bool Empty() const noexcept override;
 
   using typename MappableContainer<Data>::MapFunctor;
   void MapBreadth(const MapFunctor, void*) override; // Override BreadthMappableContainer member

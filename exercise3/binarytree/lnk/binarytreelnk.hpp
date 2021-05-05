@@ -22,25 +22,30 @@ private:
 protected:
 
   using BinaryTree<Data>::size;
+  using typename BinaryTree<Data>::Node;
 
   // ...
 
-  struct NodeLnk : BinaryTree<Data>::Node { // Must extend Node
+  struct NodeLnk : Node { // Must extend Node
 
   private:
 
     // ...
 
   protected:
+    friend class BinaryTreeLnk<Data>;
     Data element;
     NodeLnk* right = nullptr;
     NodeLnk* left = nullptr;
 
-    void AuxCopyNode(NodeLnk*, const NodeLnk*);
+    void AuxCopyNode(NodeLnk*, const Node&);
   public:
     NodeLnk() = default;
-    NodeLnk(Data e);
+    ~NodeLnk() = default;
+    NodeLnk(const Data& e);
+    NodeLnk(Data&& e);
     NodeLnk(const NodeLnk&);
+
 
     Data& Element() noexcept override; // Mutable access to the element (concrete function should not throw exceptions)
     const Data& Element() const noexcept override; // Immutable access to the element (concrete function should not throw exceptions)
@@ -101,8 +106,10 @@ public:
   // Specific member functions (inherited from Container)
 
   void Clear() override; // Override Container member
+  using BinaryTree<Data>::Empty;
 protected:
-    void AuxCopyLinearContainer(const LinearContainer<Data>&, unsigned long, NodeLnk*);
+    void PostOrderClear(NodeLnk*);
+    void FromLinearContainer(const LinearContainer<Data>&, NodeLnk*, unsigned long);
 };
 
 /* ************************************************************************** */

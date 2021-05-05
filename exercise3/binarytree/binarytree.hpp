@@ -8,7 +8,8 @@
 
 #include "../iterator/iterator.hpp"
 
-// #include "..."
+#include "../stack/lst/stacklst.hpp"
+#include "../queue/lst/queuelst.hpp"
 
 /* ************************************************************************** */
 
@@ -114,8 +115,8 @@ public:
 
   using typename MappableContainer<Data>::MapFunctor;
 
-  void MapPreOrder(const MapFunctor fun, void* v) override { MapPreOrder(Root(), fun, v); }; // Override MappableContainer member
-  void MapPostOrder(const MapFunctor fun, void* v) override { MapPostOrder(Root(), fun, v); }; // Override MappableContainer member
+  void MapPreOrder(const MapFunctor fun, void* v) override; // Override MappableContainer member
+  void MapPostOrder(const MapFunctor fun, void* v) override; // Override MappableContainer member
 
   /* ************************************************************************ */
 
@@ -123,33 +124,35 @@ public:
 
   using typename FoldableContainer<Data>::FoldFunctor;
 
-  void FoldPreOrder(const FoldFunctor fun, const void* v1, void* v2) const override { FoldPreOrder(Root(), fun, v1, v2); }; // Override FoldableContainer member
-  void FoldPostOrder(const FoldFunctor fun, const void* v1, void* v2) const override { FoldPostOrder(Root(), fun, v1, v2); }; // Override FoldableContainer member
+  void FoldPreOrder(const FoldFunctor fun, const void* v1, void* v2) const override; // Override FoldableContainer member
+  void FoldPostOrder(const FoldFunctor fun, const void* v1, void* v2) const override; // Override FoldableContainer member
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from InOrderMappableContainer)
 
-  void MapInOrder(const MapFunctor fun, void* v) override { MapInOrder(Root(), fun, v); }; // Override InOrderMappableContainer member
+  void MapInOrder(const MapFunctor fun, void* v) override; // Override InOrderMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from InOrderFoldableContainer)
 
-  void FoldInOrder(const FoldFunctor fun, const void* v1, void* v2) const override { FoldInOrder(Root(), fun, v1, v2); }; // Override InOrderFoldableContainer member
+  void FoldInOrder(const FoldFunctor fun, const void* v1, void* v2) const override; // Override InOrderFoldableContainer member
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from BreadthMappableContainer)
 
-  void MapBreadth(const MapFunctor fun, void* v) override { MapBreadth(Root(), fun, v); }; // Override BreadthMappableContainer member
+  void MapBreadth(const MapFunctor fun, void* v) override; // Override BreadthMappableContainer member
 
   /* ************************************************************************ */
 
   // Specific member functions (inherited from BreadthFoldableContainer)
 
-  void FoldBreadth(const FoldFunctor fun, const void* v1, void* v2) const { FoldBreadth(Root(), fun, v1, v2); }; // Override BreadthFoldableContainer member
+  void FoldBreadth(const FoldFunctor fun, const void* v1, void* v2) const; // Override BreadthFoldableContainer member
 
+  using MappableContainer<Data>::Empty;
+  using MappableContainer<Data>::Size;
 protected:
 
   // Auxiliary member functions (for MappableContainer)
@@ -161,8 +164,8 @@ protected:
 
   // Auxiliary member functions (for FoldableContainer)
 
-  void FoldPreOrder(const Node&, const FoldFunctor, const void*, void*); // Accessory function executing from one node of the tree
-  void FoldPostOrder(const Node&, const FoldFunctor, const void*, void*); // Accessory function executing from one node of the tree
+  void FoldPreOrder(Node&, const FoldFunctor, const void*, void*) const; // Accessory function executing from one node of the tree
+  void FoldPostOrder(Node&, const FoldFunctor, const void*, void*) const; // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
@@ -174,7 +177,7 @@ protected:
 
   // Auxiliary member functions (for InOrderFoldableContainer)
 
-  void FoldInOrder(const Node&, const FoldFunctor, const void*, void*) const; // Accessory function executing from one node of the tree
+  void FoldInOrder(Node&, const FoldFunctor, const void*, void*) const; // Accessory function executing from one node of the tree
 
   /* ************************************************************************ */
 
@@ -186,7 +189,7 @@ protected:
 
   // Auxiliary member functions (for BreadthFoldableContainer)
 
-  void FoldBreadth(const Node&, const FoldFunctor, const void*, void*) const; // Accessory function executing from one node of the tree
+  void FoldBreadth(Node&, const FoldFunctor, const void*, void*) const; // Accessory function executing from one node of the tree
 
 };
 
@@ -201,8 +204,10 @@ private:
 
 protected:
 
-  // ...
-
+  typedef typename BinaryTree<Data>::Node Node;
+  Node* binaryTreeRoot = nullptr;
+  Node* node = nullptr;
+  StackLst<Node*> stk;
 public:
 
   // Specific constructors
@@ -262,12 +267,19 @@ private:
 
 protected:
 
-  // ...
+    typedef typename BinaryTree<Data>::Node Node;
+    Node* binaryTreeRoot = nullptr;
+    Node* node = nullptr;
+    Node* prevNode = nullptr;
+    StackLst<Node*> stk;
+
+    void gotoNext();
+
 
 public:
 
   // Specific constructors
-  BTPostOrderIterator(const BinaryTree<Data>); // An iterator over a given binary tree
+  BTPostOrderIterator(const BinaryTree<Data>&); // An iterator over a given binary tree
 
   /* ************************************************************************ */
 
@@ -323,8 +335,12 @@ private:
 
 protected:
 
-  // ...
+    typedef typename BinaryTree<Data>::Node Node;
+    Node* binaryTreeRoot = nullptr;
+    Node* node = nullptr;
+    StackLst<Node*> stk;
 
+    void gotoMostLeftNode();
 public:
 
   // Specific constructors
@@ -346,10 +362,10 @@ public:
   /* ************************************************************************ */
 
   // Copy assignment
-  BTInOrderIterator operator=(const BTInOrderIterator<Data>&);
+  BTInOrderIterator& operator=(const BTInOrderIterator<Data>&);
 
   // Move assignment
-  BTInOrderIterator operator=(BTInOrderIterator<Data>&&) noexcept;
+  BTInOrderIterator& operator=(BTInOrderIterator<Data>&&) noexcept;
 
   /* ************************************************************************ */
 
@@ -384,12 +400,15 @@ private:
 
 protected:
 
-  // ...
+    typedef typename BinaryTree<Data>::Node Node;
+    Node* binaryTreeRoot = nullptr;
+    Node* node = nullptr;
+    QueueLst<Node*> que;
 
 public:
 
   // Specific constructors
-  BTBreadthIterator(const BinaryTree<Data>); // An iterator over a given binary tree
+  BTBreadthIterator(const BinaryTree<Data>&); // An iterator over a given binary tree
 
   /* ************************************************************************ */
 
