@@ -1,4 +1,4 @@
 # Lasd
 Progetto di laboratorio e strutture dati, Informatica Federico II 2020/2021. 
 
-![](https://counter1.stat.ovh/private/contatoreaccessi.php?c=ttmd7en1qypbpj2yuf7grrfubfegj94a)
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FMatteoRichardGaudino%2FLasd&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
