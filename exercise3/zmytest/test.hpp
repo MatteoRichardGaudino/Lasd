@@ -81,8 +81,8 @@ void launchStackMenu(Stack<Data>&);
 template<typename Data>
 void launchQueueMenu(Queue<Data>&);
 
-template<typename Data>
-void launchBtMenu(BinaryTree<Data>&);
+template<typename Data, template<typename> class BT>
+void launchBtMenu(BT<Data>&);
 
 /* *** Container test *** */
 
@@ -165,35 +165,34 @@ template<typename Data>
 void testHeadNDequeue(Queue<Data>&);
 
 /* *** BinaryTree test *** */
-template<typename Data>
-void popolaBt(BinaryTree<Data>&);
-void popolaBtVec(BinaryTreeVec<int>&);
-void popolaBtVec(BinaryTreeVec<float>&);
-void popolaBtVec(BinaryTreeVec<string>&);
+template<typename Data, template<typename> class BT>
+void popolaBt(BT<Data>&);
 
-void popolaBtLnk(BinaryTreeLnk<int>&);
-void popolaBtLnk(BinaryTreeLnk<float>&);
-void popolaBtLnk(BinaryTreeLnk<string>&);
+//template<typename Data>
+//void popolaBtVec(BinaryTreeVec<Data>&);
+//template<typename Data>
+//void popolaBtLnk(BinaryTreeLnk<Data>&);
 
 template<typename Data>
-void printPreOrder(const MappableContainer<Data>&);
+void printPreOrder(MappableContainer<Data>&);
 template<typename Data>
-void printPostOrder(const MappableContainer<Data>&);
+void printPostOrder(MappableContainer<Data>&);
 template<typename Data>
-void printInOrder(const InOrderMappableContainer<Data>&);
+void printInOrder(InOrderMappableContainer<Data>&);
 template<typename Data>
-void printBreadth(const BreadthMappableContainer<Data>&);
+void printBreadth(BreadthMappableContainer<Data>&);
 
 void testMappableBT(MappableContainer<int>&);
 void testMappableBT(MappableContainer<float>&);
 void testMappableBT(MappableContainer<string>&);
+
 
 template<typename Data>
 void gotoRight(typename BinaryTree<Data>::Node*&);
 template<typename Data>
 void gotoLeft(typename BinaryTree<Data>::Node*&);
 template<typename Data>
-void gotoRoot(typename BinaryTree<Data>::Node*&);
+void gotoRoot(const BinaryTree<Data>&, typename BinaryTree<Data>::Node*&);
 
 template<typename Data>
 void testRoot(BinaryTree<Data>&);

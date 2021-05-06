@@ -31,9 +31,10 @@ struct NodeVec : virtual public BinaryTree<Data>::Node { // Must extend Node
 
   protected:
     friend class BinaryTreeVec<Data>;
+
     unsigned long index;
     Data element;
-    Vector<NodeVec*>* elements = nullptr;
+    Vector<NodeVec>* elements = nullptr;
 
   public:
     NodeVec() = default;
@@ -45,6 +46,9 @@ struct NodeVec : virtual public BinaryTree<Data>::Node { // Must extend Node
     NodeVec& operator=(const NodeVec&);
     NodeVec& operator=(NodeVec&&) noexcept;
 
+    bool operator==(const NodeVec&) const noexcept;
+    bool operator!=(const NodeVec&) const noexcept;
+
     Data& Element() noexcept override; // Mutable access to the element (concrete function should not throw exceptions)
     const Data& Element() const noexcept override; // Immutable access to the element (concrete function should not throw exceptions)
 
@@ -55,7 +59,7 @@ struct NodeVec : virtual public BinaryTree<Data>::Node { // Must extend Node
     NodeVec& RightChild() const override;
 
   };
-Vector<NodeVec*> elements;
+Vector<NodeVec> elements;
 
 public:
 

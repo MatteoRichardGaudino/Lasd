@@ -377,47 +377,48 @@ void launchQueueMenu(Queue<Data>& que){
     while (mainMenu.show());
 }
 
-template<typename Data>
-void launchBtMenu(BinaryTree<Data>& bt){
-    typename BinaryTree<Data>::Node* node = nullptr;
+template<typename Data, template<typename> class BT>
+void launchBtMenu(BT<Data>& bt){
+    typename BinaryTree<Data>::Node* node;
 
-    if (!bt.Empty()){
-        node = &bt.Root();
-    }
+    if (bt.Empty()) node = nullptr;
+    else node = &bt.Root();
 
     Menu mainMenu("Chose an action:");
 
-    MenuItem insertValues("Insert Values", [&bt](){
+    MenuItem insertValues("Insert Values", [&bt, &node](){
         popolaBt(bt);
+        if (bt.Empty()) node = nullptr;
+        else node = &bt.Root();
     });
 
     MenuItem root("Print Root", [&bt](){
         testRoot(bt);
     });
 
-    MenuItem gotoroot("Goto Root", [&bt](){
+    MenuItem gotoroot("Goto Root", [&bt, &node](){
         gotoRoot(bt, node);
     });
 
 
-    MenuItem hasLeft("Has Left Child", [&bt](){
-        testHasLeftChild(node);
+    MenuItem hasLeft("Has Left Child", [&bt, &node](){
+        testHasLeftChild<Data>(node);
     });
-    MenuItem hasRight("Has Right Child", [&bt](){
-        testHasRightChild(node);
+    MenuItem hasRight("Has Right Child", [&bt, &node](){
+        testHasRightChild<Data>(node);
     });
-    MenuItem isLeaf("Is Leaf", [&bt](){
-        testIsLeaf(node);
+    MenuItem isLeaf("Is Leaf", [&bt, &node](){
+        testIsLeaf<Data>(node);
     });
 
-    MenuItem left("Goto left", [&bt](){
-        gotoLeft(node);
+    MenuItem left("Goto left", [&bt, &node](){
+        gotoLeft<Data>(node);
     });
-    MenuItem right("Goto Right", [&bt](){
-        gotoRight(node);
+    MenuItem right("Goto Right", [&node](){
+        gotoRight<Data>(node);
     });
-    MenuItem element("Print Element", [&bt](){
-        testElement(node);
+    MenuItem element("Print Element", [&node](){
+        testElement<Data>(node);
     });
 
     MenuItem preOrder("Print PreOrder", [&bt](){
@@ -437,7 +438,14 @@ void launchBtMenu(BinaryTree<Data>& bt){
         testMappableBT(bt);
     });
 
+    MenuItem fold("Test Fold function", [&bt](){
+        testFoldable(bt);
+    });
+
     mainMenu.add(insertValues);
+
+    setupContainerMenu(mainMenu, bt);
+
     mainMenu.add(root);
     mainMenu.add(gotoroot);
     mainMenu.add(hasLeft);
@@ -452,12 +460,10 @@ void launchBtMenu(BinaryTree<Data>& bt){
     mainMenu.add(inOrder);
     mainMenu.add(breadth);
     mainMenu.add(map);
+    mainMenu.add(fold);
 
-
-    setupContainerMenu(mainMenu, bt);
-
-
-    while (mainMenu.show());
+    while (mainMenu.show())
+        if (bt.Empty()) node = nullptr;
 }
 
 /* *** Random generation *** */
@@ -860,4 +866,143 @@ void testHeadNDequeue(Queue<Data>& que){
 
 /* *** BinaryTree test *** */
 
+template<typename Data, template<typename> class BT>
+void popolaBt(BT<Data>& bt){
+    Vector<Data> v;
+    popolaVector(v);
+    BT<Data> btTemp(v);
+    swap(bt, btTemp);
+}
+//template<typename Data>
+//void popolaBtVec(BinaryTreeVec<Data>& bt){
+//    Vector<Data> v;
+//    popolaVector(v);
+//    BinaryTreeVec<Data> btTmp(v);
+//    swap(bt, btTmp);
+//}
+//template<typename Data>
+//void popolaBtLnk(BinaryTreeLnk<Data>& bt){
+//    Vector<Data> v;
+//    popolaVector(v);
+//    BinaryTreeLnk<Data> btTmp(v);
+//    swap(bt, btTmp);
+//}
+
+template<typename Data>
+void printPreOrder(MappableContainer<Data>& mc){
+    cout<<"PreOrder: ";
+    mc.MapPreOrder([](Data& data, void*){
+        cout<< data << " ";
+    }, nullptr);
+    cout<< endl;
+}
+
+template<typename Data>
+void printPostOrder(MappableContainer<Data>& mc){
+    cout<<"PostOrder: ";
+    mc.MapPostOrder([](Data& data, void*){
+        cout<< data << " ";
+    }, nullptr);
+    cout<< endl;
+}
+template<typename Data>
+void printInOrder(InOrderMappableContainer<Data>& mc){
+    cout<<"InOrder: ";
+    mc.MapInOrder([](Data& data, void*){
+        cout<< data << " ";
+    }, nullptr);
+    cout<< endl;
+}
+template<typename Data>
+void printBreadth(BreadthMappableContainer<Data>& mc){
+    cout<<"Breadth: ";
+    mc.MapBreadth([](Data& data, void*){
+        cout<< data << " ";
+    }, nullptr);
+    cout<< endl;
+}
+
+void testMappableBT(MappableContainer<int>& mc){
+    mc.MapPreOrder([](int& data, void*){ data *= 3; }, nullptr);
+    cout << "Function n -> 3n applied to all elements" << endl;
+}
+void testMappableBT(MappableContainer<float>& mc){
+    mc.MapPreOrder([](float & data, void*){ data = data*data*data; }, nullptr);
+    cout << "Function n -> n*n*n applied to all elements" << endl;
+}
+void testMappableBT(MappableContainer<string>& mc){
+    string str;
+    cout<<"Insert string to concat:" << endl << ">>> ";
+    cin>>str;
+    mc.MapPreOrder([](string& data, void* str){ data = *static_cast<string*>(str)+data; }, &str);
+}
+
+
+template<typename Data>
+void gotoRight(typename BinaryTree<Data>::Node*& node){
+    try {
+        if (node == nullptr) cout<< "Binary Tree is Empty" << endl;
+        else {
+            node = &node->RightChild();
+            cout << "Node is set to Right child. Element: " << node->Element() << endl;
+        }
+    } catch (out_of_range& e){
+        cout<<"Error: " << e.what() << endl;
+    }
+}
+template<typename Data>
+void gotoLeft(typename BinaryTree<Data>::Node*& node){
+    try {
+        if (node == nullptr) cout<< "Binary Tree is Empty" << endl;
+        else {
+            node = &node->LeftChild();
+            cout << "Node is set to Left child. Element: " << node->Element() << endl;
+        }
+    } catch (out_of_range& e){
+        cout<<"Error: " << e.what() << endl;
+    }
+}
+template<typename Data>
+void gotoRoot(const BinaryTree<Data>& bt, typename BinaryTree<Data>::Node*& node){
+    try {
+        node = &bt.Root();
+        cout<<"Node is set to Root. Element: " << node->Element() << endl;
+    } catch (length_error& e){
+        cout<<"Error: " << e.what() << endl;
+    }
+}
+
+template<typename Data>
+void testRoot(BinaryTree<Data>& bt){
+    try {
+        cout<<"Root: " << bt.Root().Element() << endl;
+    } catch (length_error& e){
+        cout<<"Error: " << e.what() << endl;
+    }
+}
+
+template<typename Data>
+void testIsLeaf(typename BinaryTree<Data>::Node* node){
+    if (node == nullptr) cout<< "Binary Tree is Empty" << endl;
+    else
+        cout<< "Node is " << ((node->IsLeaf())? "": "not ") << "a leaf" << endl;
+}
+template<typename Data>
+void testHasLeftChild(typename BinaryTree<Data>::Node* node){
+    if (node == nullptr) cout<< "Binary Tree is Empty" << endl;
+    else
+        cout<< "Node has " << ((node->HasLeftChild())? "": "not ") << "Left Child" << endl;
+}
+template<typename Data>
+void testHasRightChild(typename BinaryTree<Data>::Node* node){
+    if (node == nullptr) cout<< "Binary Tree is Empty" << endl;
+    else
+        cout<< "Node has " << ((node->HasRightChild())? "": "not ") << "Right Child" << endl;
+}
+template<typename Data>
+void testElement(typename BinaryTree<Data>::Node* node){
+    if (node == nullptr) cout<< "Binary Tree is Empty" << endl;
+    else
+        cout<< "Element: "<< node->Element() << endl;
+}
 

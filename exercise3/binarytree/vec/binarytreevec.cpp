@@ -31,6 +31,16 @@ namespace lasd {
     }
 
     template<typename Data>
+    bool BinaryTreeVec<Data>::NodeVec::operator==(const NodeVec& node) const noexcept{
+        return BinaryTree<Data>::Node::operator==(node);
+    }
+    template<typename Data>
+    bool BinaryTreeVec<Data>::NodeVec::operator!=(const NodeVec& node) const noexcept{
+        return !operator==(node);
+    }
+
+
+    template<typename Data>
     Data& BinaryTreeVec<Data>::NodeVec::Element() noexcept{
         return element;
     }
@@ -50,13 +60,13 @@ namespace lasd {
 
     template<typename Data>
     typename BinaryTreeVec<Data>::NodeVec& BinaryTreeVec<Data>::NodeVec::LeftChild() const {
-        if (HasLeftChild()) return *(*elements)[(index*2) + 1];
+        if (HasLeftChild()) return (*elements)[(index*2) + 1];
         else throw std::out_of_range("Left child does not exist");
     }
 
     template<typename Data>
     typename BinaryTreeVec<Data>::NodeVec& BinaryTreeVec<Data>::NodeVec::RightChild() const {
-        if (HasRightChild()) return *(*elements)[(index*2) + 2];
+        if (HasRightChild()) return (*elements)[(index*2) + 2];
         else throw std::out_of_range("Right child does not exist");
     }
 
@@ -64,10 +74,9 @@ namespace lasd {
     BinaryTreeVec<Data>::BinaryTreeVec(const LinearContainer<Data>& linearContainer){
         elements.Resize(linearContainer.Size());
         for (unsigned long i = 0;  i < linearContainer.Size(); i++) {
-            elements[i] = new NodeVec();
-            elements[i]->element = linearContainer[i];
-            elements[i]->index = i;
-            elements[i]->elements = &elements;
+            elements[i].element = linearContainer[i];
+            elements[i].index = i;
+            elements[i].elements = &elements;
         }
     }
 
@@ -75,10 +84,9 @@ namespace lasd {
     BinaryTreeVec<Data>::BinaryTreeVec(const BinaryTreeVec<Data>& bt) {
         elements.Resize(bt.elements.Size());
         for (unsigned long i = 0; i < bt.elements.Size(); ++i) {
-            elements[i] = new NodeVec();
-            elements[i]->element = bt.elements[i]->element;
-            elements[i]->index = i;
-            elements[i]->elements = &elements;
+            elements[i].element = bt.elements[i].element;
+            elements[i].index = i;
+            elements[i].elements = &elements;
         }
     }
 
@@ -92,10 +100,9 @@ namespace lasd {
         Clear();
         elements.Resize(bt.elements.Size());
         for (unsigned long i = 0; i < bt.elements.Size(); ++i) {
-            elements[i] = new NodeVec();
-            elements[i]->element = bt.elements[i]->element;
-            elements[i]->index = i;
-            elements[i]->elements = &elements;
+            elements[i].element = bt.elements[i].element;
+            elements[i].index = i;
+            elements[i].elements = &elements;
         }
         return *this;
     }
@@ -110,7 +117,7 @@ namespace lasd {
     bool BinaryTreeVec<Data>::operator==(const BinaryTreeVec<Data>& bt) const noexcept{
         if (elements.Size() == bt.elements.Size()){
             for (unsigned long i = 0; i < elements.Size(); ++i) {
-                if (elements[i]->element != bt.elements[i]->element) return false;
+                if (elements[i].element != bt.elements[i].element) return false;
             }
             return true;
         } else return false;
@@ -123,15 +130,15 @@ namespace lasd {
     template<typename Data>
     typename BinaryTreeVec<Data>::NodeVec& BinaryTreeVec<Data>::Root() const{
         if (elements.Size() != 0){
-            return *(elements[0]);
+            return elements[0];
         } else throw std::length_error("BinaryTreeVec is Empty");
     }
 
     template<typename Data>
     void BinaryTreeVec<Data>::Clear(){
-        elements.MapPreOrder([](NodeVec* data, void* _){
-                delete data;
-            }, nullptr);
+//        elements.MapPreOrder([](NodeVec* data, void*){
+//                delete data;
+//            }, nullptr);
         elements.Clear();
     }
     template<typename Data>
@@ -146,14 +153,14 @@ namespace lasd {
     template<typename Data>
     void BinaryTreeVec<Data>::MapBreadth(const MapFunctor fun, void* v){
         for (unsigned long i = 0; i < elements.Size(); ++i) {
-            fun(elements[i]->element, v);
+            fun(elements[i].element, v);
         }
     }
 
     template<typename Data>
     void BinaryTreeVec<Data>::FoldBreadth(const FoldFunctor fun, const void* v1, void* v2) const{
         for (unsigned long i = 0; i < elements.Size(); ++i) {
-            fun(elements[i]->element, v1, v2);
+            fun(elements[i].element, v1, v2);
         }
     }
 
