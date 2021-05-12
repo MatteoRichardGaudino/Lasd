@@ -205,7 +205,8 @@ private:
 protected:
 
   typedef typename BinaryTree<Data>::Node Node;
-  Node* binaryTreeRoot = nullptr;
+
+  const BinaryTree<Data>* binaryTree = nullptr;
   Node* node = nullptr;
   StackLst<Node*> stk;
 public:
@@ -268,7 +269,7 @@ private:
 protected:
 
     typedef typename BinaryTree<Data>::Node Node;
-    Node* binaryTreeRoot = nullptr;
+    const BinaryTree<Data>* binaryTree = nullptr;
     Node* node = nullptr;
     Node* prevNode = nullptr;
     StackLst<Node*> stk;
@@ -336,7 +337,7 @@ private:
 protected:
 
     typedef typename BinaryTree<Data>::Node Node;
-    Node* binaryTreeRoot = nullptr;
+    const BinaryTree<Data>* binaryTree = nullptr;
     Node* node = nullptr;
     StackLst<Node*> stk;
 
@@ -401,7 +402,7 @@ private:
 protected:
 
     typedef typename BinaryTree<Data>::Node Node;
-    Node* binaryTreeRoot = nullptr;
+    const BinaryTree<Data>* binaryTree = nullptr;
     Node* node = nullptr;
     QueueLst<Node*> que;
 

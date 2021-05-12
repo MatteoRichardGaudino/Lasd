@@ -28,22 +28,8 @@ bool BinaryTree<Data>::Node::operator==(const Node& node) const noexcept {
             } else if (HasRightChild()) { // se non ha figlio sinistro allora ha figlio destro
                 return RightChild() == node.RightChild();
             }
-        } else return false;
-
-        //if (Element() != node.Element()) return false;
-        //if (IsLeaf() && node.IsLeaf()) return true;
-        //bool ret;
-        //if (HasLeftChild() && node.HasLeftChild()){
-        //    ret = LeftChild() == node.LeftChild();
-        //} else if (HasLeftChild() || node.HasLeftChild()) return false;
-        //else ret = true;
-        //if (ret) {
-        //    if (HasRightChild() && node.HasRightChild())
-        //        return RightChild() == node.RightChild();
-        //    else if (HasRightChild() || node.HasRightChild()) return false;
-        //    else return true;
-        //}
-
+        }
+        return false;
 }
 
 template<typename Data>
@@ -195,29 +181,31 @@ void BinaryTree<Data>::FoldBreadth(Node& node, const FoldFunctor fun, const void
 /* *** PreOrder Iterator  *** */
     template<typename Data>
     BTPreOrderIterator<Data>::BTPreOrderIterator(const BinaryTree<Data>& bt){
-        binaryTreeRoot = &bt.Root();
-        if (!bt.Empty()) node = &bt.Root();
+        binaryTree = &bt;
+        if (!bt.Empty()) {
+            node = &bt.Root();
+        }
     }
 
     template<typename Data>
     BTPreOrderIterator<Data>::BTPreOrderIterator(const BTPreOrderIterator<Data>& i){
         stk = i.stk;
         node = i.node;
-        binaryTreeRoot = i.binaryTreeRoot;
+        binaryTree = i.binaryTree;
     }
 
     template<typename Data>
     BTPreOrderIterator<Data>::BTPreOrderIterator(BTPreOrderIterator<Data>&& i) noexcept{
         std::swap(stk, i.stk);
         std::swap(node, i.node);
-        std::swap(binaryTreeRoot, i.binaryTreeRoot);
+        std::swap(binaryTree, i.binaryTree);
     }
 
     template<typename Data>
     BTPreOrderIterator<Data>& BTPreOrderIterator<Data>::operator=(const BTPreOrderIterator<Data>& i){
         stk = i.stk;
         node = i.node;
-        binaryTreeRoot = i.binaryTreeRoot;
+        binaryTree = i.binaryTree;
         return *this;
     }
 
@@ -225,12 +213,12 @@ void BinaryTree<Data>::FoldBreadth(Node& node, const FoldFunctor fun, const void
     BTPreOrderIterator<Data>& BTPreOrderIterator<Data>::operator=(BTPreOrderIterator<Data>&& i) noexcept{
         std::swap(stk, i.stk);
         std::swap(node, i.node);
-        std::swap(binaryTreeRoot, i.binaryTreeRoot);
+        std::swap(binaryTree, i.binaryTree);
         return *this;
     }
     template<typename Data>
     bool BTPreOrderIterator<Data>:: operator==(const BTPreOrderIterator<Data>& i) const noexcept{
-        return (node == i.node) && (stk == i.stk) && (*binaryTreeRoot == *i.binaryTreeRoot);
+        return (node == i.node) && (stk == i.stk) && (binaryTree == i.binaryTree);
     }
     template<typename Data>
     bool BTPreOrderIterator<Data>::operator!=(const BTPreOrderIterator<Data>& i) const noexcept{
@@ -260,12 +248,13 @@ void BinaryTree<Data>::FoldBreadth(Node& node, const FoldFunctor fun, const void
                 } else node = nullptr;
             }
         } else throw std::out_of_range("Iterator is Terminated");
+        return *this;
     }
 
 /* *** PostOrder Iterator  *** */
     template<typename Data>
     BTPostOrderIterator<Data>::BTPostOrderIterator(const BinaryTree<Data>& bt){
-        binaryTreeRoot = &bt.Root();
+        binaryTree = &bt;
         if (!bt.Empty()) {
             node = &bt.Root();
             gotoNext();
@@ -292,7 +281,7 @@ void BinaryTree<Data>::FoldBreadth(Node& node, const FoldFunctor fun, const void
     BTPostOrderIterator<Data>::BTPostOrderIterator(const BTPostOrderIterator<Data>& i){
         stk = i.stk;
         node = i.node;
-        binaryTreeRoot = i.binaryTreeRoot;
+        binaryTree = i.binaryTree;
         prevNode = i.prevNode;
     }
 
@@ -300,7 +289,7 @@ void BinaryTree<Data>::FoldBreadth(Node& node, const FoldFunctor fun, const void
     BTPostOrderIterator<Data>::BTPostOrderIterator(BTPostOrderIterator<Data>&& i) noexcept{
         std::swap(stk, i.stk);
         std::swap(node, i.node);
-        std::swap(binaryTreeRoot, i.binaryTreeRoot);
+        std::swap(binaryTree, i.binaryTree);
         std::swap(prevNode, i.prevNode);
     }
 
@@ -308,7 +297,7 @@ void BinaryTree<Data>::FoldBreadth(Node& node, const FoldFunctor fun, const void
     BTPostOrderIterator<Data>& BTPostOrderIterator<Data>::operator=(const BTPostOrderIterator<Data>& i){
         stk = i.stk;
         node = i.node;
-        binaryTreeRoot = i.binaryTreeRoot;
+        binaryTree = i.binaryTree;
         prevNode = i.prevNode;
         return *this;
     }
@@ -318,12 +307,12 @@ void BinaryTree<Data>::FoldBreadth(Node& node, const FoldFunctor fun, const void
         std::swap(stk, i.stk);
         std::swap(node, i.node);
         std::swap(prevNode, i.prevNode);
-        std::swap(binaryTreeRoot, i.binaryTreeRoot);
+        std::swap(binaryTree, i.binaryTree);
         return *this;
     }
     template<typename Data>
     bool BTPostOrderIterator<Data>:: operator==(const BTPostOrderIterator<Data>& i) const noexcept{
-        return (node == i.node) && (prevNode == i.prevNode) && (stk == i.stk) && (*binaryTreeRoot == *i.binaryTreeRoot);
+        return (node == i.node) && (prevNode == i.prevNode) && (stk == i.stk) && (binaryTree == i.binaryTree);
     }
     template<typename Data>
     bool BTPostOrderIterator<Data>::operator!=(const BTPostOrderIterator<Data>& i) const noexcept{
@@ -370,14 +359,14 @@ void BinaryTree<Data>::FoldBreadth(Node& node, const FoldFunctor fun, const void
                     gotoNext();
                 } else node = stk.TopNPop();
             }
-            return *this;
         } else throw std::out_of_range("Iterator is Terminated");
+        return *this;
     }
 
 /* *** InOrder Iterator  *** */
     template<typename Data>
     BTInOrderIterator<Data>::BTInOrderIterator(const BinaryTree<Data>& bt){
-        binaryTreeRoot = &bt.Root();
+        binaryTree = &bt;
         if (!bt.Empty()) {
             node = &bt.Root();
             gotoMostLeftNode();
@@ -395,21 +384,21 @@ void BinaryTree<Data>::FoldBreadth(Node& node, const FoldFunctor fun, const void
     BTInOrderIterator<Data>::BTInOrderIterator(const BTInOrderIterator<Data>& i){
         stk = i.stk;
         node = i.node;
-        binaryTreeRoot = i.binaryTreeRoot;
+        binaryTree = i.binaryTree;
     }
 
     template<typename Data>
     BTInOrderIterator<Data>::BTInOrderIterator(BTInOrderIterator<Data>&& i) noexcept{
         std::swap(stk, i.stk);
         std::swap(node, i.node);
-        std::swap(binaryTreeRoot, i.binaryTreeRoot);
+        std::swap(binaryTree, i.binaryTree);
     }
 
     template<typename Data>
     BTInOrderIterator<Data>& BTInOrderIterator<Data>::operator=(const BTInOrderIterator<Data>& i){
         stk = i.stk;
         node = i.node;
-        binaryTreeRoot = i.binaryTreeRoot;
+        binaryTree = i.binaryTree;
         return *this;
     }
 
@@ -417,12 +406,12 @@ void BinaryTree<Data>::FoldBreadth(Node& node, const FoldFunctor fun, const void
     BTInOrderIterator<Data>& BTInOrderIterator<Data>::operator=(BTInOrderIterator<Data>&& i) noexcept{
         std::swap(stk, i.stk);
         std::swap(node, i.node);
-        std::swap(binaryTreeRoot, i.binaryTreeRoot);
+        std::swap(binaryTree, i.binaryTree);
         return *this;
     }
     template<typename Data>
     bool BTInOrderIterator<Data>:: operator==(const BTInOrderIterator<Data>& i) const noexcept{
-        return (node == i.node) && (stk == i.stk) && (*binaryTreeRoot == *i.binaryTreeRoot);
+        return (node == i.node) && (stk == i.stk) && (binaryTree == i.binaryTree);
     }
     template<typename Data>
     bool BTInOrderIterator<Data>::operator!=(const BTInOrderIterator<Data>& i) const noexcept{
@@ -450,14 +439,14 @@ void BinaryTree<Data>::FoldBreadth(Node& node, const FoldFunctor fun, const void
                 if(stk.Empty()) node = nullptr;
                 else node = stk.TopNPop();
             }
-            return *this;
         } else throw std::out_of_range("Iterator is Terminated");
+        return *this;
     }
 
 /* *** Breadth Iterator  *** */
     template<typename Data>
     BTBreadthIterator<Data>::BTBreadthIterator(const BinaryTree<Data>& bt){
-        binaryTreeRoot = &bt.Root();
+        binaryTree = &bt;
         if (!bt.Empty()) {
             node = &bt.Root();
             if (node->HasLeftChild()) que.Enqueue(&(node->LeftChild()));
@@ -470,21 +459,21 @@ void BinaryTree<Data>::FoldBreadth(Node& node, const FoldFunctor fun, const void
     BTBreadthIterator<Data>::BTBreadthIterator(const BTBreadthIterator<Data>& i){
         que = i.que;
         node = i.node;
-        binaryTreeRoot = i.binaryTreeRoot;
+        binaryTree = i.binaryTree;
     }
 
     template<typename Data>
     BTBreadthIterator<Data>::BTBreadthIterator(BTBreadthIterator<Data>&& i) noexcept{
         std::swap(que, i.que);
         std::swap(node, i.node);
-        std::swap(binaryTreeRoot, i.binaryTreeRoot);
+        std::swap(binaryTree, i.binaryTree);
     }
 
     template<typename Data>
     BTBreadthIterator<Data>& BTBreadthIterator<Data>::operator=(const BTBreadthIterator<Data>& i){
         que = i.que;
         node = i.node;
-        binaryTreeRoot = i.binaryTreeRoot;
+        binaryTree = i.binaryTree;
         return *this;
     }
 
@@ -492,12 +481,12 @@ void BinaryTree<Data>::FoldBreadth(Node& node, const FoldFunctor fun, const void
     BTBreadthIterator<Data>& BTBreadthIterator<Data>::operator=(BTBreadthIterator<Data>&& i) noexcept{
         std::swap(que, i.que);
         std::swap(node, i.node);
-        std::swap(binaryTreeRoot, i.binaryTreeRoot);
+        std::swap(binaryTree, i.binaryTree);
         return *this;
     }
     template<typename Data>
     bool BTBreadthIterator<Data>:: operator==(const BTBreadthIterator<Data>& i) const noexcept{
-        return (node == i.node) && (que == i.que) && (*binaryTreeRoot == *i.binaryTreeRoot);
+        return (node == i.node) && (que == i.que) && (binaryTree == i.binaryTree);
     }
     template<typename Data>
     bool BTBreadthIterator<Data>::operator!=(const BTBreadthIterator<Data>& i) const noexcept{
@@ -523,27 +512,7 @@ void BinaryTree<Data>::FoldBreadth(Node& node, const FoldFunctor fun, const void
                 if (node->HasLeftChild()) que.Enqueue(&(node->LeftChild()));
                 if (node->HasRightChild()) que.Enqueue(&(node->RightChild()));
             } else node = nullptr;
-            return *this;
         } else throw std::out_of_range("Iterator is Terminated");
+        return *this;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

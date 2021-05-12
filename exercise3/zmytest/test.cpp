@@ -1,12 +1,17 @@
 #include "test.hpp"
 #include "../stack/vec/stackvec.hpp"
-#include "../stack/lst/stacklst.hpp"
-#include "../queue/lst/queuelst.hpp"
-#include "../queue/vec/queuevec.hpp"
 #include <random>
 
 using namespace std;
 
+MenuItem::MenuItem(const MenuItem& m){
+    text = m.text;
+    action = m.action;
+}
+MenuItem::MenuItem(MenuItem&& m) noexcept{
+    swap(text, m.text);
+    swap(action, m.action);
+}
 MenuItem::MenuItem(const string& label, function<void()> onAction){
     text = label;
     action = std::move(onAction);
@@ -28,8 +33,28 @@ Menu::Menu(const string& t){
 void Menu::add(const MenuItem& item){
     items.InsertAtBack(item);
 }
-void Menu::add(MenuItem&& item) noexcept{
+void Menu::add(MenuItem&& item){
     items.InsertAtBack(move(item));
+}
+
+void Menu::add(const string& t, const Menu& subMenu, bool loop){
+    add(t, subMenu, loop, []{});
+}
+void Menu::add(const string& t, const Menu& subMenu, bool loop, function<void(void)> fun){
+    if(loop) {
+        MenuItem item(t, [&subMenu, &fun]() {
+            fun();
+            subMenu.loop();
+        });
+        add(item);
+    } else {
+        MenuItem item(t, [&subMenu, &fun]() {
+            fun();
+            subMenu.show();
+        });
+        add(item);
+    }
+
 }
 
 bool Menu::show() const{
@@ -57,8 +82,22 @@ bool Menu::show() const{
     return true;
 }
 
+void Menu::loop() const{
+    while (show());
+}
+void Menu::loop(function<void(void)> fun) const{
+    while (show())
+        fun();
+}
+
+void Menu::clear(){
+    items.Clear();
+}
+
 void launchMenu(){
-    Menu structMenu("Chose a data structure or Launch lasd full test:");
+    Menu exMenu("Chose an exercise:");
+
+    Menu structMenu("Chose a data structure");
     Menu typeMenu("Chose a type:");
 
     MenuItem intType("Int");
@@ -70,122 +109,127 @@ void launchMenu(){
         exit(0);
     });
 
-    MenuItem vect("Vector", [&](){
-        intType.setOnAction([](){ launchVectorMenu<int>(); });
-        floatType.setOnAction([](){ launchVectorMenu<float>(); });
-        stringType.setOnAction([](){ launchVectorMenu<string>(); });
+    MenuItem ex1("Exercise 1 (Vector, List)", [&](){
+        MenuItem vect("Vector", [&](){
+            intType.setOnAction([](){ launchVectorMenu<int>(); });
+            floatType.setOnAction([](){ launchVectorMenu<float>(); });
+            stringType.setOnAction([](){ launchVectorMenu<string>(); });
+        });
+        MenuItem list("List", [&](){
+            intType.setOnAction([](){ launchListMenu<int>(); });
+            floatType.setOnAction([](){ launchListMenu<float>(); });
+            stringType.setOnAction([](){ launchListMenu<string>(); });
+        });
+        structMenu.add(vect);
+        structMenu.add(list);
     });
-    MenuItem list("List", [&](){
-        intType.setOnAction([](){ launchListMenu<int>(); });
-        floatType.setOnAction([](){ launchListMenu<float>(); });
-        stringType.setOnAction([](){ launchListMenu<string>(); });
+    MenuItem ex2("Exercise 2 (Queue, Stack)", [&](){
+        MenuItem stackVec("StackVec", [&](){
+            intType.setOnAction([](){
+                StackVec<int> stk;
+                launchStackMenu(stk);
+            });
+            floatType.setOnAction([](){
+                StackVec<float> stk;
+                launchStackMenu(stk);
+            });
+            stringType.setOnAction([](){
+                StackVec<string> stk;
+                launchStackMenu(stk);
+            });
+        });
+        MenuItem stackLst("StackLst", [&](){
+            intType.setOnAction([](){
+                StackLst<int> stk;
+                launchStackMenu<int>(stk);
+            });
+            floatType.setOnAction([](){
+                StackLst<float> stk;
+                launchStackMenu<float>(stk);
+            });
+            stringType.setOnAction([](){
+                StackLst<string> stk;
+                launchStackMenu<string>(stk);
+            });
+        });
+        MenuItem queueLst("QueueLst", [&](){
+            intType.setOnAction([](){
+                QueueLst<int> que;
+                launchQueueMenu<int>(que);
+            });
+            floatType.setOnAction([](){
+                QueueLst<float> que;
+                launchQueueMenu<float>(que);
+            });
+            stringType.setOnAction([](){
+                QueueLst<string> que;
+                launchQueueMenu<string>(que);
+            });
+        });
+        MenuItem queueVec("QueueVec", [&](){
+            intType.setOnAction([](){
+                QueueVec<int> que;
+                launchQueueMenu<int>(que);
+            });
+            floatType.setOnAction([](){
+                QueueVec<float> que;
+                launchQueueMenu<float>(que);
+            });
+            stringType.setOnAction([](){
+                QueueVec<string> que;
+                launchQueueMenu<string>(que);
+            });
+        });
+        structMenu.add(stackVec);
+        structMenu.add(stackLst);
+        structMenu.add(queueVec);
+        structMenu.add(queueLst);
+    });
+    MenuItem ex3("Exercise 3 (BinaryTree)", [&](){
+        MenuItem btVec("BinaryTreeVec", [&](){
+            intType.setOnAction([](){
+                BinaryTreeVec<int> bt;
+                launchBtMenu(bt);
+            });
+            floatType.setOnAction([](){
+                BinaryTreeVec<float> bt;
+                launchBtMenu(bt);
+            });
+            stringType.setOnAction([](){
+                BinaryTreeVec<string> bt;
+                launchBtMenu(bt);
+            });
+        });
+        MenuItem btLnk("BinaryTreeLnk", [&](){
+            intType.setOnAction([](){
+                BinaryTreeLnk<int> bt;
+                launchBtMenu(bt);
+            });
+            floatType.setOnAction([](){
+                BinaryTreeLnk<float> bt;
+                launchBtMenu(bt);
+            });
+            stringType.setOnAction([](){
+                BinaryTreeLnk<string> bt;
+                launchBtMenu(bt);
+            });
+        });
+        structMenu.add(btVec);
+        structMenu.add(btLnk);
     });
 
-    MenuItem stackVec("StackVec", [&](){
-        intType.setOnAction([](){
-            StackVec<int> stk;
-            launchStackMenu(stk);
-        });
-        floatType.setOnAction([](){
-            StackVec<float> stk;
-            launchStackMenu(stk);
-        });
-        stringType.setOnAction([](){
-            StackVec<string> stk;
-            launchStackMenu(stk);
-        });
-    });
-    MenuItem stackLst("StackLst", [&](){
-        intType.setOnAction([](){
-            StackLst<int> stk;
-            launchStackMenu<int>(stk);
-        });
-        floatType.setOnAction([](){
-            StackLst<float> stk;
-            launchStackMenu<float>(stk);
-        });
-        stringType.setOnAction([](){
-            StackLst<string> stk;
-            launchStackMenu<string>(stk);
-        });
-    });
+    exMenu.add(ex1);
+    exMenu.add(ex2);
+    exMenu.add(ex3);
+    exMenu.add(fullTest);
 
-    MenuItem queueLst("QueueLst", [&](){
-        intType.setOnAction([](){
-            QueueLst<int> que;
-            launchQueueMenu<int>(que);
-        });
-        floatType.setOnAction([](){
-            QueueLst<float> que;
-            launchQueueMenu<float>(que);
-        });
-        stringType.setOnAction([](){
-            QueueLst<string> que;
-            launchQueueMenu<string>(que);
-        });
-    });
-    MenuItem queueVec("QueueVec", [&](){
-        intType.setOnAction([](){
-            QueueVec<int> que;
-            launchQueueMenu<int>(que);
-        });
-        floatType.setOnAction([](){
-            QueueVec<float> que;
-            launchQueueMenu<float>(que);
-        });
-        stringType.setOnAction([](){
-            QueueVec<string> que;
-            launchQueueMenu<string>(que);
-        });
-    });
-
-    MenuItem btVec("BinaryTreeVec", [&](){
-        intType.setOnAction([](){
-            BinaryTreeVec<int> bt;
-            launchBtMenu(bt);
-        });
-        floatType.setOnAction([](){
-            BinaryTreeVec<float> bt;
-            launchBtMenu(bt);
-        });
-        stringType.setOnAction([](){
-            BinaryTreeVec<string> bt;
-            launchBtMenu(bt);
-        });
-    });
-
-    MenuItem btLnk("BinaryTreeLnk", [&](){
-        intType.setOnAction([](){
-            BinaryTreeLnk<int> bt;
-            launchBtMenu(bt);
-        });
-        floatType.setOnAction([](){
-            BinaryTreeLnk<float> bt;
-            launchBtMenu(bt);
-        });
-        stringType.setOnAction([](){
-            BinaryTreeLnk<string> bt;
-            launchBtMenu(bt);
-        });
-    });
-
-
-    structMenu.add(vect);
-    structMenu.add(list);
-    structMenu.add(stackVec);
-    structMenu.add(stackLst);
-    structMenu.add(queueVec);
-    structMenu.add(queueLst);
-    structMenu.add(btVec);
-    structMenu.add(btLnk);
-    structMenu.add(fullTest);
-
-    if(structMenu.show()){
-        typeMenu.add(intType);
-        typeMenu.add(floatType);
-        typeMenu.add(stringType);
-        typeMenu.show();
-    }
+    if (exMenu.show())
+        if(structMenu.show()){
+            typeMenu.add(intType);
+            typeMenu.add(floatType);
+            typeMenu.add(stringType);
+            typeMenu.show();
+        }
 }
 
 void setupContainerMenu(Menu& menu, Container& cont){
@@ -377,93 +421,158 @@ void launchQueueMenu(Queue<Data>& que){
     while (mainMenu.show());
 }
 
+template<typename Data, template<typename> class IT>
+void setupIteratorMenu(Menu& itMenu, IT<Data>& it, BinaryTree<Data>& bt){
+    MenuItem nextIt("Next", [&it]{
+        testIteraorNext(it);
+    });
+    MenuItem acces("operator*", [&it]{
+        testIteraorAcces(it);
+    });
+    MenuItem modify("Modify value", [&it]{
+        testModifyBTNode(it);
+    });
+    MenuItem terminatedIt("Terminated", [&it]{
+        testIteraorTerminated(it);
+    });
+    MenuItem resetIt("Reset", [&it, &bt]{
+        resetIterator(it, bt);
+    });
+
+    itMenu.add(nextIt);
+    itMenu.add(acces);
+    itMenu.add(modify);
+    itMenu.add(terminatedIt);
+    itMenu.add(resetIt);
+}
+
 template<typename Data, template<typename> class BT>
 void launchBtMenu(BT<Data>& bt){
     typename BinaryTree<Data>::Node* node;
+
+    BTInOrderIterator<Data> inIT(bt);
+    BTPreOrderIterator<Data> preIT(bt);
+    BTPostOrderIterator<Data> postIT(bt);
+    BTBreadthIterator<Data> brhIT(bt);
+
 
     if (bt.Empty()) node = nullptr;
     else node = &bt.Root();
 
     Menu mainMenu("Chose an action:");
 
-    MenuItem insertValues("Insert Values", [&bt, &node](){
+
+    MenuItem insertValues("Insert Values", [&](){ // 3 1 1 1 10
         popolaBt(bt);
         if (bt.Empty()) node = nullptr;
         else node = &bt.Root();
-    });
 
+        resetIterator(inIT, bt);
+        resetIterator(preIT, bt);
+        resetIterator(postIT, bt);
+        resetIterator(brhIT, bt);
+    });
     MenuItem root("Print Root", [&bt](){
         testRoot(bt);
     });
 
-    MenuItem gotoroot("Goto Root", [&bt, &node](){
-        gotoRoot(bt, node);
-    });
-
-
-    MenuItem hasLeft("Has Left Child", [&bt, &node](){
-        testHasLeftChild<Data>(node);
-    });
-    MenuItem hasRight("Has Right Child", [&bt, &node](){
-        testHasRightChild<Data>(node);
-    });
-    MenuItem isLeaf("Is Leaf", [&bt, &node](){
-        testIsLeaf<Data>(node);
-    });
-
-    MenuItem left("Goto left", [&bt, &node](){
-        gotoLeft<Data>(node);
-    });
-    MenuItem right("Goto Right", [&node](){
-        gotoRight<Data>(node);
-    });
-    MenuItem element("Print Element", [&node](){
+    Menu navigate("Chose an action:");
+        MenuItem hasLeft("Has Left Child", [&node](){
+            testHasLeftChild<Data>(node);
+        });
+        MenuItem hasRight("Has Right Child", [&node](){
+            testHasRightChild<Data>(node);
+        });
+        MenuItem isLeaf("Is Leaf", [&node](){
+            testIsLeaf<Data>(node);
+        });
+        MenuItem gotoroot("Goto Root", [&bt, &node](){
+            gotoRoot(bt, node);
+        });
+        MenuItem left("Goto left", [&node](){
+            gotoLeft<Data>(node);
+        });
+        MenuItem right("Goto Right", [&node](){
+            gotoRight<Data>(node);
+        });
+        MenuItem element("Print Element", [&node](){
         testElement<Data>(node);
     });
+        MenuItem modElement("Modify Element", [&node]{
+            testModifyBTNode<Data>(node);
+        });
+        navigate.add(hasLeft);
+        navigate.add(hasRight);
+        navigate.add(isLeaf);
+        navigate.add(gotoroot);
+        navigate.add(left);
+        navigate.add(right);
+        navigate.add(element);
+        navigate.add(modElement);
+    Menu print("Chose an action:");
+        MenuItem preOrder("Print PreOrder", [&bt]{
+            printPreOrder(bt);
+        });
+        MenuItem postOrder("Print PostOrder", [&bt]{
+            printPostOrder(bt);
+        });
+        MenuItem inOrder("Print InOrder", [&bt]{
+            printInOrder(bt);
+        });
+        MenuItem breadth("Print Breadth", [&bt]{
+            printBreadth(bt);
+        });
+        print.add(preOrder);
+        print.add(postOrder);
+        print.add(inOrder);
+        print.add(breadth);
 
-    MenuItem preOrder("Print PreOrder", [&bt](){
-        printPreOrder(bt);
-    });
-    MenuItem postOrder("Print PostOrder", [&bt](){
-        printPostOrder(bt);
-    });
-    MenuItem inOrder("Print InOrder", [&bt](){
-        printInOrder(bt);
-    });
-    MenuItem breadth("Print Breadth", [&bt](){
-        printBreadth(bt);
-    });
 
-    MenuItem map("Test Map function", [&bt](){
+    Menu iteratorMenu("Chose an Iterator:");
+        Menu preOrderIt("Chose an action");
+        Menu postOrderIt("Chose an action");
+        Menu inOrderIt("Chose an action");
+        Menu breadthIt("Chose an action");
+        setupIteratorMenu(preOrderIt, preIT, bt);
+        setupIteratorMenu(postOrderIt, postIT, bt);
+        setupIteratorMenu(inOrderIt, inIT, bt);
+        setupIteratorMenu(breadthIt, brhIT, bt);
+
+        iteratorMenu.add("PreOrder Iterator", preOrderIt, true);
+        iteratorMenu.add("PostOrder Iterator", postOrderIt, true);
+        iteratorMenu.add("InOrder Iterator", inOrderIt, true);
+        iteratorMenu.add("Breadth Iterator", breadthIt, true);
+
+
+    MenuItem map("Test Map function", [&bt]{
         testMappableBT(bt);
     });
-
-    MenuItem fold("Test Fold function", [&bt](){
+    MenuItem fold("Test Fold function", [&bt]{
         testFoldable(bt);
     });
 
     mainMenu.add(insertValues);
-
     setupContainerMenu(mainMenu, bt);
-
     mainMenu.add(root);
-    mainMenu.add(gotoroot);
-    mainMenu.add(hasLeft);
-    mainMenu.add(hasRight);
-    mainMenu.add(isLeaf);
-    mainMenu.add(left);
-    mainMenu.add(right);
-    mainMenu.add(element);
 
-    mainMenu.add(preOrder);
-    mainMenu.add(postOrder);
-    mainMenu.add(inOrder);
-    mainMenu.add(breadth);
+    mainMenu.add("Navigate the Tree", navigate, true);
+    mainMenu.add("Print", print, false);
+    mainMenu.add("Iterators", iteratorMenu, true);
+
+
     mainMenu.add(map);
     mainMenu.add(fold);
 
-    while (mainMenu.show())
-        if (bt.Empty()) node = nullptr;
+    mainMenu.loop([&]{
+        if (bt.Empty()) {
+            node = nullptr;
+            resetIterator(inIT, bt);
+            resetIterator(preIT, bt);
+            resetIterator(postIT, bt);
+            resetIterator(brhIT, bt);
+        }
+    });
+
 }
 
 /* *** Random generation *** */
@@ -526,7 +635,7 @@ void popolaVector(Vector<int>& vec) {
     cout << "Insert new Size" << endl << ">>> ";
     cin >> newSize;
     vec.Resize(newSize);
-    uniform_int_distribution<int> distr(-10000, 10000);
+    uniform_int_distribution<int> distr(0, 100);
     for (unsigned long i = 0; i < vec.Size(); i++) {
         vec[i] = distr(gen);
     }
@@ -871,22 +980,8 @@ void popolaBt(BT<Data>& bt){
     Vector<Data> v;
     popolaVector(v);
     BT<Data> btTemp(v);
-    swap(bt, btTemp);
+    bt = btTemp;
 }
-//template<typename Data>
-//void popolaBtVec(BinaryTreeVec<Data>& bt){
-//    Vector<Data> v;
-//    popolaVector(v);
-//    BinaryTreeVec<Data> btTmp(v);
-//    swap(bt, btTmp);
-//}
-//template<typename Data>
-//void popolaBtLnk(BinaryTreeLnk<Data>& bt){
-//    Vector<Data> v;
-//    popolaVector(v);
-//    BinaryTreeLnk<Data> btTmp(v);
-//    swap(bt, btTmp);
-//}
 
 template<typename Data>
 void printPreOrder(MappableContainer<Data>& mc){
@@ -1005,4 +1100,51 @@ void testElement(typename BinaryTree<Data>::Node* node){
     else
         cout<< "Element: "<< node->Element() << endl;
 }
+template<typename Data>
+void testModifyBTNode(typename BinaryTree<Data>::Node* node){
+    try {
+        cout<< "Insert new Value" << endl << ">>> ";
+        cin>> node->Element();
+    } catch (...){
+        cout<< "Error" << endl;
+    }
+}
+template<typename Data>
+void testModifyBTNode(ForwardIterator<Data>& it){
+    try {
+        cout << "Insert new Value" << endl << ">>> ";
+        cin >> (*it);
+    } catch (out_of_range& e){
+        cout<< "Error: " << e.what() << endl;
+    }
+}
 
+/* *** Iterator test *** */
+
+template<typename Data>
+void testIteraorNext(ForwardIterator<Data>& it){
+    try {
+        ++it;
+        cout<< "Next Element: " << *it << endl;
+    } catch (out_of_range& e){
+        cout<< "Error: " << e.what() << endl;
+    }
+}
+template<typename Data>
+void testIteraorAcces(ForwardIterator<Data>& it){
+    try {
+        cout<< "Element: " << *it << endl;
+    } catch (out_of_range& e){
+        cout<< "Error: " << e.what() << endl;
+    }
+}
+template<typename Data>
+void testIteraorTerminated(ForwardIterator<Data>& it){
+    cout<< "Iterator is " << (it.Terminated()? "": "not ") << "Terminated" << endl;
+}
+
+template<typename Data, template<typename> class IT>
+void resetIterator(IT<Data>& it, BinaryTree<Data>& bt){
+    IT<Data> tmp(bt);
+    it = tmp;
+}

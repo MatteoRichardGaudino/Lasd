@@ -78,6 +78,7 @@ namespace lasd {
             elements[i].index = i;
             elements[i].elements = &elements;
         }
+        size = elements.Size();
     }
 
     template<typename Data>
@@ -88,11 +89,13 @@ namespace lasd {
             elements[i].index = i;
             elements[i].elements = &elements;
         }
+        size = elements.Size();
     }
 
     template<typename Data>
     BinaryTreeVec<Data>::BinaryTreeVec(BinaryTreeVec<Data>&& bt) noexcept {
         std::swap(elements, bt.elements);
+        std::swap(size, bt.size);
     }
 
     template<typename Data>
@@ -104,12 +107,14 @@ namespace lasd {
             elements[i].index = i;
             elements[i].elements = &elements;
         }
+        size = elements.Size();
         return *this;
     }
 
     template<typename Data>
     BinaryTreeVec<Data>& BinaryTreeVec<Data>::operator=(BinaryTreeVec<Data>&& bt) noexcept{
         std::swap(elements, bt.elements);
+        std::swap(size, bt.size);
         return *this;
     }
 
@@ -136,18 +141,8 @@ namespace lasd {
 
     template<typename Data>
     void BinaryTreeVec<Data>::Clear(){
-//        elements.MapPreOrder([](NodeVec* data, void*){
-//                delete data;
-//            }, nullptr);
         elements.Clear();
-    }
-    template<typename Data>
-    unsigned long BinaryTreeVec<Data>::Size() const noexcept{
-        return elements.Size();
-    }
-    template<typename Data>
-    bool BinaryTreeVec<Data>::Empty() const noexcept{
-        return Size() == 0;
+        size = 0;
     }
 
     template<typename Data>

@@ -117,11 +117,7 @@ namespace lasd {
 
     template<typename Data>
     bool BinaryTreeLnk<Data>::operator==(const BinaryTreeLnk<Data>& bt) const noexcept{
-        if (!Empty() && !bt.Empty())
-            return Root() == bt.Root();
-        else if (Empty() && bt.Empty()) return true;
-        else return false;
-
+        return BinaryTree<Data>::operator==(bt);
     }
 
     template<typename Data>

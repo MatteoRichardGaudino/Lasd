@@ -25,6 +25,8 @@ public:
     typedef function<void(void)> ActionFunctor;
 
     MenuItem() = default;
+    MenuItem(const MenuItem&);
+    MenuItem(MenuItem&&) noexcept;
     MenuItem(const string &);
     MenuItem(const string&, ActionFunctor);
     virtual ~MenuItem() = default;
@@ -37,6 +39,11 @@ public:
     MenuItem& operator=(const MenuItem& m){
         text = m.text;
         action = m.action;
+        return *this;
+    }
+    MenuItem& operator=(MenuItem&& m) noexcept{
+        swap(text, m.text);
+        swap(action, m.action);
         return *this;
     }
     bool operator==(const MenuItem& m) const noexcept{
@@ -52,8 +59,13 @@ public:
     Menu(const string&);
     virtual ~Menu() = default;
     void add(const MenuItem&);
-    void add(MenuItem&&) noexcept;
+    void add(MenuItem&&);
+    void add(const string&, const Menu&, bool);
+    void add(const string&, const Menu&, bool, function<void(void)>);
     bool show() const;
+    void loop() const;
+    void loop(function<void(void)>) const;
+    void clear();
 private:
     List<MenuItem> items;
     string title;
@@ -69,6 +81,8 @@ template<typename Data>
 void setupFoldableMenu(Menu&, FoldableContainer<Data>&);
 template<typename Data>
 void setupTestableContainerMenu(Menu&, TestableContainer<Data>&);
+template<typename Data, template<typename> class IT>
+void setupIteratorMenu(Menu&, IT<Data>&, BinaryTree<Data>&);
 
 template<typename Data>
 void launchVectorMenu();
@@ -205,6 +219,24 @@ template<typename Data>
 void testHasRightChild(typename BinaryTree<Data>::Node*);
 template<typename Data>
 void testElement(typename BinaryTree<Data>::Node*);
+
+template<typename Data>
+void testModifyBTNode(typename BinaryTree<Data>::Node* node);
+template<typename Data>
+void testModifyBTNode(ForwardIterator<Data>&);
+
+/* *** Iterator test *** */
+
+template<typename Data>
+void testIteraorNext(ForwardIterator<Data>&);
+template<typename Data>
+void testIteraorAcces(ForwardIterator<Data>&);
+template<typename Data>
+void testIteraorTerminated(ForwardIterator<Data>&);
+template<typename Data, template<typename> class IT>
+void resetIterator(IT<Data>&, BinaryTree<Data>&);
+
+
 
 
 /* ************************************************************************** */

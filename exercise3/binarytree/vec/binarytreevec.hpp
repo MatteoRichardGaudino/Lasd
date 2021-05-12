@@ -22,8 +22,8 @@ private:
 
 protected:
   // ...
-
-struct NodeVec : virtual public BinaryTree<Data>::Node { // Must extend Node
+  using BinaryTree<Data>::size;
+  struct NodeVec : virtual public BinaryTree<Data>::Node { // Must extend Node
 
   private:
 
@@ -109,8 +109,6 @@ public:
   // Specific member functions (inherited from Container)
 
   void Clear() override; // Override Container member
-  unsigned long Size() const noexcept override; // Override Container member
-  bool Empty() const noexcept override;
 
   using typename MappableContainer<Data>::MapFunctor;
   void MapBreadth(const MapFunctor, void*) override; // Override BreadthMappableContainer member
