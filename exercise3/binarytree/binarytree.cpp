@@ -333,23 +333,6 @@ void BinaryTree<Data>::FoldBreadth(Node& node, const FoldFunctor fun, const void
     template<typename Data>
     BTPostOrderIterator<Data>& BTPostOrderIterator<Data>::operator++(){
         if (!Terminated()){
-            //do {
-            //    if (!(node->IsLeaf() || RisPrev() || (!node->HasRightChild() && LisPrev()))) { // non deve entrare se è una foglia o r è prev o (se r non esiste allora l non è prev)
-            //            Node *n = node;
-            //            if (node->HasRightChild()) {
-            //                stk.Push(node);
-            //                node = &(node->RightChild());
-            //            }
-            //            if (n->HasHasLeftChild()) {
-            //                stk.Push(node);
-            //                node = &(n->LeftChild());
-            //            }
-            //    } else {
-            //        prevNode = node;
-            //        if (stk.Empty()) node = nullptr;
-            //        else node = stk.TopNPop();
-            //    }
-            //} while (!(node->IsLeaf() || RisPrev() || (!node->HasRightChild() && LisPrev()))); // esci quando nodo è foglia oppure r è prev o r non esiste e l è prev
             if (stk.Empty()) node = nullptr;
             else {
                 prevNode = node;

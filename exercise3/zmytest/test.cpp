@@ -14,7 +14,7 @@ MenuItem::MenuItem(MenuItem&& m) noexcept{
 }
 MenuItem::MenuItem(const string& label, function<void()> onAction){
     text = label;
-    action = std::move(onAction);
+    action = onAction;
 }
 MenuItem::MenuItem(const string & label){
     text = label;
@@ -25,7 +25,7 @@ void MenuItem::run(){
 }
 
 void MenuItem::setOnAction(function<void(void)> fun){
-    action = std::move(fun);
+    action = fun;
 }
 Menu::Menu(const string& t){
     title = t;
@@ -38,23 +38,17 @@ void Menu::add(MenuItem&& item){
 }
 
 void Menu::add(const string& t, const Menu& subMenu, bool loop){
-    add(t, subMenu, loop, []{});
-}
-void Menu::add(const string& t, const Menu& subMenu, bool loop, function<void(void)> fun){
-    if(loop) {
-        MenuItem item(t, [&subMenu, &fun]() {
-            fun();
+    if (loop){
+        MenuItem item(t, [&]() {
             subMenu.loop();
         });
         add(item);
-    } else {
-        MenuItem item(t, [&subMenu, &fun]() {
-            fun();
+    } else{
+        MenuItem item(t, [&]() {
             subMenu.show();
         });
         add(item);
     }
-
 }
 
 bool Menu::show() const{
@@ -720,7 +714,7 @@ void popolaList(List<string>& list){
         for (unsigned int j = 0; j < s; ++j) {
             str += charset[distr(gen)];
         }
-        list.InsertAtFront(move(str));
+        list.InsertAtFront(str);
     }
 }
 
@@ -861,7 +855,7 @@ void popolaStack(Stack<string>& stk){
         for (unsigned int j = 0; j < s; ++j) {
             str += charset[distr(gen)];
         }
-        stk.Push(move(str));
+        stk.Push(str);
     }
 }
 
@@ -936,7 +930,7 @@ void popolaQueue(Queue<string>& que){
         for (unsigned int j = 0; j < s; ++j) {
             str += charset[distr(gen)];
         }
-        que.Enqueue(move(str));
+        que.Enqueue(str);
     }
 }
 

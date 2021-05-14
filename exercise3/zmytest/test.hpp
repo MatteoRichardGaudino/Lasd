@@ -61,7 +61,6 @@ public:
     void add(const MenuItem&);
     void add(MenuItem&&);
     void add(const string&, const Menu&, bool);
-    void add(const string&, const Menu&, bool, function<void(void)>);
     bool show() const;
     void loop() const;
     void loop(function<void(void)>) const;
