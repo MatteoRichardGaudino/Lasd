@@ -7,7 +7,7 @@
 /* ************************************************************************** */
 
 template <typename Data>
-void EqualBST(uint& testnum, uint& testerr, const lasd::BST<Data>& bst1, const lasd::BST<Data>& bst2) {
+void EqualBST(unsigned int& testnum, unsigned int& testerr, const lasd::BST<Data>& bst1, const lasd::BST<Data>& bst2) {
   bool tst;
   testnum++;
   try {
@@ -17,11 +17,11 @@ void EqualBST(uint& testnum, uint& testerr, const lasd::BST<Data>& bst1, const l
     tst = false;
     std::cout << "\"" << exc.what() << "\": " << "Error!" << std::endl;
   }
-  testerr += (1 - (uint) tst);
+  testerr += (1 - (unsigned int) tst);
 }
 
 template <typename Data>
-void NonEqualBST(uint& testnum, uint& testerr, const lasd::BST<Data>& bst1, const lasd::BST<Data>& bst2) {
+void NonEqualBST(unsigned int& testnum, unsigned int& testerr, const lasd::BST<Data>& bst1, const lasd::BST<Data>& bst2) {
   bool tst;
   testnum++;
   try {
@@ -31,13 +31,13 @@ void NonEqualBST(uint& testnum, uint& testerr, const lasd::BST<Data>& bst1, cons
     tst = false;
     std::cout << "\"" << exc.what() << "\": " << "Error!" << std::endl;
   }
-  testerr += (1 - (uint) tst);
+  testerr += (1 - (unsigned int) tst);
 }
 
 /* ************************************************************************** */
 
 template <typename Data>
-void InsertC(uint& testnum, uint& testerr, lasd::BST<Data>& bst, const Data& val) {
+void InsertC(unsigned int& testnum, unsigned int& testerr, lasd::BST<Data>& bst, const Data& val) {
   testnum++;
   bool tst = true;
   try {
@@ -48,11 +48,11 @@ void InsertC(uint& testnum, uint& testerr, lasd::BST<Data>& bst, const Data& val
     tst = false;
     std::cout << "\"" << exc.what() << "\": " << "Error!" << std::endl;
   }
-  testerr += (1 - (uint) tst);
+  testerr += (1 - (unsigned int) tst);
 }
 
 template <typename Data>
-void InsertM(uint& testnum, uint& testerr, lasd::BST<Data>& bst, const Data& val) {
+void InsertM(unsigned int& testnum, unsigned int& testerr, lasd::BST<Data>& bst, const Data& val) {
   testnum++;
   bool tst = true;
   try {
@@ -63,11 +63,11 @@ void InsertM(uint& testnum, uint& testerr, lasd::BST<Data>& bst, const Data& val
     tst = false;
     std::cout << "\"" << exc.what() << "\": " << "Error!" << std::endl;
   }
-  testerr += (1 - (uint) tst);
+  testerr += (1 - (unsigned int) tst);
 }
 
 template <typename Data>
-void Remove(uint& testnum, uint& testerr, lasd::BST<Data>& bst, const Data& val) {
+void Remove(unsigned int& testnum, unsigned int& testerr, lasd::BST<Data>& bst, const Data& val) {
   testnum++;
   bool tst = true;
   try {
@@ -78,11 +78,11 @@ void Remove(uint& testnum, uint& testerr, lasd::BST<Data>& bst, const Data& val)
     tst = false;
     std::cout << "\"" << exc.what() << "\": " << "Error!" << std::endl;
   }
-  testerr += (1 - (uint) tst);
+  testerr += (1 - (unsigned int) tst);
 }
 
 template <typename Data>
-void Min(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool chk, const Data& val) {
+void Min(unsigned int& testnum, unsigned int& testerr, lasd::BST<Data>& bst, bool chk, const Data& val) {
   bool tst;
   testnum++;
   try {
@@ -94,11 +94,11 @@ void Min(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool chk, const Dat
     tst = false;
     std::cout << std::endl << "Wrong exception: " << exc.what() << "!" << std::endl;
   }
-  testerr += (1 - (uint) tst);
+  testerr += (1 - (unsigned int) tst);
 }
 
 template <typename Data>
-void RemoveMin(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool chk) {
+void RemoveMin(unsigned int& testnum, unsigned int& testerr, lasd::BST<Data>& bst, bool chk) {
   bool tst;
   testnum++;
   try {
@@ -111,11 +111,11 @@ void RemoveMin(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool chk) {
     tst = false;
     std::cout << std::endl << "Wrong exception: " << exc.what() << "!" << std::endl;
   }
-  testerr += (1 - (uint) tst);
+  testerr += (1 - (unsigned int) tst);
 }
 
 template <typename Data>
-void MinNRemove(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool chk, const Data& val) {
+void MinNRemove(unsigned int& testnum, unsigned int& testerr, lasd::BST<Data>& bst, bool chk, const Data& val) {
   bool tst;
   testnum++;
   try {
@@ -127,11 +127,11 @@ void MinNRemove(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool chk, co
     tst = false;
     std::cout << std::endl << "Wrong exception: " << exc.what() << "!" << std::endl;
   }
-  testerr += (1 - (uint) tst);
+  testerr += (1 - (unsigned int) tst);
 }
 
 template <typename Data>
-void Max(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool chk, const Data& val) {
+void Max(unsigned int& testnum, unsigned int& testerr, lasd::BST<Data>& bst, bool chk, const Data& val) {
   bool tst;
   testnum++;
   try {
@@ -143,11 +143,11 @@ void Max(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool chk, const Dat
     tst = false;
     std::cout << std::endl << "Wrong exception: " << exc.what() << "!" << std::endl;
   }
-  testerr += (1 - (uint) tst);
+  testerr += (1 - (unsigned int) tst);
 }
 
 template <typename Data>
-void RemoveMax(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool chk) {
+void RemoveMax(unsigned int& testnum, unsigned int& testerr, lasd::BST<Data>& bst, bool chk) {
   bool tst;
   testnum++;
   try {
@@ -160,11 +160,11 @@ void RemoveMax(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool chk) {
     tst = false;
     std::cout << std::endl << "Wrong exception: " << exc.what() << "!" << std::endl;
   }
-  testerr += (1 - (uint) tst);
+  testerr += (1 - (unsigned int) tst);
 }
 
 template <typename Data>
-void MaxNRemove(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool chk, const Data& val) {
+void MaxNRemove(unsigned int& testnum, unsigned int& testerr, lasd::BST<Data>& bst, bool chk, const Data& val) {
   bool tst;
   testnum++;
   try {
@@ -176,11 +176,11 @@ void MaxNRemove(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool chk, co
     tst = false;
     std::cout << std::endl << "Wrong exception: " << exc.what() << "!" << std::endl;
   }
-  testerr += (1 - (uint) tst);
+  testerr += (1 - (unsigned int) tst);
 }
 
 template <typename Data>
-void Predecessor(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool chk, const Data& prd, const Data& val) {
+void Predecessor(unsigned int& testnum, unsigned int& testerr, lasd::BST<Data>& bst, bool chk, const Data& prd, const Data& val) {
   bool tst;
   testnum++;
   try {
@@ -192,11 +192,11 @@ void Predecessor(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool chk, c
     tst = false;
     std::cout << std::endl << "Wrong exception: " << exc.what() << "!" << std::endl;
   }
-  testerr += (1 - (uint) tst);
+  testerr += (1 - (unsigned int) tst);
 }
 
 template <typename Data>
-void RemovePredecessor(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool chk, const Data& prd) {
+void RemovePredecessor(unsigned int& testnum, unsigned int& testerr, lasd::BST<Data>& bst, bool chk, const Data& prd) {
   bool tst;
   testnum++;
   try {
@@ -209,11 +209,11 @@ void RemovePredecessor(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool 
     tst = false;
     std::cout << std::endl << "Wrong exception: " << exc.what() << "!" << std::endl;
   }
-  testerr += (1 - (uint) tst);
+  testerr += (1 - (unsigned int) tst);
 }
 
 template <typename Data>
-void PredecessorNRemove(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool chk, const Data& prd, const Data& val) {
+void PredecessorNRemove(unsigned int& testnum, unsigned int& testerr, lasd::BST<Data>& bst, bool chk, const Data& prd, const Data& val) {
   bool tst;
   testnum++;
   try {
@@ -225,11 +225,11 @@ void PredecessorNRemove(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool
     tst = false;
     std::cout << std::endl << "Wrong exception: " << exc.what() << "!" << std::endl;
   }
-  testerr += (1 - (uint) tst);
+  testerr += (1 - (unsigned int) tst);
 }
 
 template <typename Data>
-void Successor(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool chk, const Data& prd, const Data& val) {
+void Successor(unsigned int& testnum, unsigned int& testerr, lasd::BST<Data>& bst, bool chk, const Data& prd, const Data& val) {
   bool tst;
   testnum++;
   try {
@@ -241,11 +241,11 @@ void Successor(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool chk, con
     tst = false;
     std::cout << std::endl << "Wrong exception: " << exc.what() << "!" << std::endl;
   }
-  testerr += (1 - (uint) tst);
+  testerr += (1 - (unsigned int) tst);
 }
 
 template <typename Data>
-void RemoveSuccessor(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool chk, const Data& prd) {
+void RemoveSuccessor(unsigned int& testnum, unsigned int& testerr, lasd::BST<Data>& bst, bool chk, const Data& prd) {
   bool tst;
   testnum++;
   try {
@@ -258,11 +258,11 @@ void RemoveSuccessor(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool ch
     tst = false;
     std::cout << std::endl << "Wrong exception: " << exc.what() << "!" << std::endl;
   }
-  testerr += (1 - (uint) tst);
+  testerr += (1 - (unsigned int) tst);
 }
 
 template <typename Data>
-void SuccessorNRemove(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool chk, const Data& prd, const Data& val) {
+void SuccessorNRemove(unsigned int& testnum, unsigned int& testerr, lasd::BST<Data>& bst, bool chk, const Data& prd, const Data& val) {
   bool tst;
   testnum++;
   try {
@@ -274,7 +274,7 @@ void SuccessorNRemove(uint& testnum, uint& testerr, lasd::BST<Data>& bst, bool c
     tst = false;
     std::cout << std::endl << "Wrong exception: " << exc.what() << "!" << std::endl;
   }
-  testerr += (1 - (uint) tst);
+  testerr += (1 - (unsigned int) tst);
 }
 
 /* ************************************************************************** */

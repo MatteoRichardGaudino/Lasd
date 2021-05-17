@@ -2,6 +2,7 @@
 #include "zlasdtest/test.hpp"
 
 #include "zmytest/test.hpp"
+#include "bst/bst.hpp"
 
 /* ************************************************************************** */
 

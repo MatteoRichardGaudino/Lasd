@@ -21,8 +21,8 @@ using namespace std;
 
 /* ************************************************************************** */
 
-void stestBSTInt(uint& testnum, uint& testerr) {
-  uint loctestnum = 0, loctesterr = 0;
+void stestBSTInt(unsigned int& testnum, unsigned int& testerr) {
+  unsigned int loctestnum = 0, loctesterr = 0;
   cout << endl << "Begin of BST<int> Test" << endl;
   try {
     lasd::BST<int> bst;
@@ -159,8 +159,8 @@ void stestBSTInt(uint& testnum, uint& testerr) {
   testerr += loctesterr;
 }
 
-void stestBSTFloat(uint& testnum, uint& testerr) {
-  uint loctestnum = 0, loctesterr = 0;
+void stestBSTFloat(unsigned int& testnum, unsigned int& testerr) {
+  unsigned int loctestnum = 0, loctesterr = 0;
   cout << endl << "Begin of BST<double> Test" << endl;
   try {
     lasd::List<double> lst;
@@ -221,8 +221,8 @@ void stestBSTFloat(uint& testnum, uint& testerr) {
   testerr += loctesterr;
 }
 
-void stestBSTString(uint& testnum, uint& testerr) {
-  uint loctestnum = 0, loctesterr = 0;
+void stestBSTString(unsigned int& testnum, unsigned int& testerr) {
+  unsigned int loctestnum = 0, loctesterr = 0;
   cout << endl << "Begin of BST<string> Test" << endl;
   try {
     lasd::Vector<string> vec(5);
@@ -315,7 +315,7 @@ void stestBSTString(uint& testnum, uint& testerr) {
 /* ************************************************************************** */
 
 void testSimpleExercise4() {
-  uint testnum = 0, testerr = 0;
+  unsigned int testnum = 0, testerr = 0;
   stestBSTInt(testnum, testerr);
   stestBSTFloat(testnum, testerr);
   stestBSTString(testnum, testerr);

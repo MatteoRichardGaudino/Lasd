@@ -28,6 +28,6 @@ add_executable(main
         exercise3/zlasdtest/exercise3/simpletest.cpp
         exercise3/zlasdtest/exercise3/fulltest.cpp
 
-        exercise4/zlasdtest/exercise3/simpletest.cpp
-        exercise4/zlasdtest/exercise3/fulltest.cpp
+        exercise4/zlasdtest/exercise4/simpletest.cpp
+        exercise4/zlasdtest/exercise4/fulltest.cpp
         )

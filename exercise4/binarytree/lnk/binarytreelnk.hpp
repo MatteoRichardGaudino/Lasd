@@ -5,7 +5,6 @@
 /* ************************************************************************** */
 
 #include "../binarytree.hpp"
-
 /* ************************************************************************** */
 
 namespace lasd {
@@ -35,11 +34,12 @@ protected:
   protected:
     friend class BinaryTreeLnk<Data>;
     Data element;
-    NodeLnk* right = nullptr;
-    NodeLnk* left = nullptr;
 
     void AuxCopyNode(NodeLnk*, const Node&);
   public:
+    NodeLnk* right = nullptr;
+    NodeLnk* left = nullptr;
+
     NodeLnk() = default;
     ~NodeLnk() = default;
     NodeLnk(const Data& e);
