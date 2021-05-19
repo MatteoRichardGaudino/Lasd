@@ -1,6 +1,4 @@
-
 #include "bst.hpp"
-#include <iostream>
 
 namespace lasd {
 
@@ -53,6 +51,7 @@ namespace lasd {
     void BST<Data>::Insert(const Data& data){
         if (Empty()){
             root = new NodeLnk(data);
+            size++;
         } else{
             NodeLnk* nod = FindPointerTo(data);
             if (nod->Element() != data){
@@ -62,14 +61,15 @@ namespace lasd {
                 } else {
                     nod->right = newNode;
                 }
+                size++;
             }
         }
-        size++;
     }
     template<typename Data>
     void BST<Data>::Insert(Data&& data){
         if (Empty()){
             root = new NodeLnk(std::move(data));
+            size++;
         } else{
             NodeLnk* nod = FindPointerTo(data);
             if (nod->Element() != data){
@@ -79,14 +79,14 @@ namespace lasd {
                 } else {
                     nod->right = newNode;
                 }
+                size++;
             }
         }
-        size++;
     }
     template<typename Data>
     void BST<Data>::Remove(const Data& data){
         if (!Empty()){
-            Remove(root, data);
+            root = Remove(root, data);
         }
     }
 
@@ -189,9 +189,6 @@ namespace lasd {
     template<typename Data>
     bool BST<Data>::Exists(const Data& data) const noexcept{
         if (!Empty()) {
-            BinaryTreeLnk<Data>::FoldInOrder([](const Data& dat, const void *, void *){
-                std::cout<< dat << " ";
-            }, nullptr, nullptr);
             NodeLnk *n = FindPointerTo(data);
             if (n->Element() == data) return true;
             else return false;
@@ -234,9 +231,6 @@ namespace lasd {
 
     template<typename Data>
     typename BST<Data>::NodeLnk* BST<Data>::DetachMin(){
-        BinaryTreeLnk<Data>::FoldInOrder([](const Data& dat, const void *, void *){
-            std::cout<< dat << " ";
-        }, nullptr, nullptr);
         if (size > 0){
             NodeLnk* nod = SkipOnLeft(root);
             size--;
@@ -256,9 +250,6 @@ namespace lasd {
 
     template<typename Data>
     typename BST<Data>::NodeLnk* BST<Data>::DetachMax(){
-        BinaryTreeLnk<Data>::FoldInOrder([](const Data& dat, const void *, void *){
-            std::cout<< dat << " ";
-        }, nullptr, nullptr);
         if (size > 0){
             NodeLnk* nod = SkipOnRight(root);
             size--;
@@ -343,7 +334,7 @@ namespace lasd {
             }
             if (tmp != nullptr && tmp->HasLeftChild()) return FindPointerToMax(tmp->left);
             return pred;
-        } else return nullptr; // TODO
+        } else return nullptr;
     }
     template<typename Data>
     typename BST<Data>::NodeLnk* BST<Data>::FindPointerToSuccessor(const Data& data) const{

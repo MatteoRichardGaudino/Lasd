@@ -11,6 +11,7 @@
 #include "../binarytree/binarytree.hpp"
 #include "../binarytree/vec/binarytreevec.hpp"
 #include "../binarytree/lnk/binarytreelnk.hpp"
+#include "../bst/bst.hpp"
 
 #include <string>
 #include <iostream>
@@ -96,6 +97,8 @@ void launchQueueMenu(Queue<Data>&);
 
 template<typename Data, template<typename> class BT>
 void launchBtMenu(BT<Data>&);
+template<typename Data>
+void launchBSTMenu(BST<Data>&);
 
 /* *** Container test *** */
 
@@ -180,12 +183,6 @@ void testHeadNDequeue(Queue<Data>&);
 /* *** BinaryTree test *** */
 template<typename Data, template<typename> class BT>
 void popolaBt(BT<Data>&);
-
-//template<typename Data>
-//void popolaBtVec(BinaryTreeVec<Data>&);
-//template<typename Data>
-//void popolaBtLnk(BinaryTreeLnk<Data>&);
-
 template<typename Data>
 void printPreOrder(MappableContainer<Data>&);
 template<typename Data>
@@ -234,6 +231,30 @@ template<typename Data>
 void testIteraorTerminated(ForwardIterator<Data>&);
 template<typename Data, template<typename> class IT>
 void resetIterator(IT<Data>&, BinaryTree<Data>&);
+
+/* *** BST test *** */
+
+template<typename Data>
+void testInsert(BST<Data>&);
+template<typename Data>
+void testRemove(BST<Data>&);
+template<typename Data>
+void testMin(BST<Data>&);
+template<typename Data>
+void testRemoveMin(BST<Data>&);
+template<typename Data>
+void testMax(BST<Data>&);
+template<typename Data>
+void testRemoveMax(BST<Data>&);
+template<typename Data>
+void testPredecessor(BST<Data>&);
+template<typename Data>
+void testRemovePredecessor(BST<Data>&);
+template<typename Data>
+void testSuccessor(BST<Data>&);
+template<typename Data>
+void testRemoveSuccessor(BST<Data>&);
+
 
 
 

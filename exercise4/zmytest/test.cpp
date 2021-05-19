@@ -39,12 +39,12 @@ void Menu::add(MenuItem&& item){
 
 void Menu::add(const string& t, const Menu& subMenu, bool loop){
     if (loop){
-        MenuItem item(t, [&]() {
+        MenuItem item(t, [=]() {
             subMenu.loop();
         });
         add(item);
     } else{
-        MenuItem item(t, [&]() {
+        MenuItem item(t, [=]() {
             subMenu.show();
         });
         add(item);
@@ -211,10 +211,29 @@ void launchMenu(){
         structMenu.add(btVec);
         structMenu.add(btLnk);
     });
+    MenuItem ex4("Exercise 4 (BST)", [&](){
+        MenuItem bst("BST", [&](){
+            intType.setOnAction([](){
+                BST<int> bt;
+                launchBSTMenu(bt);
+            });
+            floatType.setOnAction([](){
+                BST<float> bt;
+                launchBSTMenu(bt);
+            });
+            stringType.setOnAction([](){
+                BST<string> bt;
+                launchBSTMenu(bt);
+            });
+        });
+        structMenu.add(bst);
+    });
+
 
     exMenu.add(ex1);
     exMenu.add(ex2);
     exMenu.add(ex3);
+    exMenu.add(ex4);
     exMenu.add(fullTest);
 
     if (exMenu.show())
@@ -286,6 +305,30 @@ void setupTestableContainerMenu(Menu& menu, TestableContainer<Data>& cont){
         testExists(cont);
     });
     menu.add(exists);
+}
+template<typename Data, template<typename> class IT>
+void setupIteratorMenu(Menu& itMenu, IT<Data>& it, BinaryTree<Data>& bt){
+    MenuItem nextIt("Next", [&it]{
+        testIteraorNext(it);
+    });
+    MenuItem acces("operator*", [&it]{
+        testIteraorAcces(it);
+    });
+    MenuItem modify("Modify value", [&it]{
+        testModifyBTNode(it);
+    });
+    MenuItem terminatedIt("Terminated", [&it]{
+        testIteraorTerminated(it);
+    });
+    MenuItem resetIt("Reset", [&it, &bt]{
+        resetIterator(it, bt);
+    });
+
+    itMenu.add(nextIt);
+    itMenu.add(acces);
+    itMenu.add(modify);
+    itMenu.add(terminatedIt);
+    itMenu.add(resetIt);
 }
 
 template<typename Data>
@@ -415,30 +458,7 @@ void launchQueueMenu(Queue<Data>& que){
     while (mainMenu.show());
 }
 
-template<typename Data, template<typename> class IT>
-void setupIteratorMenu(Menu& itMenu, IT<Data>& it, BinaryTree<Data>& bt){
-    MenuItem nextIt("Next", [&it]{
-        testIteraorNext(it);
-    });
-    MenuItem acces("operator*", [&it]{
-        testIteraorAcces(it);
-    });
-    MenuItem modify("Modify value", [&it]{
-        testModifyBTNode(it);
-    });
-    MenuItem terminatedIt("Terminated", [&it]{
-        testIteraorTerminated(it);
-    });
-    MenuItem resetIt("Reset", [&it, &bt]{
-        resetIterator(it, bt);
-    });
 
-    itMenu.add(nextIt);
-    itMenu.add(acces);
-    itMenu.add(modify);
-    itMenu.add(terminatedIt);
-    itMenu.add(resetIt);
-}
 
 template<typename Data, template<typename> class BT>
 void launchBtMenu(BT<Data>& bt){
@@ -567,6 +587,158 @@ void launchBtMenu(BT<Data>& bt){
         }
     });
 
+}
+
+template<typename Data>
+void launchBSTMenu(BST<Data>& bt){
+    typename BinaryTree<Data>::Node* node;
+
+    BTInOrderIterator<Data> inIT(bt);
+    BTPreOrderIterator<Data> preIT(bt);
+    BTPostOrderIterator<Data> postIT(bt);
+    BTBreadthIterator<Data> brhIT(bt);
+
+
+    if (bt.Empty()) node = nullptr;
+    else node = &bt.Root();
+
+    Menu mainMenu("Chose an action:");
+
+
+    MenuItem insertValues("Insert Values", [&](){ // 3 1 1 1 10
+        popolaBt(bt);
+        if (bt.Empty()) node = nullptr;
+        else node = &bt.Root();
+
+        resetIterator(inIT, bt);
+        resetIterator(preIT, bt);
+        resetIterator(postIT, bt);
+        resetIterator(brhIT, bt);
+    });
+    MenuItem root("Print Root", [&bt](){
+        testRoot(bt);
+    });
+
+    Menu navigate("Chose an action:");
+    MenuItem hasLeft("Has Left Child", [&node](){
+        testHasLeftChild<Data>(node);
+    });
+    MenuItem hasRight("Has Right Child", [&node](){
+        testHasRightChild<Data>(node);
+    });
+    MenuItem isLeaf("Is Leaf", [&node](){
+        testIsLeaf<Data>(node);
+    });
+    MenuItem gotoroot("Goto Root", [&bt, &node](){
+        gotoRoot(bt, node);
+    });
+    MenuItem left("Goto left", [&node](){
+        gotoLeft<Data>(node);
+    });
+    MenuItem right("Goto Right", [&node](){
+        gotoRight<Data>(node);
+    });
+    MenuItem element("Print Element", [&node](){
+        testElement<Data>(node);
+    });
+    MenuItem modElement("Modify Element", [&node]{
+        testModifyBTNode<Data>(node);
+    });
+    navigate.add(hasLeft);
+    navigate.add(hasRight);
+    navigate.add(isLeaf);
+    navigate.add(gotoroot);
+    navigate.add(left);
+    navigate.add(right);
+    navigate.add(element);
+    navigate.add(modElement);
+    Menu print("Chose an action:");
+    MenuItem preOrder("Print PreOrder", [&bt]{
+        printPreOrder(bt);
+    });
+    MenuItem postOrder("Print PostOrder", [&bt]{
+        printPostOrder(bt);
+    });
+    MenuItem inOrder("Print InOrder", [&bt]{
+        printInOrder(bt);
+    });
+    MenuItem breadth("Print Breadth", [&bt]{
+        printBreadth(bt);
+    });
+    print.add(preOrder);
+    print.add(postOrder);
+    print.add(inOrder);
+    print.add(breadth);
+
+
+    Menu iteratorMenu("Chose an Iterator:");
+    Menu preOrderIt("Chose an action");
+    Menu postOrderIt("Chose an action");
+    Menu inOrderIt("Chose an action");
+    Menu breadthIt("Chose an action");
+    setupIteratorMenu(preOrderIt, preIT, bt);
+    setupIteratorMenu(postOrderIt, postIT, bt);
+    setupIteratorMenu(inOrderIt, inIT, bt);
+    setupIteratorMenu(breadthIt, brhIT, bt);
+
+    iteratorMenu.add("PreOrder Iterator", preOrderIt, true);
+    iteratorMenu.add("PostOrder Iterator", postOrderIt, true);
+    iteratorMenu.add("InOrder Iterator", inOrderIt, true);
+    iteratorMenu.add("Breadth Iterator", breadthIt, true);
+
+
+    MenuItem map("Test Map function", [&bt]{
+        testMappableBT(bt);
+    });
+    MenuItem fold("Test Fold function", [&bt]{
+        testFoldable(bt);
+    });
+
+    mainMenu.add(insertValues);
+    setupContainerMenu(mainMenu, bt);
+    mainMenu.add(root);
+
+    mainMenu.add("Navigate the Tree", navigate, true);
+    mainMenu.add("Print", print, false);
+    mainMenu.add("Iterators", iteratorMenu, true);
+
+
+    mainMenu.add(map);
+    mainMenu.add(fold);
+
+    Menu bstMenu("Chose an action");
+        MenuItem insert("Insert", [&bt]{ testInsert(bt); });
+        MenuItem remove("Remove", [&bt]{ testRemove(bt); });
+        MenuItem min("Min", [&bt]{ testMin(bt); });
+        MenuItem removeMin("Remove Min", [&bt]{ testRemoveMin(bt); });
+        MenuItem max("Max", [&bt]{ testMax(bt); });
+        MenuItem removeMax("Remove Max", [&bt]{ testRemoveMax(bt); });
+        MenuItem predecessor("Predecessor", [&bt]{ testPredecessor(bt); });
+        MenuItem removePredecessor("Remove Predecessor", [&bt]{ testRemovePredecessor(bt); });
+        MenuItem successor("Successor", [&bt]{ testSuccessor(bt); });
+        MenuItem removeSuccessor("Remove Successor", [&bt]{ testRemoveSuccessor(bt); });
+        bstMenu.add(insert);
+        bstMenu.add(remove);
+        bstMenu.add(min);
+        bstMenu.add(removeMin);
+        bstMenu.add(max);
+        bstMenu.add(removeMax);
+        bstMenu.add(predecessor);
+        bstMenu.add(removePredecessor);
+        bstMenu.add(successor);
+        bstMenu.add(removeSuccessor);
+
+    mainMenu.add("BST functions", bstMenu, true);
+
+    mainMenu.loop([&]{
+        if (bt.Empty()) {
+            node = nullptr;
+            resetIterator(inIT, bt);
+            resetIterator(preIT, bt);
+            resetIterator(postIT, bt);
+            resetIterator(brhIT, bt);
+        }
+    });
 }
 
 /* *** Random generation *** */
@@ -1141,4 +1313,101 @@ template<typename Data, template<typename> class IT>
 void resetIterator(IT<Data>& it, BinaryTree<Data>& bt){
     IT<Data> tmp(bt);
     it = tmp;
+}
+
+/* *** BST test *** */
+
+template<typename Data>
+void testInsert(BST<Data>& bst){
+    Data data;
+    cout<< "Insert new value" << endl << ">>> ";
+    cin>> data;
+    bst.Insert(data);
+}
+template<typename Data>
+void testRemove(BST<Data>& bst){
+    Data data;
+    cout<< "Insert value to remove" << endl << ">>> ";
+    cin>> data;
+    if (!bst.Exists(data)) cout<< "\"" << data << "\" does not Exists" << endl;
+    else {
+        bst.Remove(data);
+        cout<< "Value: \"" << data << "\" Removed" << endl;
+    }
+}
+template<typename Data>
+void testMin(BST<Data>& bst){
+    try {
+        cout<< "Min: " << bst.Min() << endl;
+    } catch (length_error& e){
+        cout<< "Error: " << e.what() << endl;
+    }
+}
+template<typename Data>
+void testRemoveMin(BST<Data>& bst){
+    try {
+        cout<< "Min \"" << bst.MinNRemove() << "\" Removed" << endl;
+    } catch (length_error& e){
+        cout<< "Error: " << e.what() << endl;
+    }
+}
+template<typename Data>
+void testMax(BST<Data>& bst){
+    try {
+        cout<< "Max: " << bst.Max() << endl;
+    } catch (length_error& e){
+        cout<< "Error: " << e.what() << endl;
+    }
+}
+template<typename Data>
+void testRemoveMax(BST<Data>& bst){
+    try {
+        cout<< "Max \"" << bst.MaxNRemove() << "\" Removed" << endl;
+    } catch (length_error& e){
+        cout<< "Error: " << e.what() << endl;
+    }
+}
+template<typename Data>
+void testPredecessor(BST<Data>& bst){
+    Data data;
+    cout<< "Insert value: " << endl << ">>> ";
+    cin>> data;
+    try {
+        cout<< "Predecessor of " << data <<": " << bst.Predecessor(data) << endl;
+    } catch (length_error& e){
+        cout<< "Error: " << e.what() << endl;
+    }
+}
+template<typename Data>
+void testRemovePredecessor(BST<Data>& bst){
+    Data data;
+    cout<< "Insert value: " << endl << ">>> ";
+    cin>> data;
+    try {
+        cout<< "Predecessor of " << data <<": " << bst.PredecessorNRemove(data) << " Removed" << endl;
+    } catch (length_error& e){
+        cout<< "Error: " << e.what() << endl;
+    }
+}
+template<typename Data>
+void testSuccessor(BST<Data>& bst){
+    Data data;
+    cout<< "Insert value: " << endl << ">>> ";
+    cin>> data;
+    try {
+        cout<< "Successor of " << data <<": " << bst.Successor(data) << endl;
+    } catch (length_error& e){
+        cout<< "Error: " << e.what() << endl;
+    }
+}
+template<typename Data>
+void testRemoveSuccessor(BST<Data>& bst){
+    Data data;
+    cout<< "Insert value: " << endl << ">>> ";
+    cin>> data;
+    try {
+        cout<< "Successor of " << data <<": " << bst.SuccessorNRemove(data) << " Removed" << endl;
+    } catch (length_error& e){
+        cout<< "Error: " << e.what() << endl;
+    }
 }

@@ -39,12 +39,12 @@ void Menu::add(MenuItem&& item){
 
 void Menu::add(const string& t, const Menu& subMenu, bool loop){
     if (loop){
-        MenuItem item(t, [&]() {
+        MenuItem item(t, [=]() {
             subMenu.loop();
         });
         add(item);
     } else{
-        MenuItem item(t, [&]() {
+        MenuItem item(t, [=]() {
             subMenu.show();
         });
         add(item);
@@ -415,30 +415,6 @@ void launchQueueMenu(Queue<Data>& que){
     while (mainMenu.show());
 }
 
-template<typename Data, template<typename> class IT>
-void setupIteratorMenu(Menu& itMenu, IT<Data>& it, BinaryTree<Data>& bt){
-    MenuItem nextIt("Next", [&it]{
-        testIteraorNext(it);
-    });
-    MenuItem acces("operator*", [&it]{
-        testIteraorAcces(it);
-    });
-    MenuItem modify("Modify value", [&it]{
-        testModifyBTNode(it);
-    });
-    MenuItem terminatedIt("Terminated", [&it]{
-        testIteraorTerminated(it);
-    });
-    MenuItem resetIt("Reset", [&it, &bt]{
-        resetIterator(it, bt);
-    });
-
-    itMenu.add(nextIt);
-    itMenu.add(acces);
-    itMenu.add(modify);
-    itMenu.add(terminatedIt);
-    itMenu.add(resetIt);
-}
 
 template<typename Data, template<typename> class BT>
 void launchBtMenu(BT<Data>& bt){

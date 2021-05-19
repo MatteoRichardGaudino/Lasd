@@ -101,7 +101,6 @@ protected:
 
   // type DataNDelete(argument) specifiers;
 
-  // type Detach(argument) specifiers;
   NodeLnk* Remove(NodeLnk*, const Data&);
 
   NodeLnk* DetachMin();
