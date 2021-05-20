@@ -53,14 +53,10 @@ namespace lasd {
             root = new NodeLnk(data);
             size++;
         } else{
-            NodeLnk* nod = FindPointerTo(data);
-            if (nod->Element() != data){
+            NodeLnk** node = FindPointerTo(&root, data);
+            if (*node == nullptr){
                 auto* newNode = new NodeLnk(data);
-                if (data < nod->Element()){
-                    nod->left = newNode;
-                } else {
-                    nod->right = newNode;
-                }
+                *node = newNode;
                 size++;
             }
         }
@@ -71,14 +67,10 @@ namespace lasd {
             root = new NodeLnk(std::move(data));
             size++;
         } else{
-            NodeLnk* nod = FindPointerTo(data);
-            if (nod->Element() != data){
+            NodeLnk** node = FindPointerTo(data);
+            if (*node == nullptr){
                 auto* newNode = new NodeLnk(std::move(data));
-                if (data < nod->Element()){
-                    nod->left = newNode;
-                } else {
-                    nod->right = newNode;
-                }
+                *node = newNode;
                 size++;
             }
         }
@@ -86,29 +78,29 @@ namespace lasd {
     template<typename Data>
     void BST<Data>::Remove(const Data& data){
         if (!Empty()){
-            root = Remove(root, data);
+            delete Detach(FindPointerTo(&root, data));
         }
     }
 
     template<typename Data>
     const Data& BST<Data>::Min() const {
         if (!Empty()){
-            return FindPointerToMin(root)->Element();
+            return (*FindPointerToMin(const_cast<NodeLnk**>(&root)))->element;
         } else throw std::length_error("[Min()] BTS is Empty");
     }
     template<typename Data>
     Data BST<Data>::MinNRemove() {
         if (!Empty()){
-            NodeLnk* node = DetachMin();
-            Data min = node->Element();
-            delete node;
+            NodeLnk* minPtr = DetachMin(&root);
+            Data min = minPtr->element;
+            delete minPtr;
             return min;
-        } else throw std::length_error("[RemoveMin()] BTS is Empty");
+        } else throw std::length_error("[MinNRemove()] BTS is Empty");
     }
     template<typename Data>
     void BST<Data>::RemoveMin() {
         if (!Empty()){
-            delete DetachMin();
+            delete DetachMin(&root);
         } else throw std::length_error("[RemoveMin()] BTS is Empty");
     }
 
@@ -117,241 +109,183 @@ namespace lasd {
     template<typename Data>
     const Data& BST<Data>::Max() const {
         if (!Empty()){
-            return FindPointerToMax(root)->Element();
+            return (*FindPointerToMax(const_cast<NodeLnk**>(&root)))->element;
         } else throw std::length_error("[Max()] BTS is Empty");
     }
     template<typename Data>
     Data BST<Data>::MaxNRemove() {
         if (!Empty()){
-            NodeLnk* node = DetachMax();
-            Data max = node->Element();
-            delete node;
+            NodeLnk* maxPtr = DetachMax(&root);
+            Data max = maxPtr->element;
+            delete maxPtr;
             return max;
-        } else throw std::length_error("[RemoveMax()] BTS is Empty");
+        } else throw std::length_error("[MaxNRemove()] BTS is Empty");
     }
     template<typename Data>
     void BST<Data>::RemoveMax() {
         if (!Empty()){
-            delete DetachMax();
+            delete DetachMax(&root);
         } else throw std::length_error("[RemoveMax()] BTS is Empty");
     }
 
     template<typename Data>
     const Data& BST<Data>::Predecessor(const Data& data) const{
-        NodeLnk* pred = FindPointerToPredecessor(data);
-        if (pred != nullptr) return pred->Element();
-        else throw std::length_error("[Predecessor()] Predecessor doesn't exists");
+        NodeLnk** pred = FindPointerToPredecessor(const_cast<NodeLnk**>(&root), data);
+        if (pred != nullptr){
+            return (*pred)->element;
+        } else throw std::length_error("[Predecessor()] Predecessor doesn't exists");
     }
     template<typename Data>
     Data BST<Data>::PredecessorNRemove(const Data& data){
-        NodeLnk* pred = FindPointerToPredecessor(data);
-        if (pred != nullptr){
-            Data d = pred->Element();
-            Remove(d);
-            return d;
+        NodeLnk** predPtr = FindPointerToPredecessor(&root, data);
+        if (predPtr != nullptr){
+            Data pred = (*predPtr)->element;
+            delete Detach(predPtr);
+            return pred;
         } else throw std::length_error("[PredecessorNRemove()] Predecessor doesn't exists");
-       // TODO
     }
     template<typename Data>
     void BST<Data>::RemovePredecessor(const Data& data){
-        NodeLnk* pred = FindPointerToPredecessor(data);
-        if (pred != nullptr){
-            Remove(pred->Element());
+        NodeLnk** predPtr = FindPointerToPredecessor(&root, data);
+        if (predPtr != nullptr){
+            delete Detach(predPtr);
         } else throw std::length_error("[RemovePredecessor()] Predecessor doesn't exists");
-        //TODO
     }
 
     template<typename Data>
     const Data& BST<Data>::Successor(const Data& data) const{
-        NodeLnk* pred = FindPointerToSuccessor(data);
-        if (pred != nullptr) return pred->Element();
-        else throw std::length_error("[Successor()] Successor doesn't exists");
+        NodeLnk** succ = FindPointerToSuccessor(const_cast<NodeLnk**>(&root), data);
+        if (succ != nullptr){
+            return (*succ)->element;
+        } else throw std::length_error("[Successor()] Successor doesn't exists");
     }
     template<typename Data>
     Data BST<Data>::SuccessorNRemove(const Data& data){
-        NodeLnk* succ = FindPointerToSuccessor(data);
-        if (succ != nullptr){
-            Data d = succ->Element();
-            Remove(d);
-            return d;
+        NodeLnk** succPtr = FindPointerToSuccessor(&root, data);
+        if (succPtr != nullptr){
+            Data succ = (*succPtr)->element;
+            delete Detach(succPtr);
+            return succ;
         } else throw std::length_error("[SuccessorNRemove()] Successor doesn't exists");
-        // TODO
     }
     template<typename Data>
     void BST<Data>::RemoveSuccessor(const Data& data){
-        NodeLnk* succ = FindPointerToSuccessor(data);
-        if (succ != nullptr){
-            Remove(succ->Element());
+        NodeLnk** succPtr = FindPointerToSuccessor(&root, data);
+        if (succPtr != nullptr){
+            delete Detach(succPtr);
         } else throw std::length_error("[RemoveSuccessor()] Successor doesn't exists");
-        // TODO
     }
 
     template<typename Data>
     bool BST<Data>::Exists(const Data& data) const noexcept{
         if (!Empty()) {
-            NodeLnk *n = FindPointerTo(data);
-            if (n->Element() == data) return true;
-            else return false;
+            if (*FindPointerTo(const_cast<NodeLnk**>(&root), data) != nullptr) return true;
         } else return false;
     }
 
+    template<typename Data>
+    typename BST<Data>::NodeLnk* BST<Data>::Detach(NodeLnk** node){
+        if (node != nullptr && *node != nullptr){
+            NodeLnk* nod = *node;
+            if (!((*node)->HasRightChild())) {
+                *node = (*node)->left;
+                nod->left = nullptr;
+                size--;
+            } else if (!((*node)->HasLeftChild())) {
+                *node = (*node)->right;
+                nod->right = nullptr;
+                size--;
+            } else{
+                NodeLnk* min = DetachMin(&((*node)->right));
+                std::swap((*node)->element, min->element);
+                return min;
+            }
+            return nod;
+        }
+    }
 
     template<typename Data>
-    typename BST<Data>::NodeLnk* BST<Data>::Remove(NodeLnk* node, const Data& data){
-        if (node != nullptr) {
-            if (data < node->Element())
-                node->left = Remove(node->left, data);
-            else if (data > node->Element())
-                node->right = Remove(node->right, data);
-            else {
-                if (!node->HasRightChild()) {
-                    auto* tmp = node;
-                    node = node->left;
-                    delete tmp;
-                }
-                else if (!node->HasLeftChild()) {
-                    auto* tmp = node;
-                    node = node->right;
-                    delete tmp;
-                }
-                else{
-                    NodeLnk* min = SkipOnLeft(node->right);
-                    if (min == nullptr){
-                        min = node->right;
-                        node->right = nullptr;
-                    }
-                    node->Element() = min->Element();
-                    delete min;
-                }
-                size--;
-            }
+    typename BST<Data>::NodeLnk* BST<Data>::DetachMin(NodeLnk** node){
+        NodeLnk** minPtr = FindPointerToMin(node);
+        NodeLnk* min = *minPtr;
+        *minPtr = (*minPtr)->right;
+        min->right = nullptr;
+        size--;
+        return min;
+    }
+
+    template<typename Data>
+    typename BST<Data>::NodeLnk* BST<Data>::DetachMax(NodeLnk** node){
+        NodeLnk** maxPtr = FindPointerToMax(node);
+        NodeLnk* max = *maxPtr;
+        *maxPtr = (*maxPtr)->left;
+        max->left = nullptr;
+        size--;
+        return max;
+    }
+
+    template<typename Data>
+    typename BST<Data>::NodeLnk** BST<Data>::FindPointerToMin(NodeLnk** node) const{
+        while ((*node)->HasLeftChild()){
+            node = &((*node)->left);
+        }
+        return node;
+    }
+    template<typename Data>
+    typename BST<Data>::NodeLnk** BST<Data>::FindPointerToMax(NodeLnk** node) const{
+        while ((*node)->HasRightChild()){
+            node = &((*node)->right);
         }
         return node;
     }
 
     template<typename Data>
-    typename BST<Data>::NodeLnk* BST<Data>::DetachMin(){
-        if (size > 0){
-            NodeLnk* nod = SkipOnLeft(root);
-            size--;
-            if (nod == nullptr){
-                NodeLnk* min = root;
-                root = root->right;
-                min->right = nullptr;
-                return min;
-            } else {
-                NodeLnk* min = nod->left;
-                nod->left = min->right;
-                min->right = nullptr;
-                return min;
-            }
-        } else return nullptr;
-    }
-
-    template<typename Data>
-    typename BST<Data>::NodeLnk* BST<Data>::DetachMax(){
-        if (size > 0){
-            NodeLnk* nod = SkipOnRight(root);
-            size--;
-            if (nod == nullptr) {
-                NodeLnk* max = root;
-                root = root->left;
-                max->left = nullptr;
-                return max;
-            } else{
-                NodeLnk *max = nod->right;
-                nod->right = max->left;
-                max->left = nullptr;
-                return max;
-            }
-        } else return nullptr;
-    }
-
-    template<typename Data>
-    typename BST<Data>::NodeLnk * BST<Data>::SkipOnLeft(NodeLnk* node) const {
-        if (node != nullptr && node->HasLeftChild()){
-            if (node->left->HasLeftChild())
-                return SkipOnLeft(node->left);
-            else return node;
-        } else return nullptr;
-    }
-    template<typename Data>
-    typename BST<Data>::NodeLnk* BST<Data>::SkipOnRight(NodeLnk* node) const{
-        if (node != nullptr && node->HasRightChild()){
-            if (node->right->HasRightChild())
-                return SkipOnRight(node->right);
-            else return node;
-        } else return nullptr;
-    }
-
-    template<typename Data>
-    typename BST<Data>::NodeLnk* BST<Data>::FindPointerToMin(NodeLnk* node) const{
-        if (node != nullptr){
-            NodeLnk* n = SkipOnLeft(node);
-            if (n == nullptr) return node;
-            else return n->left;
-        } else return nullptr;
-    }
-    template<typename Data>
-    typename BST<Data>::NodeLnk* BST<Data>::FindPointerToMax(NodeLnk* node) const{
-        if (node != nullptr){
-            NodeLnk* n = SkipOnRight(node);
-            if (n == nullptr) return node;
-            else return n->right;
-        } else return nullptr;
-    }
-
-    template<typename Data>
-    typename BST<Data>::NodeLnk* BST<Data>::FindPointerTo(const Data& data) const{
-        NodeLnk* tmp = root;
+    typename BST<Data>::NodeLnk** BST<Data>::FindPointerTo(NodeLnk** node, const Data& data) const{
+        if (node == nullptr) return nullptr;
         do{
-            if (data == tmp->Element()) return tmp;
-            if (data < tmp->Element()){
-                if (tmp->HasLeftChild()){
-                    tmp = tmp->left;
-                } else return tmp;
+            if (data == (*node)->element) return node;
+            if (data < (*node)->element){
+                if ((*node)->HasLeftChild()){
+                    node = &((*node)->left);
+                } else return &((*node)->left);
             }
-            if (data > tmp->Element()){
-                if (tmp->HasRightChild()){
-                    tmp = tmp->right;
-                } else return tmp;
+            if (data > (*node)->element){
+                if ((*node)->HasRightChild()){
+                    node = &((*node)->right);
+                } else return &((*node)->right);
             }
         } while (true);
     }
 
     template<typename Data>
-    typename BST<Data>::NodeLnk* BST<Data>::FindPointerToPredecessor(const Data& data) const{
-        NodeLnk* pred = nullptr;
-        NodeLnk* tmp = root;
-        if (!Empty()){
-            while (tmp != nullptr && tmp->Element() != data) {
-                if (data < tmp->Element()) {
-                    tmp = tmp->left;
-                } else{
-                    pred = tmp;
-                    tmp = tmp->right;
-                }
+    typename BST<Data>::NodeLnk** BST<Data>::FindPointerToPredecessor(NodeLnk** node, const Data& data) const{
+        if (node == nullptr) return nullptr;
+        NodeLnk** pred = nullptr;
+        while ((*node) != nullptr && (*node)->element != data) {
+            if (data < (*node)->element) {
+                node = &((*node)->left);
+            } else{
+                pred = node;
+                node = &((*node)->right);
             }
-            if (tmp != nullptr && tmp->HasLeftChild()) return FindPointerToMax(tmp->left);
-            return pred;
-        } else return nullptr;
+        }
+        if (*node != nullptr && (*node)->HasLeftChild()) return FindPointerToMax(&((*node)->left));
+        return pred;
     }
     template<typename Data>
-    typename BST<Data>::NodeLnk* BST<Data>::FindPointerToSuccessor(const Data& data) const{
-        NodeLnk* succ = nullptr;
-        NodeLnk* tmp = root;
-        if (!Empty()){
-            while (tmp != nullptr && tmp->Element() != data) {
-                if (data < tmp->Element()) {
-                    succ = tmp;
-                    tmp = tmp->left;
-                } else{
-                    tmp = tmp->right;
-                }
+    typename BST<Data>::NodeLnk** BST<Data>::FindPointerToSuccessor(NodeLnk** node, const Data& data) const{
+        if (node == nullptr) return nullptr;
+        NodeLnk** succ = nullptr;
+        while (*node != nullptr && (*node)->element != data) {
+            if (data < (*node)->element) {
+                succ = node;
+                node = &((*node)->left);
+            } else{
+                node = &((*node)->right);
             }
-            if (tmp != nullptr && tmp->HasRightChild()) return FindPointerToMin(tmp->right);
-            return succ;
-        } else return nullptr;
+        }
+        if (*node != nullptr && (*node)->HasRightChild()) return FindPointerToMin(&((*node)->right));
+        return succ;
     }
 
 /* ************************************************************************** */

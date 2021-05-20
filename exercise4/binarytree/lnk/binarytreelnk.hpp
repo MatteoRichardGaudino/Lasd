@@ -33,10 +33,9 @@ protected:
 
   protected:
     friend class BinaryTreeLnk<Data>;
-    Data element;
-
     void AuxCopyNode(NodeLnk*, const Node&);
   public:
+    Data element;
     NodeLnk* right = nullptr;
     NodeLnk* left = nullptr;
 

@@ -15,7 +15,7 @@ include_directories(
         exercise4/bst)
 add_executable(main
         exercise4/zlasdtest/container/container.cpp
-        exercise4/zmytest/test.cpp
+#        exercise4/zmytest/test.cpp
         exercise4/zlasdtest/test.cpp
         exercise4/main.cpp
 
