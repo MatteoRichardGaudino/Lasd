@@ -55,8 +55,7 @@ namespace lasd {
         } else{
             NodeLnk** node = FindPointerTo(&root, data);
             if (*node == nullptr){
-                auto* newNode = new NodeLnk(data);
-                *node = newNode;
+                *node = new NodeLnk(data);
                 size++;
             }
         }
@@ -67,10 +66,9 @@ namespace lasd {
             root = new NodeLnk(std::move(data));
             size++;
         } else{
-            NodeLnk** node = FindPointerTo(data);
+            NodeLnk** node = FindPointerTo(&root, data);
             if (*node == nullptr){
-                auto* newNode = new NodeLnk(std::move(data));
-                *node = newNode;
+                *node = new NodeLnk(std::move(data));
                 size++;
             }
         }
@@ -179,7 +177,7 @@ namespace lasd {
     template<typename Data>
     bool BST<Data>::Exists(const Data& data) const noexcept{
         if (!Empty()) {
-            if (*FindPointerTo(const_cast<NodeLnk**>(&root), data) != nullptr) return true;
+            return *FindPointerTo(const_cast<NodeLnk**>(&root), data) != nullptr;
         } else return false;
     }
 
@@ -201,11 +199,12 @@ namespace lasd {
                 return min;
             }
             return nod;
-        }
+        } else return nullptr;
     }
 
     template<typename Data>
     typename BST<Data>::NodeLnk* BST<Data>::DetachMin(NodeLnk** node){
+        if (node == nullptr || *node == nullptr) return nullptr;
         NodeLnk** minPtr = FindPointerToMin(node);
         NodeLnk* min = *minPtr;
         *minPtr = (*minPtr)->right;
@@ -216,6 +215,7 @@ namespace lasd {
 
     template<typename Data>
     typename BST<Data>::NodeLnk* BST<Data>::DetachMax(NodeLnk** node){
+        if (node == nullptr || *node == nullptr) return nullptr;
         NodeLnk** maxPtr = FindPointerToMax(node);
         NodeLnk* max = *maxPtr;
         *maxPtr = (*maxPtr)->left;
@@ -226,6 +226,7 @@ namespace lasd {
 
     template<typename Data>
     typename BST<Data>::NodeLnk** BST<Data>::FindPointerToMin(NodeLnk** node) const{
+        if (node == nullptr || *node == nullptr) return nullptr;
         while ((*node)->HasLeftChild()){
             node = &((*node)->left);
         }
@@ -233,6 +234,7 @@ namespace lasd {
     }
     template<typename Data>
     typename BST<Data>::NodeLnk** BST<Data>::FindPointerToMax(NodeLnk** node) const{
+        if (node == nullptr || *node == nullptr) return nullptr;
         while ((*node)->HasRightChild()){
             node = &((*node)->right);
         }
@@ -241,7 +243,7 @@ namespace lasd {
 
     template<typename Data>
     typename BST<Data>::NodeLnk** BST<Data>::FindPointerTo(NodeLnk** node, const Data& data) const{
-        if (node == nullptr) return nullptr;
+        if (node == nullptr || *node == nullptr) return nullptr;
         do{
             if (data == (*node)->element) return node;
             if (data < (*node)->element){

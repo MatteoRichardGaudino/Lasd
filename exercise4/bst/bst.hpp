@@ -99,8 +99,6 @@ protected:
 
   // Auxiliary member functions
 
-  // type DataNDelete(argument) specifiers;
-
   NodeLnk* Detach(NodeLnk**);
 
   NodeLnk* DetachMin(NodeLnk**);

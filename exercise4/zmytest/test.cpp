@@ -593,12 +593,6 @@ template<typename Data>
 void launchBSTMenu(BST<Data>& bt){
     typename BinaryTree<Data>::Node* node;
 
-    BTInOrderIterator<Data> inIT(bt);
-    BTPreOrderIterator<Data> preIT(bt);
-    BTPostOrderIterator<Data> postIT(bt);
-    BTBreadthIterator<Data> brhIT(bt);
-
-
     if (bt.Empty()) node = nullptr;
     else node = &bt.Root();
 
@@ -609,11 +603,6 @@ void launchBSTMenu(BST<Data>& bt){
         popolaBt(bt);
         if (bt.Empty()) node = nullptr;
         else node = &bt.Root();
-
-        resetIterator(inIT, bt);
-        resetIterator(preIT, bt);
-        resetIterator(postIT, bt);
-        resetIterator(brhIT, bt);
     });
     MenuItem root("Print Root", [&bt](){
         testRoot(bt);
@@ -671,22 +660,6 @@ void launchBSTMenu(BST<Data>& bt){
     print.add(breadth);
 
 
-    Menu iteratorMenu("Chose an Iterator:");
-    Menu preOrderIt("Chose an action");
-    Menu postOrderIt("Chose an action");
-    Menu inOrderIt("Chose an action");
-    Menu breadthIt("Chose an action");
-    setupIteratorMenu(preOrderIt, preIT, bt);
-    setupIteratorMenu(postOrderIt, postIT, bt);
-    setupIteratorMenu(inOrderIt, inIT, bt);
-    setupIteratorMenu(breadthIt, brhIT, bt);
-
-    iteratorMenu.add("PreOrder Iterator", preOrderIt, true);
-    iteratorMenu.add("PostOrder Iterator", postOrderIt, true);
-    iteratorMenu.add("InOrder Iterator", inOrderIt, true);
-    iteratorMenu.add("Breadth Iterator", breadthIt, true);
-
-
     MenuItem map("Test Map function", [&bt]{
         testMappableBT(bt);
     });
@@ -700,8 +673,6 @@ void launchBSTMenu(BST<Data>& bt){
 
     mainMenu.add("Navigate the Tree", navigate, true);
     mainMenu.add("Print", print, false);
-    mainMenu.add("Iterators", iteratorMenu, true);
-
 
     mainMenu.add(map);
     mainMenu.add(fold);
@@ -733,10 +704,6 @@ void launchBSTMenu(BST<Data>& bt){
     mainMenu.loop([&]{
         if (bt.Empty()) {
             node = nullptr;
-            resetIterator(inIT, bt);
-            resetIterator(preIT, bt);
-            resetIterator(postIT, bt);
-            resetIterator(brhIT, bt);
         }
     });
 }
