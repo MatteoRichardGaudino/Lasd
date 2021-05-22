@@ -14,10 +14,10 @@ include_directories(
         exercise4/iterator
         exercise4/bst)
 add_executable(main
-        exercise4/zlasdtest/container/container.cpp
-        exercise4/zmytest/test.cpp
-        exercise4/zlasdtest/test.cpp
-        exercise4/main.cpp
+        exercise5/zlasdtest/container/container.cpp
+        exercise5/zmytest/test.cpp
+        exercise5/zlasdtest/test.cpp
+        exercise5/main.cpp
 
         exercise1/zlasdtest/exercise1/simpletest.cpp
         exercise1/zlasdtest/exercise1/fulltest.cpp
@@ -30,4 +30,7 @@ add_executable(main
 
         exercise4/zlasdtest/exercise4/simpletest.cpp
         exercise4/zlasdtest/exercise4/fulltest.cpp
+
+        exercise5/zlasdtest/exercise5/simpletest.cpp
+        exercise5/zlasdtest/exercise5/fulltest.cpp
         )
