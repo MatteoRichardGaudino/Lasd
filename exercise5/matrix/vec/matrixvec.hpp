@@ -15,7 +15,7 @@ namespace lasd {
 /* ************************************************************************** */
 
 template <typename Data>
-class MatrixVec : virtual public Matrix<Data>, virtual private Vector<Data>{ // Must extend Matrix<Data>
+class MatrixVec : virtual public Matrix<Data>, virtual protected Vector<Data>{ // Must extend Matrix<Data>
 
 private:
 
