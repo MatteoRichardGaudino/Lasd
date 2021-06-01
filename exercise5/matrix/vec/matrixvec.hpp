@@ -15,7 +15,8 @@ namespace lasd {
 /* ************************************************************************** */
 
 template <typename Data>
-class MatrixVec : virtual public Matrix<Data>, virtual protected Vector<Data>{ // Must extend Matrix<Data>
+class MatrixVec : virtual public Matrix<Data>,
+                  virtual protected Vector<Data>{ // Must extend Matrix<Data>
 
 private:
 
@@ -25,10 +26,9 @@ protected:
 
   using Matrix<Data>::row;
   using Matrix<Data>::column;
-  using Vector<Data>::Resize;
+  using Vector<Data>::elements;
 
 public:
-
   // Default constructor
   MatrixVec() = default;
 
@@ -40,10 +40,10 @@ public:
   /* ************************************************************************ */
 
   // Copy constructor
-  MatrixVec(const Matrix<Data>&);
+  MatrixVec(const MatrixVec<Data>&);
 
   // Move constructor
-  MatrixVec(Matrix<Data>&&) noexcept;
+  MatrixVec(MatrixVec<Data>&&) noexcept;
 
   /* ************************************************************************ */
 

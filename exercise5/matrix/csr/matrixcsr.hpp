@@ -29,8 +29,18 @@ protected:
   using Matrix<Data>::column;
   using typename List<pair>::Node;
   using List<pair>::head;
+  using List<pair>::size;
   Vector<Node**> R;
 
+  void forEachElementInRow(unsigned long i, std::function<void(void)> fun) const{
+      if (i < row) {
+          Node **ptr = R[i];
+          while (ptr != R[i+1]){
+              fun();
+              ptr = &((*ptr)->next);
+          }
+      }
+  }
 public:
 
   // Default constructor
@@ -75,7 +85,7 @@ public:
   void RowResize(unsigned long) override; // Override Matrix member
   void ColumnResize(unsigned long) override; // Override Matrix member
 
-  bool ExistsCell() const noexcept override; // Override Matrix member (should not throw exceptions)
+  bool ExistsCell(unsigned long, unsigned long) const noexcept override; // Override Matrix member (should not throw exceptions)
 
   Data& operator()(unsigned long, unsigned long); // Override Matrix member (mutable access to the element; throw out_of_range when out of range)
   const Data& operator()(unsigned long, unsigned long) const; // Override Matrix member (immutable access to the element; throw out_of_range when out of range and length_error when not present)
