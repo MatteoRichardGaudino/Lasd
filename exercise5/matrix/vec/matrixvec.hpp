@@ -26,7 +26,6 @@ protected:
 
   using Matrix<Data>::row;
   using Matrix<Data>::column;
-  using Vector<Data>::elements;
 
 public:
   // Default constructor
