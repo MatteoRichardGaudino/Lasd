@@ -55,20 +55,22 @@ void MatrixVec<Data>::Clear() {
 }
 
 template <typename Data>
-void MatrixVec<Data>::RowResize(unsigned long newRow) { // TODO
-    Vector<Data> tmp(newRow*column);
-    unsigned long rowMin = (row < newRow)? row: newRow;
-
-    for (unsigned long i = 0; i < rowMin; ++i) {
-        for (unsigned long j = 0; j < column; ++j) {
-            std::swap(tmp[(i*column) + j], Vector<Data>::operator[](i*column + j));
-        }
-    }
-
-    row = newRow;
-    Vector<Data>::operator=(tmp);
-//    Vector<Data>::Resize(newRow*column);
+void MatrixVec<Data>::RowResize(unsigned long newRow) {
+//    Vector<Data> tmp(newRow*column);
+//    unsigned long rowMin = (row < newRow)? row: newRow;
+//
+//    for (unsigned long i = 0; i < rowMin; ++i) {
+//        for (unsigned long j = 0; j < column; ++j) {
+//            std::swap(tmp[(i*column) + j], Vector<Data>::operator[](i*column + j));
+//        }
+//    }
+//
 //    row = newRow;
+//    Vector<Data>::operator=(tmp);
+    unsigned long col = column;
+    Vector<Data>::Resize(newRow*column);
+    row = newRow;
+    column = col;
 }
 
 template <typename Data>

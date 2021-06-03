@@ -3,15 +3,10 @@
 #define MYTEST_HPP
 
 
-#include "../list/list.hpp"
-#include "../vector/vector.hpp"
-#include "../stack/stack.hpp"
-#include "../queue/queue.hpp"
+
 #include "../zlasdtest/test.hpp"
-#include "../binarytree/binarytree.hpp"
-#include "../binarytree/vec/binarytreevec.hpp"
-#include "../binarytree/lnk/binarytreelnk.hpp"
-#include "../bst/bst.hpp"
+#include "../matrix/matrix.hpp"
+#include "../list/list.hpp"
 
 #include <string>
 #include <iostream>
@@ -72,6 +67,9 @@ private:
 };
 
 void launchMenu();
+template<typename Data>
+void launchMatrixMenu(Matrix<Data>&);
+
 void setupContainerMenu(Menu& menu, Container& cont);
 template<typename Data>
 void setupLinearContainerMenu(Menu&, LinearContainer<Data>&);
@@ -81,24 +79,6 @@ template<typename Data>
 void setupFoldableMenu(Menu&, FoldableContainer<Data>&);
 template<typename Data>
 void setupTestableContainerMenu(Menu&, TestableContainer<Data>&);
-template<typename Data, template<typename> class IT>
-void setupIteratorMenu(Menu&, IT<Data>&, BinaryTree<Data>&);
-
-template<typename Data>
-void launchVectorMenu();
-template<typename Data>
-void launchListMenu();
-
-template<typename Data>
-void launchStackMenu(Stack<Data>&);
-
-template<typename Data>
-void launchQueueMenu(Queue<Data>&);
-
-template<typename Data, template<typename> class BT>
-void launchBtMenu(BT<Data>&);
-template<typename Data>
-void launchBSTMenu(BST<Data>&);
 
 /* *** Container test *** */
 
@@ -117,27 +97,6 @@ template<typename Data>
 void testExists(TestableContainer<Data>&);
 
 
-/* *** Vector test *** */
-template<typename Data>
-void testResize(Vector<Data>&);
-void popolaVector(Vector<int> &);
-void popolaVector(Vector<float> &);
-void popolaVector(Vector<string> &);
-
-
-/* *** List test *** */
-void popolaList(List<int>&);
-void popolaList(List<float>&);
-void popolaList(List<string>&);
-
-template<typename Data>
-void testInsertAtFront(List<Data>&);
-template<typename Data>
-void testRemoveFromFront(List<Data>&);
-template<typename Data>
-void testFrontNRemove(List<Data>&);
-template<typename Data>
-void testInsertAtBack(List<Data>&);
 
 /* *** Mappable test *** */
 template<typename Data>
@@ -152,108 +111,21 @@ void testFoldable(FoldableContainer<float>&);
 void testFoldable(FoldableContainer<string>&);
 
 
-/* *** Stack test *** */
-void popolaStack(Stack<int>&);
-void popolaStack(Stack<float>&);
-void popolaStack(Stack<string>&);
+/* *** Matrix test *** */
 
+void myStressTest();
 template<typename Data>
-void testPush(Stack<Data>&);
+void popolaMatrix(Matrix<Data>&);
 template<typename Data>
-void testTop(Stack<Data>&);
+void testRowResize(Matrix<Data>&);
 template<typename Data>
-void testPop(Stack<Data>&);
+void testColResize(Matrix<Data>&);
 template<typename Data>
-void testTopNPop(Stack<Data>&);
-
-/* *** Queue test *** */
-void popolaQueue(Queue<int>&);
-void popolaQueue(Queue<float>&);
-void popolaQueue(Queue<string>&);
-
+void testExistsCell(const Matrix<Data>&);
 template<typename Data>
-void testEnqueue(Queue<Data>&);
+void testAccesOperator(Matrix<Data>&);
 template<typename Data>
-void testHead(Queue<Data>&);
-template<typename Data>
-void testDequeue(Queue<Data>&);
-template<typename Data>
-void testHeadNDequeue(Queue<Data>&);
-
-/* *** BinaryTree test *** */
-template<typename Data, template<typename> class BT>
-void popolaBt(BT<Data>&);
-template<typename Data>
-void printPreOrder(MappableContainer<Data>&);
-template<typename Data>
-void printPostOrder(MappableContainer<Data>&);
-template<typename Data>
-void printInOrder(InOrderMappableContainer<Data>&);
-template<typename Data>
-void printBreadth(BreadthMappableContainer<Data>&);
-
-void testMappableBT(MappableContainer<int>&);
-void testMappableBT(MappableContainer<float>&);
-void testMappableBT(MappableContainer<string>&);
-
-
-template<typename Data>
-void gotoRight(typename BinaryTree<Data>::Node*&);
-template<typename Data>
-void gotoLeft(typename BinaryTree<Data>::Node*&);
-template<typename Data>
-void gotoRoot(const BinaryTree<Data>&, typename BinaryTree<Data>::Node*&);
-
-template<typename Data>
-void testRoot(BinaryTree<Data>&);
-
-template<typename Data>
-void testIsLeaf(typename BinaryTree<Data>::Node*);
-template<typename Data>
-void testHasLeftChild(typename BinaryTree<Data>::Node*);
-template<typename Data>
-void testHasRightChild(typename BinaryTree<Data>::Node*);
-template<typename Data>
-void testElement(typename BinaryTree<Data>::Node*);
-
-template<typename Data>
-void testModifyBTNode(typename BinaryTree<Data>::Node* node);
-template<typename Data>
-void testModifyBTNode(ForwardIterator<Data>&);
-
-/* *** Iterator test *** */
-
-template<typename Data>
-void testIteraorNext(ForwardIterator<Data>&);
-template<typename Data>
-void testIteraorAcces(ForwardIterator<Data>&);
-template<typename Data>
-void testIteraorTerminated(ForwardIterator<Data>&);
-template<typename Data, template<typename> class IT>
-void resetIterator(IT<Data>&, BinaryTree<Data>&);
-
-/* *** BST test *** */
-
-template<typename Data>
-void testInsert(BST<Data>&);
-template<typename Data>
-void testRemove(BST<Data>&);
-template<typename Data>
-void testMin(BST<Data>&);
-template<typename Data>
-void testRemoveMin(BST<Data>&);
-template<typename Data>
-void testMax(BST<Data>&);
-template<typename Data>
-void testRemoveMax(BST<Data>&);
-template<typename Data>
-void testPredecessor(BST<Data>&);
-template<typename Data>
-void testRemovePredecessor(BST<Data>&);
-template<typename Data>
-void testSuccessor(BST<Data>&);
-template<typename Data>
-void testRemoveSuccessor(BST<Data>&);
+void testConstAccessOperator(const Matrix<Data>&);
 
 
 

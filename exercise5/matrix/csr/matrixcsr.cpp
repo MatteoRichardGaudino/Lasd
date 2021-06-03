@@ -37,7 +37,7 @@ namespace lasd {
     }
 
     template<typename Data>
-    MatrixCSR<Data>::MatrixCSR(MatrixCSR<Data>&& mx) noexcept{
+    MatrixCSR<Data>::MatrixCSR(MatrixCSR<Data>&& mx) noexcept {
         R.Resize(1);
         R[0] = &mx.head;
 
@@ -113,8 +113,8 @@ namespace lasd {
                 }
                 if(ptr1 != R[i+1] || ptr2 != mx.R[i+1]) return false;
             }
+            return true;
         } else return false;
-        return true;
     }
 
     template<typename Data>
@@ -148,7 +148,7 @@ namespace lasd {
             for (unsigned long i = 0; i < R.Size(); ++i) {
                 R[i] = &head;
             }
-            size = 0;
+//            size = 0;
         } else if(newCol < column){
             for (unsigned long i = 0; i < row; ++i) {
                 Node** tmp = R[i];
@@ -157,7 +157,6 @@ namespace lasd {
                         Node* del = *tmp;
                         *tmp = del->next;
                         if (del->next == *R[i+1]){
-//                            R[i+1] = tmp;
                             for(unsigned long j = i+1; j < R.Size() && *R[j] == del->next; ++j){
                                 R[j] = tmp;
                             }
@@ -185,33 +184,11 @@ namespace lasd {
     }
     template<typename Data>
     Data& MatrixCSR<Data>::operator()(unsigned long r, unsigned long c){
-//        if (r < row && c < column){
-//            Node** ptr = R[r];
-//            while (ptr != R[r+1] && (*ptr)->data.second <= c) {
-//                if((*ptr)->data.second == c) return (*ptr)->data.first;
-//                ptr = &((*ptr)->next);
-//            }
-//
-//            Node* newNode = new Node();
-//            newNode->next = *ptr;
-//            *ptr = newNode;
-//            newNode->data.second = c;
-//            size++;
-//            if(ptr == R[r]){ // se primo elemento inserito in riga
-//                for(unsigned long i = r+1; i < R.Size() && R[i] == R[r]; ++i){
-//                    R[i] = &((*ptr)->next);
-//                }
-//            }
-//            return newNode->data.first;
-//        } else throw std::out_of_range("[operator()] Out of Range");
-
         if (r < row && c < column){
             Node** ptr = R[r];
-            Node** ext = R[r+1];
-            while (ptr != ext && (*ptr)->data.second <= c) {
-                Node& node = **ptr;
-                if(node.data.second == c) return node.data.first;
-                ptr = &(node.next);
+            while (ptr != R[r+1] && (*ptr)->data.second <= c) {
+                if((*ptr)->data.second == c) return (*ptr)->data.first;
+                ptr = &((*ptr)->next);
             }
 
             Node* newNode = new Node();
@@ -219,15 +196,16 @@ namespace lasd {
             *ptr = newNode;
             newNode->data.second = c;
             size++;
-            unsigned long i = r+1;
-            if(ptr == ext){
-                for(; i < row && R[i] == R[i+1]; ++i){
+
+            if(ptr == R[r+1]){
+                unsigned long i = r+1;
+                while (i < row && R[i] == R[i+1]){
                     R[i] = &((*ptr)->next);
+                    ++i;
                 }
                 R[i] = &((*ptr)->next);
             }
             return newNode->data.first;
-
         } else throw std::out_of_range("[operator()] Out of Range");
     }
     template<typename Data>

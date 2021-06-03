@@ -87,9 +87,6 @@ public:
 
   using Vector<Data>::MapPreOrder;
   using Vector<Data>::MapPostOrder;
-  //using typename MappableContainer<Data>::MapFunctor;
-  //void MapPreOrder(const MapFunctor, void*) override; // Override MappableContainer member
-  //void MapPostOrder(const MapFunctor, void*) override; // Override MappableContainer member
 
   /* ************************************************************************ */
 
@@ -97,9 +94,6 @@ public:
 
   using Vector<Data>::FoldPreOrder;
   using Vector<Data>::FoldPostOrder;
-//  using typename FoldableContainer<Data>::FoldFunctor;
-//  void FoldPreOrder(const FoldFunctor, const void*, void*) const override; // Override FoldableContainer member
-//  void FoldPostOrder(const FoldFunctor, const void*, void*) const override; // Override FoldableContainer member
 
 };
 
