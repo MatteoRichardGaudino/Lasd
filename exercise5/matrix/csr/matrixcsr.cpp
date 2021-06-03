@@ -21,24 +21,11 @@ namespace lasd {
 
 
     template<typename Data>
-    MatrixCSR<Data>::MatrixCSR(const MatrixCSR<Data>& mx){
-        operator=(mx);
-    }
-
-    template<typename Data>
-    MatrixCSR<Data>::MatrixCSR(MatrixCSR<Data>&& mx) noexcept{
-        std::swap(R, mx.R);
-        std::swap(row, mx.row);
-        std::swap(column, mx.column);
-        List<pair>::operator=(std::move(mx));
-    }
-
-    template<typename Data>
-    MatrixCSR<Data>& MatrixCSR<Data>::operator=(const MatrixCSR<Data>& mx){
-        List<pair>::operator=(mx);
+    MatrixCSR<Data>::MatrixCSR(const MatrixCSR<Data>& mx) : List<pair>(mx){
         R.Resize(mx.R.Size());
         row = mx.row;
         column = mx.column;
+
         Node** ptr1 = &head;
         for (unsigned long i = 0; i < row; ++i) {
             R[i] = ptr1;
@@ -47,38 +34,87 @@ namespace lasd {
             });
         }
         R.Back() = ptr1;
+    }
+
+    template<typename Data>
+    MatrixCSR<Data>::MatrixCSR(MatrixCSR<Data>&& mx) noexcept{
+        R.Resize(1);
+        R[0] = &mx.head;
+
+        unsigned long i = 0;
+        while (i < mx.R.Size() && mx.R[i] == &mx.head){
+            mx.R[i] = &head;
+            ++i;
+        }
+
+        std::swap(R, mx.R);
+        std::swap(row, mx.row);
+        std::swap(column, mx.column);
+
+        std::swap(head, mx.head);
+        std::swap(size, mx.size);
+    }
+
+    template<typename Data>
+    MatrixCSR<Data>& MatrixCSR<Data>::operator=(const MatrixCSR<Data>& mx){
+        if (this != &mx) {
+            Clear();
+            List<pair>::operator=(mx);
+            R.Resize(mx.R.Size());
+            row = mx.row;
+            column = mx.column;
+
+            Node **ptr1 = &head;
+            for (unsigned long i = 0; i < row; ++i) {
+                R[i] = ptr1;
+                mx.forEachElementInRow(i, [&ptr1] {
+                    ptr1 = &((*ptr1)->next);
+                });
+            }
+            R.Back() = ptr1;
+        }
         return *this;
     }
 
     template<typename Data>
-    MatrixCSR<Data>& MatrixCSR<Data>::operator=(MatrixCSR<Data>&& mx) noexcept{
-        std::swap(R, mx.R);
-        std::swap(row, mx.row);
-        std::swap(column, mx.column);
-        List<pair>::operator=(std::move(mx));
+    MatrixCSR<Data>& MatrixCSR<Data>::operator=(MatrixCSR<Data>&& mx) noexcept {
+        if (this != &mx) {
+            unsigned long i = 0;
+            while (i < mx.R.Size() && mx.R[i] == &mx.head) {
+                mx.R[i] = &head;
+                ++i;
+            }
+            i = 0;
+            while (i < R.Size() && R[i] == &head) {
+                R[i] = &mx.head;
+                ++i;
+            }
+
+            std::swap(R, mx.R);
+            std::swap(row, mx.row);
+            std::swap(column, mx.column);
+
+            std::swap(head, mx.head);
+            std::swap(size, mx.size);
+        }
         return *this;
     }
 
     template<typename Data>
     bool MatrixCSR<Data>::operator==(const MatrixCSR<Data>& mx) const noexcept{
-        if (row != mx.row || column != mx.column) return false;
-        else if (row == 0 && mx.row == 0 &&
-                column == 0 && mx.column == 0) return true;
-        else{
-            for (unsigned long i = 0; i < row; ++i) {
-                Node* ptr1 = *R[i];
-                Node* ptr2 = *mx.R[i];
-
-                while (ptr1 != *R[i+1] && ptr2 != *mx.R[i+1]){
-                    if (ptr1->data != ptr2->data) return false;
-                    ptr1 = ptr1->next;
-                    ptr2 = ptr2->next;
+        if(row == mx.row && column == mx.column){
+            Node** ptr1 = R[0];
+            Node** ptr2 = mx.R[0];
+            for(unsigned long i = 0; i < R.Size() - 1; ++i){
+                while(ptr1 != R[i+1] && ptr2 != mx.R[i+1]){
+                    if((*ptr1)->data != (*ptr2)->data) return false;
+                    ptr1 = &(*ptr1)->next;
+                    ptr2 = &(*ptr2)->next;
                 }
-                if ((ptr1 == *R[i+1] && ptr2 != *mx.R[i+1]) ||
-                    (ptr1 != *R[i+1] && ptr2 == *mx.R[i+1])) return false;
-                else return true;
+                if(ptr1 != R[i+1] || ptr2 != mx.R[i+1]) return false;
             }
-        }
+        } else return false;
+        return true;
     }
 
     template<typename Data>
@@ -120,13 +156,16 @@ namespace lasd {
                     if ((*tmp)->data.second >= newCol){
                         Node* del = *tmp;
                         *tmp = del->next;
-                        if (&(del->next) == R[i+1]){
-                            R[i+1] = tmp;
+                        if (del->next == *R[i+1]){
+//                            R[i+1] = tmp;
+                            for(unsigned long j = i+1; j < R.Size() && *R[j] == del->next; ++j){
+                                R[j] = tmp;
+                            }
                         }
                         del->next = nullptr;
                         delete del;
                         size--;
-                    }else tmp = &((*tmp)->next);
+                    } else tmp = &((*tmp)->next);
                 }
             }
         }
@@ -146,6 +185,26 @@ namespace lasd {
     }
     template<typename Data>
     Data& MatrixCSR<Data>::operator()(unsigned long r, unsigned long c){
+//        if (r < row && c < column){
+//            Node** ptr = R[r];
+//            while (ptr != R[r+1] && (*ptr)->data.second <= c) {
+//                if((*ptr)->data.second == c) return (*ptr)->data.first;
+//                ptr = &((*ptr)->next);
+//            }
+//
+//            Node* newNode = new Node();
+//            newNode->next = *ptr;
+//            *ptr = newNode;
+//            newNode->data.second = c;
+//            size++;
+//            if(ptr == R[r]){ // se primo elemento inserito in riga
+//                for(unsigned long i = r+1; i < R.Size() && R[i] == R[r]; ++i){
+//                    R[i] = &((*ptr)->next);
+//                }
+//            }
+//            return newNode->data.first;
+//        } else throw std::out_of_range("[operator()] Out of Range");
+
         if (r < row && c < column){
             Node** ptr = R[r];
             Node** ext = R[r+1];
@@ -170,7 +229,6 @@ namespace lasd {
             return newNode->data.first;
 
         } else throw std::out_of_range("[operator()] Out of Range");
-
     }
     template<typename Data>
     const Data& MatrixCSR<Data>::operator()(unsigned long r, unsigned long c) const{
