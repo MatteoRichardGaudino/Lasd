@@ -32,15 +32,7 @@ protected:
   using List<pair>::size;
   Vector<Node**> R;
 
-  void forEachElementInRow(unsigned long i, std::function<void(void)> fun) const{
-      if (i < row) {
-          Node **ptr = R[i];
-          while (ptr != R[i+1]){
-              fun();
-              ptr = &((*ptr)->next);
-          }
-      }
-  }
+  void forEachElementInRow(unsigned long i, std::function<void(void)> fun) const;
 public:
 
   // Default constructor
@@ -112,6 +104,7 @@ public:
   void FoldPreOrder(const FoldFunctor, const void*, void*) const override; // Override FoldableContainer member
   void FoldPostOrder(const FoldFunctor, const void*, void*) const override; // Override FoldableContainer member
 
+  using Matrix<Data>::Exists;
 };
 
 /* ************************************************************************** */

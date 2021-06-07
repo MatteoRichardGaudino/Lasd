@@ -162,28 +162,38 @@ void launchMatrixMenu(Matrix<Data>& mx){
     setupMappableMenu(mainMenu, mx, false);
     setupFoldableMenu(mainMenu, mx);
 
-    MenuItem rowResize("Row Resize", [&mx](){
-        testRowResize(mx);
-    });
-    MenuItem colResize("Column Resize", [&mx](){
-        testColResize(mx);
-    });
-    MenuItem existsCell("Exists Cell", [&mx](){
-        testExistsCell(mx);
-    });
-    MenuItem accesOperator("Access operator ()", [&mx](){
-        testAccesOperator(mx);
-    });
-    MenuItem constAccesOperator("Access operator () [const]", [&mx](){
-        testConstAccessOperator(mx);
-    });
+    Menu matrixMenu("Chose an action:");
+        MenuItem row("Row", [&mx]{
+            cout<< "Row is set to " << mx.RowNumber() << endl;
+        });
+        MenuItem col("Column", [&mx]{
+            cout<< "Column is set to " << mx.ColumnNumber() << endl;
+        });
+        MenuItem rowResize("Row Resize", [&mx](){
+            testRowResize(mx);
+        });
+        MenuItem colResize("Column Resize", [&mx](){
+            testColResize(mx);
+        });
+        MenuItem existsCell("Exists Cell", [&mx](){
+            testExistsCell(mx);
+        });
+        MenuItem accesOperator("Access operator ()", [&mx](){
+            testAccesOperator(mx);
+        });
+        MenuItem constAccesOperator("Access operator () [const]", [&mx](){
+            testConstAccessOperator(mx);
+        });
 
-    mainMenu.add(rowResize);
-    mainMenu.add(colResize);
-    mainMenu.add(existsCell);
-    mainMenu.add(accesOperator);
-    mainMenu.add(constAccesOperator);
+        matrixMenu.add(row);
+        matrixMenu.add(col);
+        matrixMenu.add(rowResize);
+        matrixMenu.add(colResize);
+        matrixMenu.add(existsCell);
+        matrixMenu.add(accesOperator);
+        matrixMenu.add(constAccesOperator);
 
+    mainMenu.add("Matrix Menu", matrixMenu, true);
     mainMenu.loop();
 }
 
@@ -322,8 +332,8 @@ void testMappable(MappableContainer<int>& cont){
     cout << "Function n -> 2n applied to all elements" << endl;
 }
 void testMappable(MappableContainer<float>& cont){
-    cont.MapPreOrder([](float & data, void* _){ data *= data; }, nullptr);
-    cout << "Function n -> n*n applied to all elements" << endl;
+    cont.MapPreOrder([](float & data, void* _){ data = -(data*data*data); }, nullptr);
+    cout << "Function n -> -n^3 applied to all elements" << endl;
 }
 void testMappable(MappableContainer<string>& cont){
     cont.MapPreOrder([](string & data, void* _){
@@ -399,7 +409,7 @@ void myStressTest(){
         TestMove
     };
 
-    const long seed = 3499211612;
+    const unsigned long seed = 3499211612;
     MatrixVec<int> mv;
     MatrixCSR<int> mc;
     int valMatr[100][100];
@@ -585,17 +595,74 @@ void myStressTest(){
     cout << "End. errors/tests: "<< err << "/" << test << endl;
 }
 
-template<typename Data>
-void popolaMatrix(Matrix<Data>& mx){
+
+void popolaMatrix(Matrix<int>& mx){
     if (mx.RowNumber() != 0 && mx.ColumnNumber() != 0) {
         uniform_int_distribution<unsigned int> N(0, mx.RowNumber() - 1);
         uniform_int_distribution<unsigned int> M(0, mx.ColumnNumber() - 1);
         unsigned int nElements = distr0_100(gen)/3;
+        cout<< "Insert " << nElements << " values" << endl;
         for (int k = 0; k < nElements; k++) {
-            mx(N(gen), M(gen)) =  distr0_100(gen);
+            int num = distr0_100(gen);
+            unsigned int n = N(gen);
+            unsigned int m = M(gen);
+            cout << "\tInsert " << num << " in (" << n << ", " << m << ")" << endl;
+            mx(n, m) = num;
         }
+    } else{
+        cout<< "Row or Column are 0" << endl;
     }
 }
+void popolaMatrix(Matrix<float>& mx){
+    if (mx.RowNumber() != 0 && mx.ColumnNumber() != 0) {
+        uniform_int_distribution<unsigned int> N(0, mx.RowNumber() - 1);
+        uniform_int_distribution<unsigned int> M(0, mx.ColumnNumber() - 1);
+
+        uniform_int_distribution<int> intDistr(-10000, 10000); // parte intera
+        uniform_int_distribution<int> decDistr(0, 99); // parte decimale
+
+        unsigned int nElements = distr0_100(gen)/3;
+        cout<< "Insert " << nElements << " values" << endl;
+        for (int k = 0; k < nElements; k++) {
+            int intVal = intDistr(gen);
+            unsigned int n = N(gen);
+            unsigned int m = M(gen);
+            float num = intVal + (decDistr(gen) * ((intVal < 0)? (-0.01): (0.01)));
+            cout << "\tInsert " << num << " in (" << n << ", " << m << ")" << endl;
+            mx(n, m) =  num;
+        }
+    }else{
+        cout<< "Row or Column are 0" << endl;
+    }
+}
+void popolaMatrix(Matrix<string>& mx){
+    if (mx.RowNumber() != 0 && mx.ColumnNumber() != 0) {
+        uniform_int_distribution<unsigned int> N(0, mx.RowNumber() - 1);
+        uniform_int_distribution<unsigned int> M(0, mx.ColumnNumber() - 1);
+        const string charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!:.;-_#*@";
+        uniform_int_distribution<unsigned int> distr(0, charset.size()-1);
+        uniform_int_distribution<unsigned int> size(0, 5);
+
+        unsigned int nElements = distr0_100(gen)/3;
+        cout<< "Insert " << nElements << " values" << endl;
+        for (int k = 0; k < nElements; k++) {
+            string str;
+            str = "";
+            unsigned int s = size(gen);
+            for (unsigned int j = 0; j < s; ++j) {
+                str += charset[distr(gen)];
+            }
+            unsigned int n = N(gen);
+            unsigned int m = M(gen);
+
+            cout << "\tInsert " << str << " in (" << n << ", " << m << ")" << endl;
+            mx(n, m) =  str;
+        }
+    }else{
+        cout<< "Row or Column are 0" << endl;
+    }
+}
+
 template<typename Data>
 void testRowResize(Matrix<Data>& mx){
     unsigned long r;
@@ -609,8 +676,8 @@ void testColResize(Matrix<Data>& mx){
     unsigned long c;
     cout<< "Insert new column" << endl << ">>> ";
     cin>> c;
-    mx.RowResize(c);
-    cout<< "Row is set to " << mx.RowNumber() << endl;
+    mx.ColumnResize(c);
+    cout<< "Column is set to " << mx.ColumnNumber() << endl;
 }
 template<typename Data>
 void testExistsCell(const Matrix<Data>& mx){
@@ -638,11 +705,11 @@ void testAccesOperator(Matrix<Data>& mx){
 
     try {
         Data num;
-        cout<< "Cell("<< r << ", " << c <<") is set to" << mx(r, c) << endl;
-        cout<< "Insert the new value" << endl << ">>> ";
+        cout<< "Cell("<< r << ", " << c <<") is set to " << mx(r, c) << endl;
+        cout<< "Insert the new value " << endl << ">>> ";
         cin>> num;
         mx(r, c) = num;
-        cout<< "Cell("<< r << ", " << c <<") is set to" << mx(r, c) << endl;
+        cout<< "Cell("<< r << ", " << c <<") is set to " << mx(r, c) << endl;
     }catch(out_of_range& e){
         cout<< "Error: " << e.what() << endl;
     }
@@ -657,7 +724,7 @@ void testConstAccessOperator(const Matrix<Data>& mx){
 
     try {
         Data num;
-        cout<< "Cell("<< r << ", " << c <<") is set to" << mx(r, c) << endl;
+        cout<< "Cell("<< r << ", " << c <<") is set to " << mx(r, c) << endl;
     } catch (length_error& e){
         cout<< "Error: " << e.what() << endl;
     } catch(out_of_range& e){

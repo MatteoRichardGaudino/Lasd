@@ -37,6 +37,17 @@ namespace lasd {
     }
 
     template<typename Data>
+    void MatrixCSR<Data>::forEachElementInRow(unsigned long i, std::function<void(void)> fun) const{
+        if (i < row) {
+            Node **ptr = R[i];
+            while (ptr != R[i+1]){
+                fun();
+                ptr = &((*ptr)->next);
+            }
+        }
+    }
+
+    template<typename Data>
     MatrixCSR<Data>::MatrixCSR(MatrixCSR<Data>&& mx) noexcept {
         R.Resize(1);
         R[0] = &mx.head;

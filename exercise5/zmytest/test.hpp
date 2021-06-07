@@ -114,8 +114,11 @@ void testFoldable(FoldableContainer<string>&);
 /* *** Matrix test *** */
 
 void myStressTest();
-template<typename Data>
-void popolaMatrix(Matrix<Data>&);
+
+void popolaMatrix(Matrix<int>&);
+void popolaMatrix(Matrix<float>&);
+void popolaMatrix(Matrix<string>&);
+
 template<typename Data>
 void testRowResize(Matrix<Data>&);
 template<typename Data>
