@@ -48,7 +48,7 @@ namespace lasd {
     }
 
     template<typename Data>
-    MatrixCSR<Data>::MatrixCSR(MatrixCSR<Data>&& mx) noexcept {
+    MatrixCSR<Data>::MatrixCSR(MatrixCSR<Data>&& mx) noexcept{
         R.Resize(1);
         R[0] = &mx.head;
 

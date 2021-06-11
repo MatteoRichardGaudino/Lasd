@@ -2,17 +2,17 @@ cmake_minimum_required(VERSION 3.13)
 project(Lasd)
 set(CMAKE_CXX_STANDARD 14)
 
-include_directories(
-        exercise4/container
-        exercise4/list
-        exercise4/vector
-        exercise4/zlasdtest
-        exercise4/zmytest
-        exercise4/stack/vec
-        exercise4/binarytree/vec
-        exercise4/binarytree/lnk
-        exercise4/iterator
-        exercise4/bst)
+#include_directories(
+#        exercise4/container
+#        exercise4/list
+#        exercise4/vector
+#        exercise4/zlasdtest
+#        exercise4/zmytest
+#        exercise4/stack/vec
+#        exercise4/binarytree/vec
+#        exercise4/binarytree/lnk
+#        exercise4/iterator
+#        exercise4/bst)
 add_executable(main
         exercise5/zlasdtest/container/container.cpp
         exercise5/zmytest/test.cpp
