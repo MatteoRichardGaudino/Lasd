@@ -113,6 +113,7 @@ void BinaryTree<Data>::MapPreOrder(Node& node, const MapFunctor fun, void* v){
         MapPreOrder(node.LeftChild(), fun, v);
     if (node.HasRightChild())
         MapPreOrder(node.RightChild(), fun, v);
+    return;
 }
 template<typename Data>
 void BinaryTree<Data>::MapPostOrder(Node& node, const MapFunctor fun, void* v){

@@ -1,5 +1,6 @@
 
 #include "../queue/vec/queuevec.hpp"
+#include "../stack/lst/stacklst.hpp"
 
 namespace lasd {
 
@@ -108,11 +109,11 @@ void BinaryTree<Data>::FoldBreadth(const FoldFunctor fun, const void* v1, void* 
 
 template<typename Data>
 void BinaryTree<Data>::MapPreOrder(Node& node, const MapFunctor fun, void* v){
-    fun(node.Element(), v);
-    if (node.HasLeftChild())
-        MapPreOrder(node.LeftChild(), fun, v);
-    if (node.HasRightChild())
-        MapPreOrder(node.RightChild(), fun, v);
+        fun(node.Element(), v);
+        if (node.HasLeftChild())
+            MapPreOrder(node.LeftChild(), fun, v);
+        if (node.HasRightChild())
+            MapPreOrder(node.RightChild(), fun, v);
 }
 template<typename Data>
 void BinaryTree<Data>::MapPostOrder(Node& node, const MapFunctor fun, void* v){

@@ -108,6 +108,32 @@ public:
   void FoldPreOrder(const FoldFunctor, const void*, void*) const override; // Override FoldableContainer member
   void FoldPostOrder(const FoldFunctor, const void*, void*) const override; // Override FoldableContainer member
 
+  // Sort
+
+  void Shuffle();
+
+  void QuickSort();
+  void MergeSort();
+
+  void HeapSort();
+
+  void SelectionSort();
+  void InsertionSort();
+
+  bool IsSorted();
+
+protected:
+    unsigned long Partition(unsigned long, unsigned long);
+    void QuickSort(unsigned long, unsigned long);
+
+    Data* aux = nullptr;
+    void Merge(unsigned long, unsigned long, unsigned long);
+    void MergeSort(unsigned long, unsigned long);
+
+    void BuildHeap();
+    void Heapify(unsigned long, unsigned long);
+
+    unsigned long findMin(unsigned long, unsigned long);
 };
 
 /* ************************************************************************** */

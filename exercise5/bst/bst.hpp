@@ -27,7 +27,30 @@ protected:
 
   // ...
 
+    NodeLnk* SubTree(NodeLnk* T, const Data& k1, const Data& k2, unsigned long& s){
+        NodeLnk* T1 = nullptr;
+        if (T != nullptr){
+            if (k1 < T->Element() && T->Element() < k2){
+                T1 = new NodeLnk(T->Element());
+                ++s;
+                T1->left = SubTree(T->left, k1, k2, s);
+                T1->right = SubTree(T->right, k1, k2, s);
+            } else if(T->Element() <= k1){
+                T1 = SubTree(T->right, k1, k2, s);
+            } else if(T->Element() >= k2){
+                T1 = SubTree(T->left, k1, k2, s);
+            }
+        }
+        return T1;
+    }
+
 public:
+
+  BST<Data> SubTree(const Data& k1, const Data& k2){
+      BST<Data> bst;
+      bst.root = SubTree(root, k1, k2, bst.size);
+      return bst;
+  }
 
   // Default constructor
   BST() = default;

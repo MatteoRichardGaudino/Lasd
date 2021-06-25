@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 
 namespace lasd {
 
@@ -168,6 +169,147 @@ namespace lasd {
         for (unsigned long i = size; i > 0; i--) {
             fun(elements[i-1], v1, v2);
         }
+    }
+
+
+    template<typename Data>
+    void Vector<Data>::Shuffle() {
+        std::random_shuffle(elements, elements+size);
+    }
+
+    template<typename Data>
+    unsigned long Vector<Data>::Partition(unsigned long l, unsigned long r){
+        if (l < r){
+            Data& x = elements[l];
+            unsigned long i = l;
+            unsigned long j = r;
+            while (i < j){
+                while (i < j && elements[i] < x) i++;
+                while (i < j && elements[j] >= x) j--;
+                if (i < j) std::swap(elements[i], elements[j]);
+            }
+            return j;
+        }
+    }
+    template<typename Data>
+    void Vector<Data>::QuickSort(unsigned long l, unsigned long r){
+        if (l < r){
+            unsigned long j = Partition(l, r);
+            QuickSort(l, j);
+            QuickSort(j+1, r);
+        }
+    }
+    template<typename Data>
+    void Vector<Data>::QuickSort(){
+        if(size != 0)
+            QuickSort(0, size-1);
+    }
+
+    template<typename Data>
+    void Vector<Data>::MergeSort(){
+        if(size != 0) {
+            aux = new Data[size];
+            MergeSort(0, size - 1);
+            delete[] aux;
+        }
+    }
+    template<typename Data>
+    void Vector<Data>::Merge(unsigned long l, unsigned long m, unsigned long r){
+        unsigned long i = l;
+        unsigned long j = m+1;
+
+        for (unsigned long k = l; k <= r; ++k) {
+            aux[k] = elements[k];
+        }
+
+        for(unsigned long k = l; k <= r; ++k){
+            if (i > m)               elements[k] = aux[j++];
+            else if(j > r)           elements[k] = aux[i++];
+            else if(aux[i] < aux[j]) elements[k] = aux[i++];
+            else                     elements[k] = aux[j++];
+        }
+    }
+
+    template<typename Data>
+    void Vector<Data>::MergeSort(unsigned long l, unsigned long r){
+        if(l < r){
+            unsigned long m = (l + r)/2;
+            MergeSort(l, m);
+            MergeSort(m+1, r);
+            Merge(l, m, r);
+        }
+    }
+
+    template<typename Data>
+    void Vector<Data>::HeapSort(){
+        if (size != 0) {
+            BuildHeap();
+            unsigned long s = size;
+            for (unsigned long i = size - 1; i > 0; i--) {
+                std::swap(elements[0], elements[i]);
+                s--;
+                Heapify(0, s);
+            }
+        }
+    }
+
+    template<typename Data>
+    void Vector<Data>::BuildHeap() {
+        for (unsigned long i = size/2; i > 0; --i) {
+            Heapify(i, size);
+        }
+        Heapify(0, size);
+    }
+
+    template<typename Data>
+    void Vector<Data>::Heapify(unsigned long root, unsigned long siz) {
+        unsigned long max = root;
+        unsigned long sx = 2*root+1;
+        unsigned long dx = 2*root+2;
+        if (sx < siz && elements[sx] > elements[max]) max = sx;
+        if (dx < siz && elements[dx] > elements[max]) max = dx;
+
+        if (max != root){
+            std::swap(elements[max], elements[root]);
+            Heapify(max, siz);
+        }
+    }
+
+    template<typename Data>
+    void Vector<Data>::SelectionSort(){
+        for (unsigned long i = 0; i < size; ++i) {
+            unsigned long min = findMin(i, size);
+            if (i != min)
+                std::swap(elements[min], elements[i]);
+        }
+    }
+    template<typename Data>
+    unsigned long Vector<Data>::findMin(unsigned long l, unsigned long r){
+        unsigned long min = l;
+        for (unsigned long i = l+1; i < r; ++i) {
+            if (elements[min] > elements[i]) min = i;
+        }
+        return min;
+    }
+
+    template<typename Data>
+    void Vector<Data>::InsertionSort(){
+        for(unsigned long i = 1; i < size; i++){
+            unsigned long j = i;
+            while (j > 0 && elements[j] < elements[j-1]){
+                std::swap(elements[j], elements[j-1]);
+                j--;
+            }
+        }
+    }
+
+    template<typename Data>
+    bool Vector<Data>::IsSorted(){
+        if(size == 0) return true;
+        for(unsigned long i = 0; i < size-1; i++){
+            if(elements[i] > elements[i+1]) return false;
+        }
+        return true;
     }
 
 
