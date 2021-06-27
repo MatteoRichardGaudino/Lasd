@@ -121,9 +121,9 @@ public:
   void InsertionSort();
 
   bool IsSorted();
+  unsigned long Partition(unsigned long, unsigned long);
 
 protected:
-    unsigned long Partition(unsigned long, unsigned long);
     void QuickSort(unsigned long, unsigned long);
 
     Data* aux = nullptr;

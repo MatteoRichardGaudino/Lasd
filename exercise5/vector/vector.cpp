@@ -182,12 +182,14 @@ namespace lasd {
         if (l < r){
             Data& x = elements[l];
             unsigned long i = l;
-            unsigned long j = r;
-            while (i < j){
-                while (i < j && elements[i] < x) i++;
-                while (i < j && elements[j] >= x) j--;
-                if (i < j) std::swap(elements[i], elements[j]);
-            }
+            unsigned long j = r+1;
+            do{
+                do ++i; while(i != r && elements[i] < x);
+                do --j; while(j != l && elements[j] > x);
+                if (i < j)
+                    std::swap(elements[i], elements[j]);
+            }while(i < j);
+            std::swap(elements[l], elements[j]);
             return j;
         }
     }
